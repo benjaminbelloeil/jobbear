@@ -219,3 +219,183 @@
     animation: none !important;
   }
 }
+
+/* How-it-works scenes. A scene renders its FINAL state by default; adding `.play`
+   replays its little sequence. Each animated part names its motion in data-a and its
+   start time in --d. */
+.scene.play [data-a] {
+  animation-duration: 600ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+  animation-delay: var(--d, 0ms);
+}
+.scene.play [data-a='slide'] {
+  animation-name: demo-slide;
+}
+.scene.play [data-a='drop'] {
+  animation-name: demo-slide-down;
+}
+.scene.play [data-a='pop'] {
+  animation-name: demo-pop;
+}
+.scene.play [data-a='in'] {
+  animation-name: demo-in;
+}
+.scene.play [data-a='fill'] {
+  animation-name: fill-in;
+  animation-duration: 900ms;
+  transform-origin: left center;
+}
+.scene.play [data-a='draw'] {
+  animation-name: demo-draw;
+  transform-origin: left center;
+}
+.scene.play [data-a='out'] {
+  animation-name: demo-out;
+}
+.scene.play [data-a='travel'] {
+  animation-name: scene-travel;
+  animation-duration: 900ms;
+}
+
+@keyframes scene-travel {
+  from {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.96);
+  }
+}
+
+/* Hero headline: each line rises out of its own mask, once, on load. */
+.mask-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+.mask-line > span {
+  display: block;
+  animation: line-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes line-rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+/* Data visuals that wait until they're on screen before filling. */
+.await-view .fill-in,
+.await-view .chart-rise .recharts-bar-rectangle path {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene.play [data-a],
+  .mask-line > span {
+    animation: none !important;
+  }
+}
+
+/* Mascot motion. Loops are slow and small; .bear-paused stops them off screen. */
+.bear * {
+  transform-box: fill-box;
+}
+.bear-body {
+  transform-origin: center bottom;
+  animation: bear-breathe 4.5s ease-in-out infinite;
+}
+.bear-eyes {
+  transform-origin: center;
+  animation: bear-blink 5.5s ease-in-out infinite;
+}
+.bear-ear-left {
+  transform-origin: right bottom;
+  animation: bear-ear 7s ease-in-out infinite;
+}
+.bear-reading .bear-pupils {
+  animation: bear-scan 2.6s ease-in-out infinite;
+}
+.bear-reading .bear-head {
+  transform-origin: center bottom;
+  transform: rotate(-4deg) translateY(4px);
+}
+.bear-waving .bear-arm {
+  transform-origin: 30% 10%;
+  animation: bear-wave 1.1s cubic-bezier(0.45, 0, 0.55, 1) 3;
+}
+.bear-z {
+  animation: bear-z 3s ease-out infinite both;
+}
+.bear-paused,
+.bear-paused * {
+  animation-play-state: paused !important;
+}
+
+@keyframes bear-breathe {
+  50% {
+    transform: scale(1.012, 1.025);
+  }
+}
+@keyframes bear-blink {
+  0%,
+  91%,
+  100% {
+    transform: scaleY(1);
+  }
+  94% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes bear-ear {
+  0%,
+  86%,
+  100% {
+    transform: rotate(0);
+  }
+  89% {
+    transform: rotate(-9deg);
+  }
+  92% {
+    transform: rotate(3deg);
+  }
+}
+@keyframes bear-scan {
+  0%,
+  100% {
+    transform: translate(-2px, 3px);
+  }
+  50% {
+    transform: translate(2px, 3px);
+  }
+}
+@keyframes bear-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  30% {
+    transform: translate(6px, -46px) rotate(-28deg);
+  }
+  60% {
+    transform: translate(6px, -46px) rotate(-8deg);
+  }
+}
+@keyframes bear-z {
+  from {
+    opacity: 0;
+    transform: translate(0, 10px);
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(10px, -14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bear,
+  .bear * {
+    animation: none !important;
+  }
+}
