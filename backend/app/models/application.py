@@ -1,7 +1,7 @@
 from datetime import date, datetime
 
 from sqlalchemy import Date, DateTime, Enum, ForeignKey, String, Text, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
 from app.models.enums import ApplicationSource, ApplicationStatus, NextAction
@@ -34,5 +34,6 @@ class Application(Base):
     )
 
     # TODO(me): add relationships to Company, StatusEvent (cascade), and Email.
+    company: Mapped["Company"] = relationship("Company", back_populates="applications")
     # TODO(me): decide which columns need indexes (think: what do the list filters and
     #           the ghosting job query on?).
