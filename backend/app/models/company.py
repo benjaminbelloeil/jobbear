@@ -1,11 +1,13 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
 
-
+if TYPE_CHECKING:
+    from app.models.application import Application
 class Company(Base):
     __tablename__ = "companies"
 
@@ -18,4 +20,4 @@ class Company(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     # TODO(me): add the `applications` relationship (and its back_populates on Application).
-    applications: Mapped[list["Application"]] = relationship("Application", back_populates="company")
+    applications: Mapped[list["Application"]] = relationship(back_populates="company")

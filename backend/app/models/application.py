@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Date, DateTime, Enum, ForeignKey, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -6,7 +7,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db import Base
 from app.models.enums import ApplicationSource, ApplicationStatus, NextAction
 
-
+if TYPE_CHECKING:
+    from app.models.company import Company
 class Application(Base):
     __tablename__ = "applications"
 
