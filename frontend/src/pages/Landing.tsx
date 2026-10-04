@@ -1,9 +1,14 @@
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 
+import BearCharacter from '../components/BearCharacter'
 import BearMark from '../components/BearMark'
 import Icon from '../components/Icon'
+import HowItWorks from '../components/landing/HowItWorks'
+import ProductPreview from '../components/landing/ProductPreview'
+import WakeUpBear from '../components/landing/WakeUpBear'
 import LandingDemo from '../components/LandingDemo'
+import { useInView } from '../hooks/useInView'
 
 const REPO_URL = 'https://github.com/benjaminbelloeil/jobbear'
 const INSTALL = `git clone ${REPO_URL}\ncd jobbear && docker compose up -d`
@@ -47,8 +52,21 @@ const PLAN_ROWS: [feature: string, selfHost: string, cloud: string][] = [
   ['Updates and backups', 'You', 'Us'],
 ]
 
+const NAV_LINKS = [
+  ['#how', 'How it works'],
+  ['#why', 'Why'],
+  ['#your-ai', 'Your AI'],
+  ['#pricing', 'Pricing'],
+] as const
+
+const HEADLINE = ['Know which job', 'applications', 'actually work.']
+
+/** Delay for one headline line's reveal (see .mask-line in index.css). */
+const lineDelay = (index: number) => ({ '--d': `${index * 90}ms` }) as CSSProperties
+
 export default function Landing() {
   const [copied, setCopied] = useState(false)
+  const [heroBearRef, heroBearInView] = useInView<HTMLDivElement>({ threshold: 0.1 })
 
   const copyInstall = async () => {
     try {
@@ -62,7 +80,7 @@ export default function Landing() {
 
   return (
     <div className="bg-birch">
-      <header className="bg-bark text-birch-50">
+      <header className="sticky top-0 z-40 border-b border-birch/10 bg-bark text-birch-50">
         <nav
           aria-label="Site"
           className="mx-auto flex h-16 max-w-[90rem] items-center gap-6 px-5 sm:px-8 lg:px-12"
@@ -77,21 +95,13 @@ export default function Landing() {
             JobBear
           </Link>
           <ul className="ml-6 hidden items-center gap-6 text-sm text-birch-300 md:flex">
-            <li>
-              <a href="#why" className="hover:text-birch-50">
-                Why JobBear
-              </a>
-            </li>
-            <li>
-              <a href="#your-ai" className="hover:text-birch-50">
-                Bring your AI
-              </a>
-            </li>
-            <li>
-              <a href="#pricing" className="hover:text-birch-50">
-                Pricing
-              </a>
-            </li>
+            {NAV_LINKS.map(([href, label]) => (
+              <li key={href}>
+                <a href={href} className="hover:text-birch-50">
+                  {label}
+                </a>
+              </li>
+            ))}
           </ul>
           <div className="ml-auto flex items-center gap-2">
             <a
@@ -108,18 +118,51 @@ export default function Landing() {
         </nav>
       </header>
 
-      {/* Hero: the claim, the working install, then the product proving it */}
+      {/* Hero: one focal sequence (headline reveal + reading bear), the install, then the demo */}
       <section className="bg-bark pb-20 text-birch-50 sm:pb-24">
         <div className="mx-auto max-w-[90rem] px-5 pt-14 sm:px-8 sm:pt-20 lg:px-12">
-          <h1 className="max-w-[14ch] text-5xl font-extrabold leading-[0.98] tracking-[-0.03em] sm:text-7xl lg:text-[5.5rem]">
-            Know which job applications actually work.
-          </h1>
+          <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1fr)_auto]">
+            <h1 className="text-[2.625rem] font-extrabold leading-[0.98] tracking-[-0.03em] sm:text-7xl lg:text-[5.5rem]">
+              {HEADLINE.map((line, index) => (
+                <span key={line} className="mask-line">
+                  <span style={lineDelay(index)}>{line}</span>
+                </span>
+              ))}
+            </h1>
+            {/* Birch disc, like the header badge: a bark bear needs a light ground on bark */}
+            <div
+              ref={heroBearRef}
+              className="grid aspect-square w-44 place-items-center justify-self-start rounded-full bg-birch sm:w-56 lg:w-80 lg:justify-self-end"
+            >
+              <BearCharacter
+                mood="reading"
+                paused={!heroBearInView}
+                title="The JobBear bear reading a recruiter email"
+                className="h-auto w-[68%]"
+              />
+            </div>
+          </div>
+
           <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:items-end">
-            <p className="max-w-xl text-lg leading-relaxed text-birch-300 sm:text-xl">
-              JobBear reads your recruiter emails, keeps every status change on record, and shows
-              which channels get you replies. Open source, and it runs on your own AI key or a local
-              model.
-            </p>
+            <div>
+              <p className="max-w-xl text-lg leading-relaxed text-birch-300 sm:text-xl">
+                JobBear reads your recruiter emails, keeps every status change on record, and shows
+                which channels get you replies. Open source, and it runs on your own AI key or a
+                local model.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href={REPO_URL} className="btn-honey">
+                  <Icon name="github" size={16} />
+                  Get the code
+                </a>
+                <a
+                  href="#how"
+                  className="inline-flex items-center rounded-control border border-birch/20 px-4 py-2 text-sm font-medium text-birch-50 hover:bg-birch/10"
+                >
+                  See how it works
+                </a>
+              </div>
+            </div>
             <div className="min-w-0">
               <div className="flex items-center justify-between rounded-t-control border border-b-0 border-birch/15 px-4 py-2 text-sm text-birch-300">
                 Run it yourself, free
@@ -127,10 +170,12 @@ export default function Landing() {
                   type="button"
                   onClick={copyInstall}
                   className="rounded-control px-2 py-1 text-birch-50 hover:bg-birch/10"
-                  aria-live="polite"
                 >
                   {copied ? 'Copied' : 'Copy'}
                 </button>
+                <span role="status" className="sr-only">
+                  {copied ? 'Install commands copied' : ''}
+                </span>
               </div>
               <pre className="overflow-x-auto rounded-b-control border border-birch/15 bg-black/25 px-4 py-3 font-mono text-[0.8125rem] leading-relaxed text-birch-50">
                 <code>{INSTALL}</code>
@@ -144,8 +189,40 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* How it works: the scroll is the story */}
+      <section
+        id="how"
+        className="mx-auto max-w-[90rem] scroll-mt-16 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
+      >
+        <h2 className="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+          How it works
+        </h2>
+        <div className="mt-14 lg:pl-10 xl:pl-14">
+          <HowItWorks />
+        </div>
+      </section>
+
+      {/* The product itself, with sample data */}
+      <section className="bg-bark text-birch-50">
+        <div className="mx-auto max-w-[90rem] px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+          <h2 className="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+            Your whole search on one screen.
+          </h2>
+          <p className="mt-4 max-w-xl text-lg leading-relaxed text-birch-300">
+            The real dashboard, filled with sample data: replies by channel, weekly volume, and the
+            applications going quiet.
+          </p>
+          <div className="mt-12">
+            <ProductPreview />
+          </div>
+        </div>
+      </section>
+
       {/* Why: built from what people complain about */}
-      <section id="why" className="mx-auto max-w-[90rem] px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+      <section
+        id="why"
+        className="mx-auto max-w-[90rem] scroll-mt-16 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
+      >
         <div className="grid gap-12 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
           <div>
             <h2 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
@@ -168,7 +245,7 @@ export default function Landing() {
       </section>
 
       {/* Bring your own AI */}
-      <section id="your-ai" className="border-y border-birch-200 bg-birch-50">
+      <section id="your-ai" className="scroll-mt-16 border-y border-birch-200 bg-birch-50">
         <div className="mx-auto grid max-w-[90rem] gap-12 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-2 lg:px-12">
           <div>
             <h2 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
@@ -200,7 +277,10 @@ export default function Landing() {
       </section>
 
       {/* Pricing: a real comparison, plus a waitlist that measures demand */}
-      <section id="pricing" className="mx-auto max-w-[90rem] px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+      <section
+        id="pricing"
+        className="mx-auto max-w-[90rem] scroll-mt-16 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
+      >
         <h2 className="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
           Free to run yourself. A pass if you’d rather not.
         </h2>
@@ -210,7 +290,9 @@ export default function Landing() {
             <caption className="sr-only">Self-hosted versus JobBear Cloud</caption>
             <thead>
               <tr className="align-bottom">
-                <th scope="col" className="w-[36%] pb-6" />
+                <th scope="col" className="w-[36%] pb-6">
+                  <span className="sr-only">Feature</span>
+                </th>
                 <th scope="col" className="pb-6 pr-6 font-normal">
                   <span className="block font-display text-2xl font-bold">Self-hosted</span>
                   <span className="mt-1 block text-bark-500">Free, forever</span>
@@ -260,6 +342,7 @@ export default function Landing() {
                     <input
                       id="waitlist-email"
                       type="email"
+                      autoComplete="email"
                       required
                       placeholder="you@example.com"
                       className="field border-birch/20"
@@ -275,6 +358,28 @@ export default function Landing() {
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      {/* Final call to action: the bear wakes up when you get here */}
+      <section className="border-t border-birch-200 bg-birch-50">
+        <div className="mx-auto flex max-w-[90rem] flex-col items-center px-5 py-20 text-center sm:px-8 sm:py-28 lg:px-12">
+          <WakeUpBear size={200} />
+          <h2 className="mt-8 max-w-2xl text-4xl font-extrabold leading-tight tracking-tight [text-wrap:balance] sm:text-5xl">
+            Stop guessing where your applications went.
+          </h2>
+          <p className="mt-4 max-w-lg text-lg leading-relaxed text-bark-700">
+            Clone it, run it, and let the bear read the inbox.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <a href={REPO_URL} className="btn-honey">
+              <Icon name="github" size={16} />
+              Get the code
+            </a>
+            <Link to="/login" className="btn-primary">
+              Open the app
+            </Link>
+          </div>
         </div>
       </section>
 
