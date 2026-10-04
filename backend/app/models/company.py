@@ -8,6 +8,8 @@ from app.db import Base
 
 if TYPE_CHECKING:
     from app.models.application import Application
+
+
 class Company(Base):
     __tablename__ = "companies"
 

@@ -9,6 +9,8 @@ from app.models.enums import ApplicationSource, ApplicationStatus, NextAction
 
 if TYPE_CHECKING:
     from app.models.company import Company
+
+
 class Application(Base):
     __tablename__ = "applications"
 
