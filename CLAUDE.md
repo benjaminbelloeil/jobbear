@@ -90,6 +90,16 @@ Outputs go in `docs/replica/` so every later step can read them.
 
 Scope guard: this is a 2–3 week project. A replica output can add features to the roadmap, but each feature has to fit the build order. Keep a "v2 / later" list instead of growing v1.
 
+## Design: Impeccable, always on
+
+The [Impeccable](https://github.com/pbakaus/impeccable) skill lives in `.claude/skills/impeccable/` (Apache 2.0, v4.5.0). Use it for **every** frontend change, however small:
+
+- Before any UI edit, read `.claude/skills/impeccable/reference/craft-floor.md` and follow it. Mode for app screens is **Operate**; a future landing page is **Persuade**.
+- The brand is a bear: **JobBear**. Keep the bear mark (`frontend/src/components/BearMark.tsx`), the birch/bark/honey tokens in `frontend/tailwind.config.ts`, and Bricolage Grotesque + Onest. Honey is the only accent.
+- After a UI change, run `/impeccable audit <target>` (or `critique`), then double-check with ECC: the `ecc:react-reviewer` agent for a11y/React issues and `ecc:browser-qa` for the click-through at 375px and desktop.
+- Impeccable only shapes **presentation**. It never overrides the "must NOT write" list above: no data hooks, API calls, form state or chart data transforms.
+- The engine and its design hook are installed (`.impeccable/config.json`; the hook lives in the gitignored `.claude/settings.local.json`). It checks every UI edit and runs a deep pass at the end of each session: act on its findings. Manual run: `./.claude/skills/impeccable/scripts/impeccable detect --json frontend/src`.
+
 ## Project conventions
 
 - Python 3.12, type hints everywhere, SQLAlchemy 2.0 `Mapped[]` style, Pydantic v2

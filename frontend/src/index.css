@@ -1,3 +1,221 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-birch font-sans text-bark antialiased;
+    font-feature-settings: 'ss01', 'cv11';
+    caret-color: theme('colors.honey.600');
+    scrollbar-color: theme('colors.birch.300') transparent;
+    text-underline-offset: 0.2em;
+  }
+
+  input,
+  textarea,
+  select {
+    caret-color: theme('colors.bark.DEFAULT');
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    font-optical-sizing: auto;
+  }
+
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-bark;
+  }
+
+  ::selection {
+    @apply bg-honey/40;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-panel border border-birch-200 bg-birch-50;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-control px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-bark text-birch-50 hover:bg-bark-700;
+  }
+
+  .btn-honey {
+    @apply btn bg-honey text-bark hover:bg-honey-600;
+  }
+
+  .btn-ghost {
+    @apply btn text-bark-500 hover:bg-birch-200/60 hover:text-bark;
+  }
+
+  .field {
+    @apply block w-full rounded-control border border-birch-300 bg-white px-3 py-2 text-sm text-bark placeholder:text-bark-500 focus:border-bark focus:outline-none focus:ring-2 focus:ring-honey/50;
+  }
+
+  .label {
+    @apply text-sm font-medium text-bark-700;
+  }
+}
+
+/* Motion. App screens: motion explains state (data arriving, a view changing).
+   Landing: one authored sequence (.demo-*). Easing = confident deceleration. */
+@layer utilities {
+  .ease-arrive {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* A bar or meter filling to its value when its data arrives. */
+  .fill-in {
+    transform-origin: left center;
+    animation: fill-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  /* A route's content arriving (continuity between views). */
+  .view-in {
+    animation: view-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Items of a list arriving as a list. Cap the stagger via --i (max ~6). */
+  .list-in > * {
+    animation: view-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(min(var(--i, 0), 6) * 40ms);
+  }
+}
+
+/* Recharts bars rise from the baseline when the chart's data arrives. */
+.chart-rise .recharts-bar-rectangle path {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: rise 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fill-in {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes view-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Keep state legible without movement: fills and views simply appear. */
+  .fill-in,
+  .view-in,
+  .list-in > *,
+  .chart-rise .recharts-bar-rectangle path {
+    animation: none !important;
+  }
+
+  /* Other animations shorten; colour and opacity transitions stay as feedback. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Landing demo: one authored sequence (~3.6s). An email arrives, the bear reads it, the
+   application's status flips and the history gains a row. Default styles are the FINAL
+   state, so with reduced motion (or no animation support) the outcome simply shows. */
+.demo [data-step] {
+  animation-duration: 600ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+.demo [data-step='email'] {
+  animation-name: demo-slide;
+}
+.demo [data-step='link-1'] {
+  animation-name: demo-draw;
+  animation-delay: 650ms;
+}
+.demo [data-step='read'] {
+  animation-name: demo-pop;
+  animation-delay: 1150ms;
+}
+.demo [data-step='meter'] {
+  animation-name: fill-in;
+  animation-duration: 800ms;
+  animation-delay: 1500ms;
+  transform-origin: left center;
+}
+.demo [data-step='link-2'] {
+  animation-name: demo-draw;
+  animation-delay: 2350ms;
+}
+.demo [data-step='old-badge'] {
+  animation-name: demo-out;
+  animation-delay: 2900ms;
+  opacity: 0;
+}
+.demo [data-step='new-badge'] {
+  animation-name: demo-in;
+  animation-delay: 2950ms;
+}
+.demo [data-step='history'] {
+  animation-name: demo-slide-down;
+  animation-delay: 3150ms;
+}
+
+@keyframes demo-slide {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+@keyframes demo-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+@keyframes demo-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes demo-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+@keyframes demo-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes demo-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo [data-step] {
+    animation: none !important;
+  }
+}

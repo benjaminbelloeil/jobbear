@@ -19,3 +19,9 @@ Job discovery / feed,yes,-,out of scope,XL,data licensing
 Auto-apply / autofill,yes,-,out of scope,XL,fragile; top complaint
 Insider connections,yes,-,out of scope,L,LinkedIn data
 Cover letter / resume generation,yes,P3,v2,M,quality is a top complaint for Jobright
+"Needs you" list (next actions with dates),unknown,P1,v1,S,UI done with sample data; derive from next_action + dates
+Going-quiet meter (days until ghosted),no evidence,P1,v1,S,UI done; answers "am I being ghosted?"
+Plain-language insights ("referrals reply 3x more"),no evidence,P2,v1,M,UI done; decide who writes the sentences
+Pipeline board view,yes,P2,v1,S,UI done (read-only; no drag and drop)
+Bring-your-own AI key (Claude/GPT/Gemini/Grok/Ollama),no,P2,v2,M,see open-source-byok.md; v1 stays Claude via .env
+Landing page + Cloud waitlist (fake-door),n/a,P2,v2,S,UI done; waitlist storage is TODO(me)

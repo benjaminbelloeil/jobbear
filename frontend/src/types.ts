@@ -13,23 +13,13 @@ export const APPLICATION_STATUSES = [
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number]
 
 export type NextAction =
-  | 'FOLLOW_UP'
-  | 'WAITING'
-  | 'PREPARE_OA'
-  | 'PREPARE_INTERVIEW'
-  | 'SEND_EMAIL'
-  | 'DECIDE'
-  | 'NONE'
+  'FOLLOW_UP' | 'WAITING' | 'PREPARE_OA' | 'PREPARE_INTERVIEW' | 'SEND_EMAIL' | 'DECIDE' | 'NONE'
 
-export type ApplicationSource = 'ATS' | 'REFERRAL' | 'LINKEDIN' | 'COMPANY_SITE' | 'OTHER'
+export const APPLICATION_SOURCES = ['ATS', 'REFERRAL', 'LINKEDIN', 'COMPANY_SITE', 'OTHER'] as const
+export type ApplicationSource = (typeof APPLICATION_SOURCES)[number]
 
 export type EmailClassification =
-  | 'REJECTION'
-  | 'OA_INVITE'
-  | 'INTERVIEW_INVITE'
-  | 'OFFER'
-  | 'CONFIRMATION'
-  | 'OTHER'
+  'REJECTION' | 'OA_INVITE' | 'INTERVIEW_INVITE' | 'OFFER' | 'CONFIRMATION' | 'OTHER'
 
 export type EventSource = 'MANUAL' | 'EMAIL' | 'SYSTEM'
 
@@ -53,6 +43,7 @@ export interface Application {
   remote: boolean
   status: ApplicationStatus
   next_action: NextAction
+  /** Plain date, "YYYY-MM-DD" (Python `date`). */
   applied_at: string
   last_activity_at: string | null
   notes: string | null
@@ -95,3 +86,25 @@ export interface TokenResponse {
   access_token: string
   token_type: string
 }
+
+export interface Email {
+  id: number
+  application_id: number | null
+  gmail_message_id: string
+  sender: string
+  subject: string
+  snippet: string | null
+  received_at: string
+  classification: EmailClassification | null
+  confidence: number | null
+  processed_at: string | null
+}
+
+export interface EmailSyncResult {
+  fetched: number
+  matched: number
+  unmatched: number
+  status_updates: number
+}
+
+export type ApplicationSort = '-applied_at' | 'applied_at' | '-last_activity_at' | 'company'

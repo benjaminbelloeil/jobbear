@@ -6,5 +6,3 @@ def test_health_returns_ok(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok", "database": "ok"}
-
-
