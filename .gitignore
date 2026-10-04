@@ -8,6 +8,17 @@ credentials*.json
 token*.json
 *_token.json
 *.pem
+*.key
+*.p12
+.env.local
+
+# Local Claude Code / tool state (machine-specific, may hold personal paths or consent)
+.claude/settings.local.json
+.claude/projects/
+.claude/todos/
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/live/
 
 # Python
 __pycache__/
@@ -27,8 +38,11 @@ dist/
 coverage/
 *.tsbuildinfo
 npm-debug.log*
+*.log
 
 # OS / editors
 .DS_Store
 .idea/
 .vscode/
+*.swp
+Thumbs.db
