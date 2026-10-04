@@ -1,55 +1,102 @@
-import EmptyState from '../components/EmptyState'
-import PageHeader from '../components/PageHeader'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-const COLUMNS = ['Company', 'Position', 'Status', 'Next action', 'Applied', 'Last activity']
+import ApplicationRow from '../components/ApplicationRow'
+import Icon from '../components/Icon'
+import PageHeader from '../components/PageHeader'
+import Pagination from '../components/Pagination'
+import PipelineBoard from '../components/PipelineBoard'
+import StatusFilterChips from '../components/StatusFilterChips'
+import { SAMPLE_TOTAL, sampleApplications, sampleBoard } from '../sample/data'
+
+const COLUMNS = ['Company', 'Position', 'Status', 'Next step', 'Applied', 'Last activity']
+
+type View = 'table' | 'board'
 
 export default function Applications() {
-  // TODO(me): useQuery for GET /applications with filters (status, company, date range),
-  //           sort and pagination held in URL search params; a "New application" form
-  //           (useMutation + invalidateQueries); rows link to /applications/:id.
+  // View choice is purely visual, so it lives here.
+  const [view, setView] = useState<View>('table')
+
+  // TODO(me): replace sample data with useQuery for GET /applications. Filters (status,
+  //           company_id, date range), sort and page belong in URL search params; pass
+  //           them to the query and to <StatusFilterChips selected onToggle /> and
+  //           <Pagination page onPageChange />. Group the board's columns yourself.
   return (
     <>
       <PageHeader
         title="Applications"
-        description="Every job you've applied to, newest first."
+        description={`${SAMPLE_TOTAL} applications, newest first.`}
         actions={
-          <button
-            type="button"
-            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
-          >
-            New application
-          </button>
+          <>
+            <div
+              role="group"
+              aria-label="View"
+              className="flex rounded-control border border-birch-300 bg-birch-50 p-0.5"
+            >
+              {(['table', 'board'] as const).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  aria-pressed={view === option}
+                  onClick={() => setView(option)}
+                  className={`flex items-center gap-1.5 rounded-[0.5rem] px-3 py-1.5 text-sm transition-colors duration-150 ${
+                    view === option ? 'bg-bark text-birch-50' : 'text-bark-700 hover:text-bark'
+                  }`}
+                >
+                  <Icon name={option === 'table' ? 'list' : 'board'} size={16} />
+                  {option === 'table' ? 'Table' : 'Board'}
+                </button>
+              ))}
+            </div>
+            <Link to="/applications/new" className="btn-honey">
+              <Icon name="plus" size={16} />
+              New application
+            </Link>
+          </>
         }
       />
 
-      {/* TODO(me): filter bar (status multi-select, company, date range) */}
-      <div className="mb-4 h-10 rounded-lg border border-dashed border-slate-300 bg-white" />
+      {view === 'board' ? (
+        <PipelineBoard columns={sampleBoard} />
+      ) : (
+        <>
+          <div className="mb-5 flex flex-col gap-3 2xl:flex-row 2xl:items-center 2xl:justify-between">
+            <StatusFilterChips selected={[]} onToggle={() => {}} />
+            <label className="sm:max-w-xs 2xl:w-72">
+              <span className="sr-only">Company</span>
+              <select className="field" defaultValue="">
+                <option value="">All companies</option>
+              </select>
+            </label>
+          </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50">
-            <tr>
-              {COLUMNS.map((column) => (
-                <th
-                  key={column}
-                  scope="col"
-                  className="px-4 py-3 text-left font-medium text-slate-500"
-                >
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {/* TODO(me): render rows; use <StatusBadge status={app.status} /> */}
-          </tbody>
-        </table>
-        <div className="p-4">
-          <EmptyState title="No applications yet">
-            Add one, or import your Notion export with the CLI script.
-          </EmptyState>
-        </div>
-      </div>
+          <div className="panel overflow-hidden">
+            <div className="overflow-x-auto">
+              <table aria-label="Applications" className="min-w-full text-sm">
+                <thead className="border-b border-birch-200 bg-birch">
+                  <tr>
+                    {COLUMNS.map((column) => (
+                      <th
+                        key={column}
+                        scope="col"
+                        className="whitespace-nowrap px-4 py-3 text-left font-medium text-bark-500"
+                      >
+                        {column}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-birch-200">
+                  {sampleApplications.map((app) => (
+                    <ApplicationRow key={app.id} application={app} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination page={1} pageSize={12} total={SAMPLE_TOTAL} onPageChange={() => {}} />
+          </div>
+        </>
+      )}
     </>
   )
 }
