@@ -5,8 +5,7 @@ import BearMark from '../components/BearMark'
 import Icon from '../components/Icon'
 import LandingDemo from '../components/LandingDemo'
 
-// TODO(me): set this once the repo is public.
-const REPO_URL = 'https://github.com/YOUR-USERNAME/jobbear'
+const REPO_URL = 'https://github.com/benjaminbelloeil/jobbear'
 const INSTALL = `git clone ${REPO_URL}\ncd jobbear && docker compose up -d`
 
 // Each row answers a complaint theme in docs/replica/feedback.md (paraphrased, not quoted).
