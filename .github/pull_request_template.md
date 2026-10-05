@@ -21,3 +21,4 @@
 - [ ] Commits follow Conventional Commits (`feat(frontend): …`)
 - [ ] No secrets, `.env` files or personal data committed
 - [ ] Every status change still writes a `status_events` row (backend changes)
+- [ ] I agree to the [Contributor License Agreement](../CONTRIBUTING.md#contributor-license-agreement-cla)
