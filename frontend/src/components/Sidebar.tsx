@@ -16,11 +16,18 @@ interface NavItem {
   footer?: boolean
 }
 
+export interface WeeklyGoal {
+  id: string
+  label: string
+  done: number
+  target: number
+}
+
 interface SidebarProps {
   items: NavItem[]
   onLogout?: () => void
-  /** This week's applications against the weekly goal, shown at the foot of the sidebar. */
-  weekly?: { done: number; goal: number }
+  /** This week's goals, shown at the foot of the sidebar. */
+  goals?: WeeklyGoal[]
 }
 
 /** The brand lock-up. Inside the app it always leads to the dashboard, never the website. */
@@ -65,7 +72,7 @@ const topBarButton =
  * Desktop: a fixed bark sidebar with a highlight that glides to the current page.
  * Mobile: a slim top bar and a bottom tab bar with the "New" action raised in the middle.
  */
-export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
+export default function Sidebar({ items, onLogout, goals = [] }: SidebarProps) {
   const { pathname } = useLocation()
   const listRef = useRef<HTMLUListElement>(null)
   const [pill, setPill] = useState<{ top: number; height: number } | null>(null)
@@ -87,8 +94,7 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
     }
   }, [pathname])
 
-  const progress = weekly ? Math.min(1, weekly.done / Math.max(1, weekly.goal)) : 0
-  const remaining = weekly ? Math.max(0, weekly.goal - weekly.done) : 0
+  const goalsMet = goals.filter((goal) => goal.done >= goal.target).length
   // Mobile tab bar: two tabs, the raised "New" button, then the rest. Rarely used pages
   // (settings) sit in the top bar instead, so the tab bar keeps four thumb-sized tabs.
   const mainItems = items.filter((item) => !item.footer)
@@ -161,43 +167,7 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
           </div>
         </nav>
 
-        {weekly && (
-          <section
-            aria-label="Weekly goal"
-            className="relative mt-6 rounded-panel bg-birch/[0.06] p-4 ring-1 ring-inset ring-birch/10"
-          >
-            <div className="flex items-baseline justify-between">
-              <p className="text-xs font-medium text-birch-300">This week</p>
-              <p className="font-display text-lg font-bold tabular-nums text-birch-50">
-                {weekly.done}
-                <span className="text-sm font-medium text-birch-300"> / {weekly.goal}</span>
-              </p>
-            </div>
-            <div
-              role="meter"
-              aria-label="Applications this week"
-              aria-valuemin={0}
-              aria-valuemax={weekly.goal}
-              aria-valuenow={weekly.done}
-              className="mt-2 h-2 overflow-hidden rounded-full bg-birch/10"
-            >
-              <div
-                className="fill-in h-full rounded-full bg-gradient-to-r from-honey-600 to-honey"
-                style={{ width: `${progress * 100}%` }}
-              />
-            </div>
-            <p className="mt-2 text-xs text-birch-300">
-              {remaining === 0 ? (
-                <span className="font-semibold text-honey">Goal hit. Nice work.</span>
-              ) : (
-                <>
-                  <span className="font-semibold text-birch-50">{remaining} more</span> to hit your
-                  goal
-                </>
-              )}
-            </p>
-          </section>
-        )}
+        {goals.length > 0 && <GoalsCard goals={goals} goalsMet={goalsMet} />}
 
         <div className="relative mt-4 space-y-0.5 border-t border-birch/10 pt-4">
           {footerItems.map((item) => (
@@ -268,7 +238,6 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
               to="/applications/new"
               aria-label="New application"
               className="ease-arrive -mt-5 mb-2 grid h-14 w-14 place-items-center rounded-full bg-honey text-bark ring-4 ring-bark transition-transform duration-200 active:scale-95"
-              style={{ boxShadow: '0 10px 24px -8px rgb(233 168 37 / 0.7)' }}
             >
               <Icon name="plus" size={24} />
             </Link>
@@ -279,6 +248,191 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
         </ul>
       </nav>
     </>
+  )
+}
+
+const GOALS_OPEN_KEY = 'jobbear.sidebar-goals-open'
+
+/**
+ * This week's goals. Folded by default to one line and a strip of mini bars (one per goal)
+ * so it doesn't crowd the nav; open it to see each goal. The choice is remembered per
+ * browser.
+ */
+function GoalsCard({ goals, goalsMet }: { goals: WeeklyGoal[]; goalsMet: number }) {
+  const [open, setOpen] = useState(() => {
+    try {
+      return localStorage.getItem(GOALS_OPEN_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+  const toggle = () => {
+    setOpen((was) => {
+      try {
+        localStorage.setItem(GOALS_OPEN_KEY, was ? '0' : '1')
+      } catch {
+        // Storage blocked (private window): the card still opens, it just won't remember.
+      }
+      return !was
+    })
+  }
+
+  // Both parts stay mounted and slide on grid rows (0fr ↔ 1fr), so opening and closing
+  // animate the real height instead of snapping. The folded strip and the full list
+  // cross-fade over the same 450 ms.
+  const fold =
+    'grid transition-[grid-template-rows] duration-[450ms] ease-arrive motion-reduce:transition-none'
+  const fade =
+    'ease-arrive transition-[opacity,transform] duration-[450ms] motion-reduce:transition-none'
+
+  return (
+    <section
+      aria-labelledby="goals-title"
+      className="relative mt-6 overflow-hidden rounded-panel bg-birch/[0.06] ring-1 ring-inset ring-birch/10 transition-colors duration-200 hover:ring-birch/20"
+    >
+      <h2 id="goals-title">
+        <button
+          type="button"
+          onClick={toggle}
+          aria-expanded={open}
+          aria-controls="goals-body"
+          className="group flex w-full items-center gap-3 rounded-panel p-3 text-left"
+        >
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[0.7rem] bg-honey/15 text-honey ring-1 ring-inset ring-honey/25">
+            <Icon name="target" size={17} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-semibold text-birch-50">This week</span>
+            <span className="block text-xs tabular-nums text-birch-300">
+              <span className="font-semibold text-honey">{goalsMet}</span> of {goals.length} goals
+              met
+            </span>
+          </span>
+          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-birch/10 text-birch-300 transition-colors duration-150 group-hover:bg-birch/15 group-hover:text-birch-50">
+            <Icon
+              name="chevronDown"
+              size={14}
+              className={`ease-arrive transition-transform duration-[450ms] motion-reduce:transition-none ${
+                open ? 'rotate-180' : ''
+              }`}
+            />
+          </span>
+        </button>
+      </h2>
+
+      {/* Folded: one bar per goal, so progress still reads at a glance. */}
+      <div aria-hidden className={`${fold} ${open ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]'}`}>
+        <div className="min-h-0 overflow-hidden">
+          <div
+            className={`flex gap-1.5 px-3 pb-3.5 ${fade} ${
+              open ? '-translate-y-1 opacity-0' : 'translate-y-0 opacity-100'
+            }`}
+          >
+            {goals.map((goal) => {
+              const share = Math.min(1, goal.done / goal.target)
+              return (
+                <span key={goal.id} className="h-2 flex-1 overflow-hidden rounded-full bg-birch/10">
+                  <span
+                    className="block h-full rounded-full bg-honey transition-[width] duration-500"
+                    style={{ width: `${share * 100}%` }}
+                  />
+                </span>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="goals-body"
+        inert={!open}
+        className={`${fold} ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div className="mx-3 border-t border-birch/10 pb-3.5 pt-3">
+            <ul className="space-y-3">
+              {goals.map((goal, i) => (
+                <li
+                  key={goal.id}
+                  className={`${fade} ${open ? 'translate-y-0 opacity-100' : '-translate-y-1.5 opacity-0'}`}
+                  // Rows arrive one after another on open; on close they leave together.
+                  style={{ transitionDelay: open ? `${80 + i * 60}ms` : '0ms' }}
+                >
+                  <GoalRow goal={goal} />
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/settings?tab=goals"
+              className={`group mt-3.5 inline-flex items-center gap-1 rounded-control text-xs font-medium text-birch-300 hover:text-birch-50 ${fade} ${
+                open ? 'opacity-100' : 'opacity-0'
+              }`}
+              style={{ transitionDelay: open ? `${80 + goals.length * 60}ms` : '0ms' }}
+            >
+              Edit goals
+              <Icon
+                name="arrowRight"
+                size={12}
+                className="ease-arrive transition-transform duration-200 group-hover:translate-x-0.5"
+              />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/**
+ * One goal: its name, how far along it is, and a row of segments, one per unit up to 12
+ * (a bar beyond that). Segments make "4 of 8" countable at a glance.
+ */
+function GoalRow({ goal }: { goal: WeeklyGoal }) {
+  const met = goal.done >= goal.target
+  const segmented = goal.target <= 12
+  const left = Math.max(0, goal.target - goal.done)
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-2 text-xs">
+        <span className={`flex items-center gap-1.5 ${met ? 'text-birch-50' : 'text-birch-300'}`}>
+          {met && <Icon name="check" size={13} className="text-honey" />}
+          {goal.label}
+        </span>
+        <span className="font-semibold tabular-nums text-birch-50">
+          {goal.done}
+          <span className="font-normal text-birch-300">/{goal.target}</span>
+        </span>
+      </div>
+      <div
+        role="meter"
+        aria-label={`${goal.label} this week`}
+        aria-valuemin={0}
+        aria-valuemax={goal.target}
+        aria-valuenow={Math.min(goal.done, goal.target)}
+        aria-valuetext={
+          met
+            ? `${goal.done} of ${goal.target}, goal met`
+            : `${goal.done} of ${goal.target}, ${left} to go`
+        }
+        className="mt-1.5 flex h-1.5 gap-[3px]"
+      >
+        {segmented ? (
+          Array.from({ length: goal.target }, (_, i) => (
+            <span
+              key={i}
+              className={`h-full flex-1 rounded-full ${i < goal.done ? 'bg-honey' : 'bg-birch/10'}`}
+            />
+          ))
+        ) : (
+          <span className="h-full flex-1 overflow-hidden rounded-full bg-birch/10">
+            <span
+              className="fill-in block h-full rounded-full bg-honey"
+              style={{ width: `${Math.min(1, goal.done / goal.target) * 100}%` }}
+            />
+          </span>
+        )}
+      </div>
+    </div>
   )
 }
 

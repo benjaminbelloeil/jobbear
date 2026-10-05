@@ -14,6 +14,7 @@ import PageHeader from '../components/PageHeader'
 import Pagination from '../components/Pagination'
 import Panel from '../components/Panel'
 import Skeleton from '../components/Skeleton'
+import SkyMark from '../components/SkyMark'
 import StatusBadge from '../components/StatusBadge'
 import StatusFilterChips from '../components/StatusFilterChips'
 import StatusTimeline from '../components/StatusTimeline'
@@ -115,6 +116,17 @@ export default function Styleguide() {
               { label: 'Applied on', value: 'Sep 12, 2026' },
             ]}
           />
+        </Panel>
+
+        <Panel title="Greeting sky">
+          <div className="flex flex-wrap items-end gap-8">
+            {(['sunrise', 'day', 'sunset', 'night'] as const).map((phase) => (
+              <figure key={phase} className="text-center">
+                <SkyMark phase={phase} size={56} />
+                <figcaption className="mt-2 text-xs text-bark-500">{phase}</figcaption>
+              </figure>
+            ))}
+          </div>
         </Panel>
 
         <div className="grid gap-6 lg:grid-cols-3">
