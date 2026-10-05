@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import { tokenStorage } from '../api/client'
-import { sampleEmails, sampleWeekly } from '../sample/data'
+import { sampleEmails, sampleGoals } from '../sample/data'
 import PageLoader from './PageLoader'
 import Sidebar from './Sidebar'
 
@@ -39,9 +39,8 @@ export default function Layout() {
     },
   ]
 
-  // TODO(me): this week's count from GET /stats/weekly (the last week) and the user's goal.
-  const thisWeek = sampleWeekly.weeks[sampleWeekly.weeks.length - 1]
-  const weekly = { done: thisWeek?.applications ?? 0, goal: sampleWeekly.goal }
+  // TODO(me): this week's progress per goal; applications come from GET /stats/weekly.
+  const goals = sampleGoals
 
   return (
     <div className="min-h-screen">
@@ -51,7 +50,7 @@ export default function Layout() {
       >
         Skip to content
       </a>
-      <Sidebar items={items} onLogout={handleLogout} weekly={weekly} />
+      <Sidebar items={items} onLogout={handleLogout} goals={goals} />
       <main id="main" className="lg:pl-60">
         {/* Keyed by route so each view arrives with a short fade (continuity, not choreography). */}
         <div

@@ -31,9 +31,8 @@ export default function ProductPreview() {
         </span>
         <span className="ml-auto text-xs text-bark-500">Sample data</span>
       </div>
-      {/* inert: decorative copy of the app; keeps its links out of the tab order and the a11y tree.
-          React 18 has no `inert` prop type, so it goes in as a plain attribute. */}
-      <div className="space-y-5 p-4 text-bark sm:p-6" {...({ inert: '' } as object)}>
+      {/* inert: decorative copy of the app; keeps its links out of the tab order and the a11y tree. */}
+      <div className="space-y-5 p-4 text-bark sm:p-6" inert>
         <MetricStrip metrics={sampleMetrics} />
         <div className="grid gap-5 xl:grid-cols-12">
           <section className="panel min-w-0 p-5 xl:col-span-7">

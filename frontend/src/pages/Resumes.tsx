@@ -95,6 +95,276 @@ function VersionCard({
   )
 }
 
+/**
+ * The road from sending to an interview for one version: three bars on one scale, so the
+ * drop-off reads at a glance. A tick on the replies bar marks your average across versions.
+ */
+function Funnel({ resume, average }: { resume: SampleResume; average: number }) {
+  // TODO(me): use the counts the API returns instead of rate × sent.
+  const sent = resume.applications
+  const replies = Math.round(resume.response_rate * sent)
+  const interviews = Math.round(resume.interview_rate * sent)
+  const steps = [
+    { label: 'Sent', count: sent, share: 1, bar: 'bg-bark', note: 'applications sent with it' },
+    {
+      label: 'Replies',
+      count: replies,
+      share: resume.response_rate,
+      bar: 'bg-honey',
+      note: `${percent(resume.response_rate)} got a reply`,
+    },
+    {
+      label: 'Interviews',
+      count: interviews,
+      share: resume.interview_rate,
+      bar: 'bg-pine',
+      note: `${percent(resume.interview_rate)} reached an interview`,
+    },
+  ]
+  const diff = Math.round((resume.response_rate - average) * 100)
+
+  return (
+    <div>
+      <ol className="space-y-4">
+        {steps.map((step) => (
+          <li
+            key={step.label}
+            className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-x-4"
+          >
+            <span>
+              <span className="block font-display text-2xl font-bold tabular-nums leading-none">
+                {step.count}
+              </span>
+              <span className="mt-1 block text-xs font-medium text-bark-500">{step.label}</span>
+            </span>
+            <span className="block">
+              <span className="relative block h-3 rounded-full bg-birch-200">
+                <span
+                  className={`fill-in absolute inset-y-0 left-0 rounded-full ${step.bar}`}
+                  style={{ width: `${Math.max(step.share * 100, step.count > 0 ? 2 : 0)}%` }}
+                />
+                {step.label === 'Replies' && (
+                  <span
+                    aria-hidden
+                    className="absolute -inset-y-1 w-0.5 rounded-full bg-bark"
+                    style={{ left: `${average * 100}%` }}
+                  />
+                )}
+              </span>
+              <span className="mt-1.5 block text-sm text-bark-500">{step.note}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+      <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-bark-700">
+        <span aria-hidden className="inline-block h-3.5 w-0.5 rounded-full bg-bark" />
+        Your average reply rate is {percent(average)}.
+        <span
+          className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+            diff >= 0 ? 'bg-pine-50 text-pine-700' : 'bg-berry-50 text-berry'
+          }`}
+        >
+          {diff >= 0 ? `${diff} points above` : `${Math.abs(diff)} points below`}
+        </span>
+      </p>
+    </div>
+  )
+}
+
+const companyInitial = (name = '') => name.trim().charAt(0).toUpperCase() || '?'
+
+/** One version, up close: how it does, the applications it went out with, and editing. */
+function VersionDetail({
+  resume,
+  average,
+  sentWith,
+}: {
+  resume: SampleResume
+  average: number
+  sentWith: typeof sampleApplications
+}) {
+  const [editing, setEditing] = useState(false)
+  const tooFew = resume.applications < SAMPLE_MIN_SENDS_TO_COMPARE
+
+  return (
+    <section aria-labelledby="version-title" className="panel mt-6 min-w-0 overflow-hidden">
+      <header className="flex flex-wrap items-start justify-between gap-4 p-5 sm:p-6">
+        <div className="flex min-w-0 items-start gap-4">
+          <PageThumb dark={false} />
+          <div className="min-w-0">
+            <h2 id="version-title" className="font-display text-2xl font-bold tracking-tight">
+              {resume.name}
+            </h2>
+            <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-bark-500">
+              <span className="inline-flex items-center gap-1.5">
+                <Icon name="file" size={14} />
+                {resume.file_name}
+              </span>
+              <span aria-hidden>·</span>
+              <span>Updated {plainDate.format(new Date(resume.updated_at))}</span>
+            </p>
+            {tooFew && (
+              <p className="mt-2 text-sm text-bark-500">
+                Sent fewer than {SAMPLE_MIN_SENDS_TO_COMPARE} times, so these numbers are early.
+              </p>
+            )}
+          </div>
+        </div>
+        {!editing && (
+          <div className="flex flex-wrap gap-2">
+            <button type="button" onClick={() => setEditing(true)} className="btn-soft">
+              <Icon name="pencil" size={15} />
+              Edit
+            </button>
+            <button type="button" className="btn-soft">
+              <Icon name="download" size={15} />
+              Download
+            </button>
+          </div>
+        )}
+      </header>
+
+      {editing && (
+        // TODO(me): controlled fields; "Save" PATCHes the name and uploads the new PDF if one
+        //   was chosen (keep the old file until the upload succeeds). Delete asks first, and
+        //   applications that used this version keep their record of it.
+        <form
+          aria-label={`Edit ${resume.name}`}
+          className="view-in border-y border-birch-200 bg-birch px-5 py-5 sm:px-6"
+          onSubmit={(event) => {
+            event.preventDefault()
+            setEditing(false)
+          }}
+        >
+          <div className="grid gap-5 md:grid-cols-2">
+            <label className="block">
+              <span className="label">Version name</span>
+              <span className="field-group mt-1.5">
+                <Icon name="note" size={17} className="field-icon" />
+                <input
+                  name="name"
+                  defaultValue={resume.name}
+                  required
+                  maxLength={80}
+                  className="field bg-birch-50"
+                />
+              </span>
+              <span className="hint mt-1.5 block">How it shows up across JobBear.</span>
+            </label>
+            <div>
+              <span className="label" id="replace-label">
+                The PDF
+              </span>
+              <label className="mt-1.5 flex min-h-[2.75rem] cursor-pointer items-center gap-3 rounded-control border border-dashed border-bark-400 bg-birch-50 px-3.5 py-2.5 transition-colors hover:border-bark hover:bg-white has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-bark">
+                <Icon name="upload" size={17} className="text-bark-500" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-medium">
+                    Replace {resume.file_name}
+                  </span>
+                  <span className="block text-xs text-bark-500">PDF, up to 5 MB</span>
+                </span>
+                <input
+                  type="file"
+                  name="file"
+                  accept="application/pdf"
+                  aria-labelledby="replace-label"
+                  className="sr-only"
+                />
+              </label>
+              <span className="hint mt-1.5 block">
+                Uploaded the wrong file or fixed a typo? Swap it here.
+              </span>
+            </div>
+          </div>
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <button type="submit" className="btn-primary">
+              <Icon name="check" size={15} />
+              Save changes
+            </button>
+            <button type="button" onClick={() => setEditing(false)} className="btn-ghost">
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn-ghost ml-auto text-berry hover:bg-berry-50 hover:text-berry"
+            >
+              Delete version
+            </button>
+          </div>
+        </form>
+      )}
+
+      <div className="grid gap-px bg-birch-200 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+        <div className="bg-birch-50 p-5 sm:p-6">
+          <h3 className="font-semibold">How {resume.name} is doing</h3>
+          <p className="mt-0.5 text-sm text-bark-500">
+            Of the applications you sent with it, how many got a reply and how many reached an
+            interview.
+          </p>
+          <div className="mt-5">
+            <Funnel resume={resume} average={average} />
+          </div>
+        </div>
+
+        {/* Wide screens: this column takes the height of the one beside it and its list
+            scrolls inside, so a long list never stretches the row and leaves a gap. */}
+        <div className="flex flex-col bg-birch-50 p-5 sm:p-6">
+          <h3 className="flex items-baseline justify-between gap-2 font-semibold">
+            Jobs you used it for
+            <span className="text-sm font-normal tabular-nums text-bark-500">
+              {sentWith.length} {sentWith.length === 1 ? 'job' : 'jobs'}
+            </span>
+          </h3>
+          <p className="mt-0.5 text-sm text-bark-500">
+            Every application where you sent this version. Open one to see where it stands.
+          </p>
+          {sentWith.length > 0 ? (
+            <div className="relative mt-3 flex-1 lg:min-h-[14rem]">
+              <ul
+                tabIndex={0}
+                aria-label={`Applications sent with ${resume.name}`}
+                className="scroll-fade -mx-2 divide-y divide-birch-200 overflow-y-auto rounded-control pb-6 max-lg:max-h-80 lg:absolute lg:inset-0 lg:mx-0"
+              >
+                {sentWith.map((app) => (
+                  <li key={app.id}>
+                    <Link
+                      to={`/applications/${app.id}`}
+                      className="group flex items-center gap-3 rounded-control px-2 py-2.5 transition-colors duration-150 hover:bg-white"
+                    >
+                      <span
+                        aria-hidden
+                        className="grid h-9 w-9 shrink-0 place-items-center rounded-control bg-bark font-display text-sm font-bold text-birch-50"
+                      >
+                        {companyInitial(app.company?.name)}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate font-medium">{app.position}</span>
+                        <span className="block truncate text-sm text-bark-500">
+                          {app.company?.name} · {plainDate.format(new Date(app.applied_at))}
+                        </span>
+                      </span>
+                      <StatusBadge status={app.status} />
+                      <Icon
+                        name="chevronRight"
+                        size={16}
+                        className="ease-arrive text-bark-400 transition-transform duration-200 group-hover:translate-x-0.5"
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p className="mt-3 rounded-control border border-dashed border-birch-300 px-4 py-6 text-center text-sm text-bark-500">
+              No applications use this version yet. Pick it under “Resume sent” when you log one.
+            </p>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function Resumes() {
   // TODO(me): replace the sample list with a query for the user's resume versions and their
   //   per-version response and interview rates. "Upload a version" opens a file picker and
@@ -153,69 +423,7 @@ export default function Resumes() {
       </ul>
 
       {selected && (
-        <Panel
-          title={selected.name}
-          icon="file"
-          description={`${selected.file_name}, updated ${plainDate.format(new Date(selected.updated_at))}`}
-          className="mt-6"
-          actions={
-            <button type="button" className="btn-soft">
-              <Icon name="external" size={15} />
-              Download
-            </button>
-          }
-        >
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-            <dl className="flex gap-3">
-              {[
-                { label: 'Sent', value: String(selected.applications) },
-                { label: 'Replies', value: percent(selected.response_rate) },
-                { label: 'Interviews', value: percent(selected.interview_rate) },
-              ].map((stat) => (
-                <div key={stat.label} className="min-w-24 rounded-control bg-birch px-4 py-3">
-                  <dt className="text-xs text-bark-500">{stat.label}</dt>
-                  <dd className="mt-1 font-display text-2xl font-bold tabular-nums">
-                    {stat.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <p className="text-sm text-bark-700">
-              <span className="font-semibold">
-                {Math.abs(Math.round((selected.response_rate - average) * 100))} points{' '}
-                {selected.response_rate >= average ? 'above' : 'below'}
-              </span>{' '}
-              your average reply rate of {percent(average)}.
-            </p>
-          </div>
-
-          <h3 className="mt-6 border-t border-birch-200 pt-5 text-sm font-semibold text-bark-700">
-            Sent with
-          </h3>
-          {sentWith.length > 0 ? (
-            <ul className="-mx-2 mt-2 grid gap-x-6 md:grid-cols-2">
-              {sentWith.map((app) => (
-                <li key={app.id}>
-                  <Link
-                    to={`/applications/${app.id}`}
-                    className="flex items-center gap-3 rounded-control px-2 py-2.5 transition-colors duration-150 hover:bg-white"
-                  >
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-medium">{app.position}</span>
-                      <span className="block truncate text-sm text-bark-500">
-                        {app.company?.name}
-                      </span>
-                    </span>
-                    <StatusBadge status={app.status} />
-                    <Icon name="chevronRight" size={16} className="text-bark-500" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-2 text-sm text-bark-500">No applications use this version yet.</p>
-          )}
-        </Panel>
+        <VersionDetail key={selected.id} resume={selected} average={average} sentWith={sentWith} />
       )}
 
       <Panel

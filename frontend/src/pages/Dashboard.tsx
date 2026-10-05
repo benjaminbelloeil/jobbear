@@ -1,16 +1,19 @@
-import { useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 
 import BearCharacter from '../components/BearCharacter'
+import SkyMark from '../components/SkyMark'
 import SourceFunnel from '../components/charts/SourceFunnel'
 import StatusBreakdown from '../components/charts/StatusBreakdown'
 import WeeklyVolumeChart from '../components/charts/WeeklyVolumeChart'
+import { skyPhase } from '../components/skyPhase'
 import GoingQuietList from '../components/GoingQuietList'
 import Icon from '../components/Icon'
 import InsightList from '../components/InsightList'
 import MetricStrip from '../components/MetricStrip'
 import NeedsYouList from '../components/NeedsYouList'
 import Panel from '../components/Panel'
+import Tabs, { TabPanel } from '../components/Tabs'
 import {
   SAMPLE_GHOST_AFTER_DAYS,
   sampleEmails,
@@ -59,16 +62,6 @@ export default function Dashboard() {
   const now = new Date()
   const waiting = sampleEmails.length
   const [tab, setTab] = useState<TabId>('today')
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
-
-  // Arrow keys move between tabs, as in any tab list.
-  const onTabKey = (event: KeyboardEvent, index: number) => {
-    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
-    event.preventDefault()
-    const next = (index + (event.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length
-    setTab(TABS[next]?.id ?? 'today')
-    tabRefs.current[next]?.focus()
-  }
 
   return (
     <>
@@ -76,8 +69,10 @@ export default function Dashboard() {
         <div className="flex min-w-0 items-center gap-4">
           <BearCharacter mood="waving" size={64} className="hidden shrink-0 sm:block" />
           <div className="min-w-0">
-            <h1 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
+            {/* The sky follows the clock: sunrise, sun, sunset, then the moon. */}
+            <h1 className="flex items-center gap-3 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
               {greeting(now.getHours())}
+              <SkyMark phase={skyPhase(now.getHours())} size={40} className="-my-2" />
             </h1>
             {/* Two different kinds of line: the date is quiet metadata, the to-do count is
                 an action that jumps to the "Needs you" panel. */}
@@ -127,57 +122,22 @@ export default function Dashboard() {
         <MetricStrip metrics={sampleMetrics} />
       </div>
 
-      <div
-        role="tablist"
-        aria-label="Dashboard views"
-        className="dash-in mt-8 flex gap-1 border-b border-birch-300"
+      <Tabs
+        tabs={TABS}
+        value={tab}
+        onChange={setTab}
+        label="Dashboard views"
+        className="dash-in mt-8"
         style={order(2)}
-      >
-        {TABS.map((item, index) => {
-          const selected = tab === item.id
-          return (
-            <button
-              key={item.id}
-              ref={(el) => {
-                tabRefs.current[index] = el
-              }}
-              type="button"
-              role="tab"
-              id={`tab-${item.id}`}
-              aria-selected={selected}
-              aria-controls={`panel-${item.id}`}
-              tabIndex={selected ? 0 : -1}
-              onClick={() => setTab(item.id)}
-              onKeyDown={(event) => onTabKey(event, index)}
-              className={`relative -mb-px px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
-                selected ? 'text-bark' : 'text-bark-500 hover:text-bark'
-              }`}
-            >
-              {item.label}
-              <span
-                aria-hidden
-                className={`ease-arrive absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-honey transition-transform duration-300 ${
-                  selected ? 'scale-x-100' : 'scale-x-0'
-                }`}
-              />
-            </button>
-          )
-        })}
-      </div>
+      />
 
-      <div
-        role="tabpanel"
-        id={`panel-${tab}`}
-        aria-labelledby={`tab-${tab}`}
-        key={tab}
-        className="view-in mt-6 grid items-stretch gap-6 xl:grid-cols-12"
-      >
+      <TabPanel key={tab} id={tab} className="mt-6 grid items-stretch gap-6 xl:grid-cols-12">
         {tab === 'today' && (
           <>
             <Panel
               id="needs-you"
               title="Needs you"
-              description="Soonest first."
+              description="Today first, then the rest of the week."
               icon="clock"
               className="dash-in panel-hover xl:col-span-7"
               style={order(2)}
@@ -238,7 +198,6 @@ export default function Dashboard() {
               className="dash-in relative min-w-0 overflow-hidden rounded-panel bg-bark p-6 text-birch-50 sm:p-7 xl:col-span-4"
               style={order(4)}
             >
-              <div aria-hidden className="demo-dots pointer-events-none absolute inset-0" />
               <BearCharacter
                 mood="reading"
                 size={76}
@@ -265,7 +224,7 @@ export default function Dashboard() {
             </Panel>
           </>
         )}
-      </div>
+      </TabPanel>
     </>
   )
 }

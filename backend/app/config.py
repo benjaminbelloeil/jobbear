@@ -3,7 +3,7 @@
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import EmailStr, Field
+from pydantic import EmailStr, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # `.env` lives at the repo root; also accept one next to the backend for flexibility.
@@ -40,6 +40,19 @@ class Settings(BaseSettings):
 
     # HTTP
     cors_origins: list[str] = ["http://localhost:5173"]
+
+    @field_validator("database_url", "test_database_url")
+    @classmethod
+    def _use_psycopg3(cls, url: str) -> str:
+        """Point plain Postgres URLs at the psycopg 3 driver.
+
+        Hosts like Railway hand out `postgresql://…` (or `postgres://…`), which SQLAlchemy
+        reads as "use psycopg2". Only psycopg 3 is installed, so rewrite the scheme.
+        """
+        for prefix in ("postgres://", "postgresql://"):
+            if url.startswith(prefix):
+                return "postgresql+psycopg://" + url.removeprefix(prefix)
+        return url
 
 
 @lru_cache

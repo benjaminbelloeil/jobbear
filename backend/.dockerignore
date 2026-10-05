@@ -5,3 +5,8 @@ __pycache__
 .ruff_cache
 .coverage
 htmlcov
+
+# Never bake local secrets into the image; Railway injects env vars at runtime.
+.env
+.env.*
+secrets

@@ -142,9 +142,9 @@ export default function NewApplication() {
           </Panel>
         </div>
 
-        {/* Wide screens: one column that stays in view and fills the screen's height, so the
-          save button is always there and the space beside the form isn't left empty. */}
-        <div className="flex flex-col gap-6 lg:sticky lg:top-6 lg:h-[calc(100dvh-3rem)]">
+        {/* Wide screens: one column that stays in view, so the save button is always there.
+          It takes its natural height: every step is visible, nothing scrolls inside it. */}
+        <div className="flex flex-col gap-6 lg:sticky lg:top-6">
           <Panel title="How you applied" icon="send" description="Feeds your stats by channel.">
             <div className="space-y-5">
               <Select
@@ -171,10 +171,7 @@ export default function NewApplication() {
             </div>
           </Panel>
 
-          <section
-            aria-labelledby="next-title"
-            className="flex min-h-0 flex-1 flex-col rounded-panel bg-bark p-6 text-birch-50 shadow-[0_30px_60px_-40px_rgba(42,31,25,0.9)]"
-          >
+          <section aria-labelledby="next-title" className="rounded-panel bg-bark p-6 text-birch-50">
             <div className="flex items-center gap-3">
               <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-birch">
                 <BearMark size={32} />
@@ -183,10 +180,17 @@ export default function NewApplication() {
                 What happens next
               </h2>
             </div>
-            <ol className="mt-5 min-h-0 flex-1 space-y-4 overflow-y-auto">
-              {NEXT_STEPS.map((step) => (
-                <li key={step.title} className="flex gap-3">
-                  <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-honey/15 text-honey ring-1 ring-inset ring-honey/30">
+            {/* A short timeline: a thread joins the steps so they read as one sequence. */}
+            <ol className="mt-5">
+              {NEXT_STEPS.map((step, index) => (
+                <li key={step.title} className="relative flex gap-3 pb-4 last:pb-0">
+                  {index < NEXT_STEPS.length - 1 && (
+                    <span
+                      aria-hidden
+                      className="absolute bottom-0 left-3.5 top-8 w-px -translate-x-1/2 bg-birch/15"
+                    />
+                  )}
+                  <span className="relative grid h-7 w-7 shrink-0 place-items-center rounded-full bg-honey/15 text-honey ring-1 ring-inset ring-honey/30">
                     <Icon name={step.icon} size={15} />
                   </span>
                   <span>

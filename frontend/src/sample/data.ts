@@ -30,6 +30,32 @@ export const sampleWeekly: WeeklyStats = {
   ],
 }
 
+/** This week's goals, shown in the sidebar and set in Settings → Goals. */
+export interface SampleGoal {
+  id: string
+  label: string
+  done: number
+  target: number
+}
+
+// TODO(me): applications and follow-ups can be counted from status_events for the current
+//   week; referral asks are ticked off by hand (or dropped) once goals are stored per user.
+export const sampleGoals: SampleGoal[] = [
+  { id: 'applications', label: 'Applications', done: 4, target: 8 },
+  { id: 'follow-ups', label: 'Follow-ups', done: 2, target: 3 },
+  { id: 'referrals', label: 'Referral asks', done: 2, target: 2 },
+]
+
+/** Goals met (true) or missed (false) in each of the last four weeks, oldest first. */
+export const sampleGoalHistory: { weeks: string[]; met: Record<string, boolean[]> } = {
+  weeks: ['2026-09-07', '2026-09-14', '2026-09-21', '2026-09-28'],
+  met: {
+    applications: [true, false, true, false],
+    'follow-ups': [true, true, false, true],
+    referrals: [false, true, true, true],
+  },
+}
+
 export const sampleStatusCounts: StatusCount[] = [
   { status: 'APPLIED', count: 21 },
   { status: 'OA', count: 6 },
@@ -150,6 +176,15 @@ export const sampleNeedsYou: {
   tone: NeedsYouTone
 }[] = [
   {
+    id: 4,
+    applicationId: 6,
+    action: 'Follow up',
+    who: 'Tidepool',
+    what: 'No reply in 17 days',
+    when: 'Today',
+    tone: 'bark',
+  },
+  {
     id: 1,
     applicationId: 1,
     action: 'Prepare for interview',
@@ -175,15 +210,6 @@ export const sampleNeedsYou: {
     what: 'Offer expires in 5 days',
     when: 'Fri 9 Oct',
     tone: 'pine',
-  },
-  {
-    id: 4,
-    applicationId: 6,
-    action: 'Follow up',
-    who: 'Tidepool',
-    what: 'No reply in 17 days',
-    when: 'Today',
-    tone: 'bark',
   },
 ]
 
@@ -476,3 +502,41 @@ export const sampleProfile = {
   locations: ['Zürich', 'Basel', 'Remote'],
   work_styles: ['Hybrid', 'Remote'],
 }
+
+/** Settings → AI model: this month's reading, so a BYOK user can see what it costs. */
+export const sampleAiUsage = {
+  emails_read: 182,
+  acted_alone: 141,
+  sent_to_inbox: 41,
+  cost_usd: 0.42,
+  cap_usd: 5,
+}
+
+/** Settings → Email: the inbox connection. Times are local. */
+export const sampleSync = {
+  account: 'you@gmail.com',
+  last_checked: '2026-10-05T14:02',
+  next_in_minutes: 38,
+  checked_today: 64,
+  matched_today: 5,
+}
+
+export const sampleIgnoredSenders = ['alerts@jobboard.example', 'newsletter@careers.example']
+
+/** Settings → Privacy: the last few emails the model read, and what it decided. */
+// prettier-ignore
+export const sampleAiLog = [
+  { id: 1, at: '2026-10-05T14:02', sender: 'northwind.example', found: 'Interview date', confidence: 0.96, acted: true },
+  { id: 2, at: '2026-10-05T11:40', sender: 'halcyon.example', found: 'Assessment invite', confidence: 0.91, acted: true },
+  { id: 3, at: '2026-10-04T18:15', sender: 'lumen.example', found: 'Maybe a rejection', confidence: 0.62, acted: false },
+  { id: 4, at: '2026-10-04T09:03', sender: 'jobboard.example', found: 'Not about an application', confidence: 0.88, acted: true },
+  { id: 5, at: '2026-10-03T16:47', sender: 'fernhill.example', found: 'Offer', confidence: 0.94, acted: true },
+]
+
+/** Settings → Privacy: what JobBear keeps, by kind. */
+export const sampleStorage = [
+  { label: 'Applications and their history', count: '48 applications', size: '96 KB' },
+  { label: 'Email snippets', count: '112 emails', size: '340 KB' },
+  { label: 'Saved job postings', count: '31 postings', size: '210 KB' },
+  { label: 'Resume files', count: '4 PDFs', size: '1.2 MB' },
+]

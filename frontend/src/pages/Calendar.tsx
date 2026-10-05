@@ -86,7 +86,23 @@ export default function Calendar() {
   const weekEnd = addDays(weekStart, 7)
 
   const sorted = [...sampleAgenda].sort((a, b) => parse(a.at).getTime() - parse(b.at).getTime())
-  const later = sorted.filter((item) => parse(item.at) >= weekEnd).slice(0, 4)
+  const later = sorted.filter((item) => parse(item.at) >= weekEnd)
+  // Group what's coming by the week it falls in, so "later" reads like the week view does.
+  const laterWeeks: { start: Date; items: SampleAgendaItem[] }[] = []
+  for (const item of later) {
+    const start = mondayOf(parse(item.at))
+    const group = laterWeeks.find((week) => sameDay(week.start, start))
+    if (group) group.items.push(item)
+    else laterWeeks.push({ start, items: [item] })
+  }
+  const thisMonday = mondayOf(today)
+  const weeksFromNow = (start: Date) =>
+    Math.round((start.getTime() - thisMonday.getTime()) / (7 * 24 * 60 * 60 * 1000))
+  const weekName = (start: Date) => {
+    const n = weeksFromNow(start)
+    if (n === 1) return 'Next week'
+    return `In ${n} weeks`
+  }
   const lastDay = days[6] ?? weekStart
   const range = `${monthDay.format(weekStart)} – ${monthDay.format(lastDay)}, ${lastDay.getFullYear()}`
 
@@ -180,42 +196,99 @@ export default function Calendar() {
         </ol>
       </section>
 
-      {later.length > 0 && (
+      {laterWeeks.length > 0 && (
         <section aria-labelledby="later-title" className="mt-8">
           <h2 id="later-title" className="text-lg font-bold tracking-tight">
-            After this week
+            Coming up later
           </h2>
-          <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {later.map((item) => {
-              const date = parse(item.at)
-              const kind = KIND[item.kind]
+          <p className="mt-0.5 text-sm text-bark-500">Everything after the week above, by week.</p>
+          <div className="mt-4 space-y-6">
+            {laterWeeks.map((week) => {
+              const last = addDays(week.start, 6)
               return (
-                <li key={item.id} className="h-full">
-                  <Link
-                    to={`/applications/${item.application_id}`}
-                    className="ease-arrive flex h-full items-start gap-4 rounded-panel border border-birch-200 bg-birch-50 p-4 transition duration-200 hover:-translate-y-0.5 hover:border-birch-300 motion-reduce:transform-none"
-                  >
-                    <span className="w-11 shrink-0 rounded-control bg-bark py-1.5 text-center text-birch-50">
-                      <span className="block text-[0.6875rem] font-semibold text-honey">
-                        {weekdayShort.format(date)}
+                <section
+                  key={week.start.toISOString()}
+                  aria-label={`${weekName(week.start)}, ${monthDay.format(week.start)} to ${monthDay.format(last)}`}
+                  className="rounded-panel border border-birch-200 bg-birch-50"
+                >
+                  <header className="flex flex-wrap items-center justify-between gap-2 border-b border-birch-200 px-4 py-3 sm:px-5">
+                    <p className="flex items-baseline gap-2">
+                      <span className="font-semibold">{weekName(week.start)}</span>
+                      <span className="text-sm tabular-nums text-bark-500">
+                        {monthDay.format(week.start)} – {monthDay.format(last)}
                       </span>
-                      <span className="block font-display text-xl font-bold tabular-nums leading-tight">
-                        {date.getDate()}
-                      </span>
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block font-semibold leading-snug">{item.title}</span>
-                      <span className="block truncate text-sm text-bark-500">{company(item)}</span>
-                      <span className="mt-1 flex items-center gap-1.5 text-xs text-bark-500">
-                        <Icon name={kind.icon} size={12} />
-                        {kind.label}, {whenLabel(item)}
-                      </span>
-                    </span>
-                  </Link>
-                </li>
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setWeekOffset(weeksFromNow(week.start))
+                        document
+                          .getElementById('week-title')
+                          ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                      }}
+                      className="group inline-flex items-center gap-1 rounded-control text-sm font-medium text-bark-500 transition-colors hover:text-bark"
+                    >
+                      Show this week
+                      <Icon
+                        name="arrowRight"
+                        size={14}
+                        className="ease-arrive transition-transform duration-200 group-hover:translate-x-0.5"
+                      />
+                    </button>
+                  </header>
+                  <ul className="divide-y divide-birch-200">
+                    {week.items.map((item) => {
+                      const date = parse(item.at)
+                      const kind = KIND[item.kind]
+                      return (
+                        <li key={item.id}>
+                          <Link
+                            to={`/applications/${item.application_id}`}
+                            className="group grid grid-cols-[3rem_minmax(0,1fr)] items-center gap-x-4 gap-y-1 px-4 py-3 transition-colors duration-150 hover:bg-white sm:grid-cols-[3rem_minmax(0,1fr)_8.5rem_6rem_1rem] sm:px-5"
+                          >
+                            <span className="row-span-2 text-center sm:row-span-1">
+                              <span className="block text-xs font-semibold text-bark-500">
+                                {weekdayShort.format(date)}
+                              </span>
+                              <span className="block font-display text-2xl font-bold tabular-nums leading-tight">
+                                {date.getDate()}
+                              </span>
+                            </span>
+                            <span className="min-w-0">
+                              <span className="block font-semibold leading-snug sm:truncate">
+                                {item.title}
+                              </span>
+                              <span className="block truncate text-sm text-bark-500">
+                                {company(item)}
+                              </span>
+                            </span>
+                            {/* Phones: kind and time share a line under the title. Wider
+                                screens: each gets its own column. */}
+                            <span className="col-start-2 flex items-center gap-3 sm:contents">
+                              <span
+                                className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${kind.chip}`}
+                              >
+                                <Icon name={kind.icon} size={12} />
+                                {kind.label}
+                              </span>
+                              <span className="text-sm tabular-nums text-bark-500 sm:text-right">
+                                {whenLabel(item)}
+                              </span>
+                            </span>
+                            <Icon
+                              name="chevronRight"
+                              size={16}
+                              className="ease-arrive hidden text-bark-400 transition-transform duration-200 group-hover:translate-x-0.5 sm:block"
+                            />
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </section>
               )
             })}
-          </ul>
+          </div>
         </section>
       )}
     </>

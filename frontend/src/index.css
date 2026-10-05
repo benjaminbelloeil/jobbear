@@ -51,11 +51,10 @@
     transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  /* Buttons are flat: no outer shadow or glow. A faint top edge is all the depth they get. */
   .btn-primary {
     @apply btn bg-bark text-birch-50 hover:bg-bark-700;
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.08),
-      0 6px 14px -8px rgb(42 31 25 / 0.6);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
   }
 
   /* Honey reads as a little slab: a lighter top edge and a darker lip underneath. */
@@ -63,14 +62,7 @@
     @apply btn bg-honey font-semibold text-bark hover:bg-[#F0B43A];
     box-shadow:
       inset 0 1px 0 rgb(255 255 255 / 0.35),
-      inset 0 -2px 0 rgb(122 82 8 / 0.25),
-      0 6px 14px -8px rgb(201 138 14 / 0.9);
-  }
-  .btn-honey:hover {
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.4),
-      inset 0 -2px 0 rgb(122 82 8 / 0.25),
-      0 10px 20px -10px rgb(201 138 14 / 0.95);
+      inset 0 -2px 0 rgb(122 82 8 / 0.25);
   }
 
   .btn-ghost {
@@ -80,7 +72,6 @@
   /* Secondary action on a light surface: a quiet outlined button. */
   .btn-soft {
     @apply btn border border-birch-300 bg-birch-50 text-bark hover:border-bark-400 hover:bg-white;
-    box-shadow: 0 1px 2px rgb(42 31 25 / 0.06);
   }
 
   /* Outlined variants come before .btn-lg so the size class wins over their base .btn size. */
@@ -275,6 +266,23 @@
 @layer utilities {
   .ease-arrive {
     transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* A list that scrolls inside a fixed height: its last row fades out, hinting at more. */
+  .scroll-fade {
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 2rem), transparent);
+    scrollbar-width: thin;
+  }
+  .scroll-fade:focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-bark;
+  }
+
+  /* A row that scrolls sideways on phones (tab bars) without showing a scrollbar. */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   /* A bar or meter filling to its value when its data arrives. */
@@ -1005,5 +1013,109 @@
   50% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* The sky beside the dashboard greeting (SkyMark). One arrival per phase, then a slow
+   idle loop: the sun rises or sets once, rays breathe or turn, stars twinkle. */
+.sky .sky-rays,
+.sky .sky-moon,
+.sky .sky-body {
+  transform-box: view-box;
+}
+.sky-day .sky-body {
+  transform-origin: 24px 24px;
+  animation: sky-pop 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.sky-day .sky-rays {
+  transform-origin: 24px 24px;
+  animation: sky-turn 24s linear infinite;
+}
+.sky-sunrise .sky-body {
+  animation: sky-rise 1400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.sky-sunset .sky-body {
+  animation: sky-set 1400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.sky-sunrise .sky-rays,
+.sky-sunset .sky-rays {
+  transform-origin: 24px 33px;
+  animation: sky-breathe 3.2s ease-in-out 1400ms infinite;
+}
+.sky-sunrise .sky-arrow {
+  animation: sky-nudge-up 2.4s ease-in-out infinite;
+}
+.sky-sunset .sky-arrow {
+  animation: sky-nudge-down 2.4s ease-in-out infinite;
+}
+.sky-night .sky-moon {
+  transform-origin: 24px 24px;
+  animation:
+    sky-pop 900ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    sky-sway 6s ease-in-out 900ms infinite;
+}
+.sky-night .sky-star {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sky-twinkle 2.6s ease-in-out infinite;
+}
+
+@keyframes sky-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotate(-20deg);
+  }
+}
+@keyframes sky-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes sky-rise {
+  from {
+    transform: translateY(14px);
+  }
+}
+@keyframes sky-set {
+  from {
+    transform: translateY(-9px);
+  }
+}
+@keyframes sky-breathe {
+  50% {
+    transform: scale(1.12);
+    opacity: 0.75;
+  }
+}
+@keyframes sky-nudge-up {
+  50% {
+    transform: translateY(-2px);
+  }
+}
+@keyframes sky-nudge-down {
+  50% {
+    transform: translateY(2px);
+  }
+}
+@keyframes sky-sway {
+  50% {
+    transform: rotate(-8deg);
+  }
+}
+@keyframes sky-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky * {
+    animation: none !important;
   }
 }

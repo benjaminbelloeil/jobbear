@@ -11,6 +11,10 @@ A full-stack job application tracker with analytics. It pulls job emails from Gm
 > sync and AI classification are being built (see [Roadmap](#roadmap)). The self-hosting steps
 > below describe how JobBear runs; anything marked *(planned)* isn't there yet.
 
+**Contents:** [Features](#features) · [Ways to use JobBear](#ways-to-use-jobbear) ·
+[Architecture](#architecture) · [Self-hosting](#self-hosting) · [Development](#development) ·
+[Deploying to Railway](#deploying-to-railway) · [Roadmap](#roadmap) · [Contributing](#contributing)
+
 ## Features
 - Track applications, companies, and a full status history (Applied → OA → Interviewing → Offer)
 - Gmail sync (read-only) with AI email classification (rejection, OA invite, interview invite, offer)
@@ -42,7 +46,23 @@ Every feature is in the open-source version. Cloud passes pay for convenience, n
 | DevOps | Docker Compose, GitHub Actions, Railway |
 
 ## Architecture
-<!-- TODO: add a diagram: React ⇄ FastAPI ⇄ PostgreSQL; APScheduler → Gmail API → Claude API → status updates -->
+
+```mermaid
+flowchart LR
+    UI["React app<br/>(Vite, TanStack Query)"] -- "REST + JWT" --> API["FastAPI<br/>routers"]
+    API --> SVC["services/<br/>status rules, stats, ghosting"]
+    SVC --> DB[("PostgreSQL<br/>applications, companies,<br/>status_events, emails")]
+    JOBS["APScheduler jobs"] --> MAIL["Email intake<br/>(Gmail API or forwarding)"]
+    MAIL --> AI["AI classifier<br/>(Claude API)"]
+    AI -- "confident" --> SVC
+    AI -- "unsure" --> REVIEW["Review queue<br/>(/inbox)"]
+    JOBS --> SVC
+```
+
+Routers stay thin and business rules live in `services/`. Every status change, manual or
+automatic, goes through one function that also writes a `status_events` row, which is what
+the timeline and the analytics read from. Low-confidence AI results never change a status on
+their own; they wait in the review queue.
 
 ## Project structure
 
@@ -267,5 +287,4 @@ problems privately, as described in [SECURITY.md](SECURITY.md).
 [GNU AGPL-3.0](LICENSE). You can use, modify and self-host JobBear freely. If you run a modified
 version as a hosted service, you must publish your changes under the same license.
 
-## What I learned
-<!-- TODO: fill in after building -->
+<!-- TODO(me): add a "What I learned" section after v1 ships. -->
