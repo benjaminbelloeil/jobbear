@@ -90,6 +90,25 @@ Outputs go in `docs/replica/` so every later step can read them.
 
 Scope guard: this is a 2–3 week project. A replica output can add features to the roadmap, but each feature has to fit the build order. Keep a "v2 / later" list instead of growing v1.
 
+## Business model (decided 2026-10-05)
+
+Supabase-style, but with **no free hosted tier**: I never pay for users who don't pay me.
+
+| Tier | Price | Notes |
+|---|---|---|
+| Demo | Free | The UI on sample data, static hosting only ($0) |
+| Self-hosted | Free, forever | Full app, their machine, their own AI key (or Ollama later). Guide lives in the README |
+| Hunt Pass | $12 / 30 days | Hosted, AI included, one-click email |
+| Season Pass | $29 / 90 days | Same, highlighted as best value |
+
+- Passes are one-time payments: **no auto-renew, no subscriptions, no lifetime deals**. Each starts with a 7-day free trial; after a pass ends the data stays readable.
+- **Every feature stays in the open-source version.** Passes pay for convenience (hosting, included AI, one-click Gmail), never for features.
+- Pre-launch: founding prices ($9 / $19) for the first 50, reserved through the landing page form. Turn the hosted backend on only after ~10 pre-sales; costs should only start when revenue does.
+- Public Gmail OAuth needs Google's yearly CASA assessment: only pay for it once passes cover it. Until then hosted email comes in by forwarding.
+- License AGPL-3.0, plus a CLA in `CONTRIBUTING.md` so the code can be relicensed or sold later.
+- Full numbers: `docs/replica/hosting-costs.md` (local only, `docs/` is gitignored and must never be committed).
+- v1 stays single-user and billing-free. Multi-user, BYOK storage, forwarding inbox and billing are v2, and the backend for all of it is mine to write.
+
 ## Design: Impeccable, always on
 
 The [Impeccable](https://github.com/pbakaus/impeccable) skill lives in `.claude/skills/impeccable/` (Apache 2.0, v4.5.0). Use it for **every** frontend change, however small:

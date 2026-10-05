@@ -29,6 +29,8 @@ services:
       - ./backend/app:/app/app
       - ./backend/alembic:/app/alembic
       - ./backend/tests:/app/tests
+      # Google OAuth client and the Gmail token (gitignored). Paths in .env are relative to /app.
+      - ./secrets:/app/secrets
     depends_on:
       db:
         condition: service_healthy
