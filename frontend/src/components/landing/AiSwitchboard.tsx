@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useId, useState, type CSSProperties } from 'react'
 import { siClaude, siGooglegemini, siOllama } from 'simple-icons'
 
 import { useInView } from '../../hooks/useInView'
@@ -7,25 +7,43 @@ import Icon from '../Icon'
 import { grokLogo, openaiLogo, type LogoPath } from './providerLogos'
 
 // Logos: Claude, Gemini and Ollama from Simple Icons (CC0); OpenAI and Grok from Lobe
-// Icons (MIT, see providerLogos.ts). All are drawn in the current text colour.
+// Icons (MIT, see providerLogos.ts). Each is drawn in its brand colour: Claude's coral,
+// Gemini's blue-to-rose gradient. OpenAI, Grok and Ollama are monochrome marks, so they
+// take the current text colour (dark on light tiles, light on dark ones).
 interface Provider {
   name: string
   vendor: string
   logo: LogoPath
+  /** A solid brand fill, or a gradient's stops; omit for a monochrome mark. */
+  brand?: string | string[]
   key: string
   sure: number
 }
 
 const PROVIDERS: Provider[] = [
-  { name: 'Claude', vendor: 'Anthropic', logo: siClaude, key: 'sk-ant-••••••••', sure: 96 },
+  {
+    name: 'Claude',
+    vendor: 'Anthropic',
+    logo: siClaude,
+    brand: `#${siClaude.hex}`,
+    key: 'sk-ant-••••••••',
+    sure: 96,
+  },
   { name: 'GPT', vendor: 'OpenAI', logo: openaiLogo, key: 'sk-••••••••', sure: 94 },
-  { name: 'Gemini', vendor: 'Google', logo: siGooglegemini, key: 'AIza••••••••', sure: 95 },
+  {
+    name: 'Gemini',
+    vendor: 'Google',
+    logo: siGooglegemini,
+    brand: ['#4796E3', '#9177C7', '#CA6673'],
+    key: 'AIza••••••••',
+    sure: 95,
+  },
   { name: 'Grok', vendor: 'xAI', logo: grokLogo, key: 'xai-••••••••', sure: 93 },
   { name: 'Ollama', vendor: 'Local model', logo: siOllama, key: '', sure: 91 },
 ]
 
-// Long enough for the card's relay (email → model → badge → meter) to finish and be read.
-const CYCLE_MS = 3600
+// Long enough for the card's hand-off (read → scan → status flip → meter) to be read.
+const CYCLE_MS = 4400
 // Tiles sit on a 33% orbit; the dashed ring (r=51) stays clear of them and their labels.
 const RADIUS = 33 // % of the ring, centre to tile
 
@@ -38,9 +56,25 @@ function spot(index: number) {
 const delay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties
 
 function ProviderGlyph({ provider, size }: { provider: Provider; size: number }) {
+  const gradientId = useId()
+  const { brand } = provider
+  const fill = Array.isArray(brand) ? `url(#${gradientId})` : brand
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden className="fill-current">
-      <path d={provider.logo.path} fillRule={provider.logo.evenOdd ? 'evenodd' : undefined} />
+      {Array.isArray(brand) && (
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+            {brand.map((stop, index) => (
+              <stop key={stop} offset={index / (brand.length - 1)} stopColor={stop} />
+            ))}
+          </linearGradient>
+        </defs>
+      )}
+      <path
+        d={provider.logo.path}
+        fill={fill}
+        fillRule={provider.logo.evenOdd ? 'evenodd' : undefined}
+      />
     </svg>
   )
 }
@@ -178,10 +212,11 @@ export default function AiSwitchboard() {
         </ul>
       </div>
 
-      {/* What the active provider just did, as a relay: the email comes in, the model
-          carries it along the track, the status pops out the other end, then the meter
-          shows how sure it was. Re-keyed per provider so it replays on every switch.
-          Visual only: the tiles carry the state. */}
+      {/* What the active provider just did, as one hand-off: the email arrives with the
+          model's logo pinned on it, a scan reads it and highlights what matters, then the
+          email lifts away and becomes your tracker row, where Applied flips to
+          Interviewing. Re-keyed per provider so it replays on every switch. Each step's
+          timing lives in index.css (.handoff-*). Visual only: the tiles carry the state. */}
       <div
         key={active}
         aria-hidden
@@ -210,48 +245,59 @@ export default function AiSwitchboard() {
           </span>
         </div>
 
-        {/* The relay: email → model → status */}
-        <div className="mt-5 grid grid-cols-[minmax(0,1fr)_minmax(2.5rem,5rem)_auto] items-center gap-2 sm:gap-3">
-          <div
-            data-a="slide"
-            style={delay(100)}
-            className="min-w-0 rounded-xl bg-birch-50 px-3 py-2.5 text-bark shadow-[0_12px_24px_-14px_rgba(0,0,0,0.8)]"
-          >
-            <span className="flex items-center gap-1.5 text-[0.6875rem] font-semibold text-bark-500">
-              <Icon name="mail" size={12} />
-              Meridian Maps
-            </span>
-            <span className="mt-0.5 block truncate font-display text-sm font-bold">
-              Scheduling your interview
+        {/* The hand-off: the email and the tracker row share one slot */}
+        <div className="handoff relative mt-6 h-[5.75rem]">
+          {/* 1 · The email, with the model's logo pinned to its corner */}
+          <div className="handoff-email absolute inset-0">
+            <div className="relative h-full overflow-hidden rounded-xl bg-birch-50 px-4 py-3 text-bark shadow-[0_14px_28px_-16px_rgba(0,0,0,0.9)]">
+              <span className="flex items-center gap-1.5 text-[0.6875rem] font-semibold text-bark-500">
+                <Icon name="mail" size={12} />
+                Meridian Maps
+                <span className="ml-auto pr-6">now</span>
+              </span>
+              <p className="mt-1 truncate font-display text-[0.9375rem] font-bold leading-snug">
+                Can we <mark className="handoff-mark text-bark">schedule an interview</mark>?
+              </p>
+              <p className="mt-0.5 truncate text-xs text-bark-500">
+                The team loved your application. Are you free next week?
+              </p>
+              {/* The read: a soft honey band sweeps across the email */}
+              <span className="handoff-scan pointer-events-none absolute inset-y-0 left-0 w-full">
+                <span className="absolute inset-y-0 left-0 w-20 -translate-x-full bg-gradient-to-r from-transparent via-honey/30 to-transparent" />
+              </span>
+            </div>
+            <span className="handoff-logo absolute -right-2.5 -top-2.5 grid h-9 w-9 place-items-center rounded-full bg-white text-bark shadow-[0_8px_18px_-8px_rgba(0,0,0,0.8)] ring-2 ring-honey">
+              <ProviderGlyph provider={provider} size={18} />
             </span>
           </div>
 
-          <div className="relative h-10">
-            <span
-              data-a="draw"
-              style={delay(250)}
-              className="absolute inset-x-0 top-[calc(50%-1px)] h-0.5 rounded-full bg-honey/60"
-            />
-            {/* The model's logo carries the email down the track */}
-            <span className="ai-relay absolute inset-y-0 left-0 w-full" style={delay(300)}>
-              <span className="absolute left-0 top-1/2 grid h-8 w-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-birch text-bark shadow-[0_8px_16px_-8px_rgba(0,0,0,0.8)] ring-2 ring-honey">
-                <ProviderGlyph provider={provider} size={15} />
+          {/* 2 · What it became: your tracker row, status flipped */}
+          <div className="handoff-row absolute inset-0 flex items-center justify-between gap-3 rounded-xl bg-birch-50 px-4 text-bark shadow-[0_14px_28px_-16px_rgba(0,0,0,0.9)]">
+            <span aria-hidden className="handoff-glow absolute inset-0 rounded-xl" />
+            <div className="min-w-0">
+              <p className="truncate font-display font-bold">Meridian Maps</p>
+              <p className="flex items-center gap-1.5 truncate text-xs text-bark-500">
+                Data Engineer Intern
+                <span className="text-birch-300">·</span>
+                <span className="inline-flex items-center gap-1">
+                  by <ProviderGlyph provider={provider} size={12} /> {provider.name}
+                </span>
+              </p>
+            </div>
+            <span className="grid shrink-0 justify-items-end">
+              <span className="handoff-applied rounded-full bg-lake-50 px-2.5 py-1 text-xs font-semibold text-lake ring-1 ring-inset ring-lake/25 [grid-area:1/1]">
+                Applied
+              </span>
+              <span className="handoff-interviewing inline-flex items-center gap-1 rounded-full bg-honey px-3 py-1 text-xs font-bold text-bark shadow-[0_8px_18px_-8px_rgba(233,168,37,0.9)] [grid-area:1/1]">
+                <Icon name="check" size={12} />
+                Interviewing
               </span>
             </span>
           </div>
-
-          <span
-            data-a="pop"
-            style={delay(1150)}
-            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-honey px-3 py-1.5 text-sm font-semibold text-bark shadow-[0_10px_22px_-10px_rgba(233,168,37,0.7)]"
-          >
-            <Icon name="check" size={14} />
-            Interviewing
-          </span>
         </div>
 
         {/* How sure it was, against your threshold */}
-        <div data-a="in" style={delay(1300)} className="mt-6">
+        <div data-a="in" style={delay(2500)} className="mt-6">
           <div className="flex items-baseline justify-between text-xs text-birch-300">
             <span>Confidence</span>
             <span className="font-display text-base font-bold tabular-nums text-birch-50">
@@ -262,7 +308,7 @@ export default function AiSwitchboard() {
             <span className="block h-2 overflow-hidden rounded-full bg-birch/10">
               <span
                 data-a="fill"
-                style={{ ...delay(1400), width: `${provider.sure}%` }}
+                style={{ ...delay(2600), width: `${provider.sure}%` }}
                 className="block h-full rounded-full bg-honey"
               />
             </span>
