@@ -1,7 +1,10 @@
 import { Link, useParams } from 'react-router-dom'
 
 import DetailList from '../components/DetailList'
+import EmailLinks from '../components/EmailLinks'
 import EmptyState from '../components/EmptyState'
+import AutoTextarea from '../components/form/AutoTextarea'
+import HistoryBand from '../components/HistoryBand'
 import Icon from '../components/Icon'
 import KeywordMatch from '../components/KeywordMatch'
 import PageHeader from '../components/PageHeader'
@@ -9,9 +12,9 @@ import Select from '../components/form/Select'
 import Panel from '../components/Panel'
 import StatusBadge from '../components/StatusBadge'
 import { NEXT_ACTION_LABELS, SOURCE_LABELS, STATUS_META } from '../components/statusStyles'
-import StatusTimeline from '../components/StatusTimeline'
 import {
   sampleApplications,
+  sampleEmailLinks,
   sampleEvents,
   sampleKeywordMatch,
   samplePostings,
@@ -51,6 +54,8 @@ export default function ApplicationDetail() {
   const posting = samplePostings[app.id]
   const resume = sampleResumes.find((r) => r.id === sampleResumeByApplication[app.id])
   const match = sampleKeywordMatch[app.id]
+  // TODO(me): links come from the email sync (see docs/replica/resumes-and-fit.md, "Links").
+  const links = sampleEmailLinks[app.id] ?? []
 
   return (
     <>
@@ -135,11 +140,11 @@ export default function ApplicationDetail() {
             <label className="block">
               <span className="sr-only">Notes</span>
               {/* TODO(me): controlled value + save with PATCH (on blur or a Save button). */}
-              <textarea
-                rows={5}
+              <AutoTextarea
+                minRows={4}
                 defaultValue={app.notes ?? ''}
                 placeholder="Who you spoke to, what to prepare, what they asked."
-                className="field resize-y leading-relaxed"
+                className="field leading-relaxed"
               />
             </label>
           </Panel>
@@ -171,6 +176,19 @@ export default function ApplicationDetail() {
             </div>
           </Panel>
 
+          <Panel
+            title="Links from your emails"
+            description="Assessments, booking pages and guides."
+          >
+            {links.length > 0 ? (
+              <EmailLinks links={links} />
+            ) : (
+              <EmptyState compact title="No links yet">
+                Links in recruiter emails, like an assessment or a booking page, appear here.
+              </EmptyState>
+            )}
+          </Panel>
+
           <Panel title="Keyword match" description="How much of the posting your resume covers.">
             {match ? (
               <KeywordMatch
@@ -186,15 +204,14 @@ export default function ApplicationDetail() {
               </EmptyState>
             )}
           </Panel>
-
-          <Panel title="History" description="Every change, and what caused it.">
-            {events.length > 0 ? (
-              <StatusTimeline events={events} />
-            ) : (
-              <EmptyState compact title="No changes yet" />
-            )}
-          </Panel>
         </div>
+      </div>
+
+      <div className="mt-6">
+        <HistoryBand
+          events={events}
+          upNext={app.next_action === 'NONE' ? undefined : NEXT_ACTION_LABELS[app.next_action]}
+        />
       </div>
     </>
   )

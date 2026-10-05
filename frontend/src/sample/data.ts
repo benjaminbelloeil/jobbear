@@ -401,3 +401,43 @@ export const sampleKeywordMatch: Record<number, SampleKeywordMatch> = {
     missing: ['Kafka', 'Kubernetes'],
   },
 }
+
+export interface SampleEmailLink {
+  id: number
+  /** What the link is for, so the UI can pick an icon and a label. */
+  kind: 'ASSESSMENT' | 'SCHEDULING' | 'POSTING' | 'OTHER'
+  label: string
+  url: string
+  from: string
+  found_at: string
+}
+
+/** Links pulled from recruiter emails during sync, newest first, by application id. */
+export const sampleEmailLinks: Record<number, SampleEmailLink[]> = {
+  1: [
+    {
+      id: 3,
+      kind: 'SCHEDULING',
+      label: 'Book your technical screen',
+      url: 'https://cal.example/northwind/tech-screen',
+      from: 'talent@northwind.example',
+      found_at: '2026-09-30T14:20:00Z',
+    },
+    {
+      id: 2,
+      kind: 'OTHER',
+      label: 'How we interview',
+      url: 'https://northwind.example/careers/interview-guide',
+      from: 'talent@northwind.example',
+      found_at: '2026-09-30T14:20:00Z',
+    },
+    {
+      id: 1,
+      kind: 'ASSESSMENT',
+      label: 'Online assessment',
+      url: 'https://assess.codeforge.example/northwind/7f3k',
+      from: 'talent@northwind.example',
+      found_at: '2026-09-20T11:05:00Z',
+    },
+  ],
+}
