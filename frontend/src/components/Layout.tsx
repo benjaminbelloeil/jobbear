@@ -20,8 +20,9 @@ export default function Layout() {
   const items = [
     { to: '/dashboard', label: 'Dashboard', icon: 'dashboard' as const },
     { to: '/applications', label: 'Applications', icon: 'list' as const },
+    { to: '/resumes', label: 'Resumes', icon: 'file' as const },
     { to: '/inbox', label: 'Inbox', icon: 'inbox' as const, count: sampleEmails.length },
-    { to: '/settings', label: 'Settings', icon: 'settings' as const },
+    { to: '/settings', label: 'Settings', icon: 'settings' as const, mobileTopBar: true },
   ]
 
   // TODO(me): this week's count from GET /stats/weekly (the last week) and the user's goal.

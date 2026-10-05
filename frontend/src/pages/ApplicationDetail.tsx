@@ -3,13 +3,21 @@ import { Link, useParams } from 'react-router-dom'
 import DetailList from '../components/DetailList'
 import EmptyState from '../components/EmptyState'
 import Icon from '../components/Icon'
+import KeywordMatch from '../components/KeywordMatch'
 import PageHeader from '../components/PageHeader'
 import Select from '../components/form/Select'
 import Panel from '../components/Panel'
 import StatusBadge from '../components/StatusBadge'
 import { NEXT_ACTION_LABELS, SOURCE_LABELS, STATUS_META } from '../components/statusStyles'
 import StatusTimeline from '../components/StatusTimeline'
-import { sampleApplications, sampleEvents } from '../sample/data'
+import {
+  sampleApplications,
+  sampleEvents,
+  sampleKeywordMatch,
+  samplePostings,
+  sampleResumeByApplication,
+  sampleResumes,
+} from '../sample/data'
 import { APPLICATION_STATUSES } from '../types'
 
 const plainDate = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeZone: 'UTC' })
@@ -38,6 +46,11 @@ export default function ApplicationDetail() {
     )
   }
   const events = sampleEvents.filter((event) => event.application_id === app.id)
+  // TODO(me): the saved posting, the resume that was sent and its keyword match come from the
+  //   API once those models exist. Only sample application 1 has a posting and a match.
+  const posting = samplePostings[app.id]
+  const resume = sampleResumes.find((r) => r.id === sampleResumeByApplication[app.id])
+  const match = sampleKeywordMatch[app.id]
 
   return (
     <>
@@ -78,6 +91,7 @@ export default function ApplicationDetail() {
               items={[
                 { label: 'Company', value: app.company?.name },
                 { label: 'Source', value: SOURCE_LABELS[app.source] },
+                { label: 'Resume sent', value: resume?.name ?? 'Not recorded' },
                 {
                   label: 'Location',
                   value: [app.location, app.remote ? 'Remote' : null].filter(Boolean).join(', '),
@@ -92,6 +106,29 @@ export default function ApplicationDetail() {
                 },
               ]}
             />
+          </Panel>
+
+          <Panel
+            title="The posting"
+            description={
+              posting
+                ? `Saved ${plainDate.format(new Date(posting.saved_at))}, so you keep it after the listing comes down.`
+                : 'Not saved for this application.'
+            }
+          >
+            {posting ? (
+              <div
+                tabIndex={0}
+                aria-label="Saved job posting"
+                className="max-h-80 overflow-y-auto whitespace-pre-line rounded-control border border-birch-200 bg-birch px-4 py-3.5 text-sm leading-relaxed text-bark-700"
+              >
+                {posting.text}
+              </div>
+            ) : (
+              <EmptyState compact title="No posting saved">
+                Paste the job description when you log an application to keep it here.
+              </EmptyState>
+            )}
           </Panel>
 
           <Panel title="Notes" description="Only you see these.">
@@ -132,6 +169,22 @@ export default function ApplicationDetail() {
                 Save status
               </button>
             </div>
+          </Panel>
+
+          <Panel title="Keyword match" description="How much of the posting your resume covers.">
+            {match ? (
+              <KeywordMatch
+                matched={match.matched}
+                missing={match.missing}
+                resumeName={
+                  sampleResumes.find((r) => r.id === match.resume_id)?.name ?? 'your resume'
+                }
+              />
+            ) : (
+              <EmptyState compact title="Nothing to compare yet">
+                Save the posting and the resume you sent to see what matches.
+              </EmptyState>
+            )}
           </Panel>
 
           <Panel title="History" description="Every change, and what caused it.">

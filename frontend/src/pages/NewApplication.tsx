@@ -6,6 +6,7 @@ import Icon from '../components/Icon'
 import PageHeader from '../components/PageHeader'
 import Panel from '../components/Panel'
 import { SOURCE_LABELS } from '../components/statusStyles'
+import { sampleResumes } from '../sample/data'
 import { APPLICATION_SOURCES } from '../types'
 
 export default function NewApplication() {
@@ -40,8 +41,22 @@ export default function NewApplication() {
                 <Icon name="link" size={17} className="field-icon" />
                 <input type="url" name="job_url" placeholder="https://" className="field" />
               </span>
+            </label>
+            <label className="block sm:col-span-2">
+              <span className="label">
+                Job description <span className="font-normal text-bark-500">(optional)</span>
+              </span>
+              {/* TODO(me): once job_url points at Greenhouse, Lever or Ashby, offer to fill this
+                in from their public job APIs; other sites keep the paste. */}
+              <textarea
+                name="job_description"
+                rows={5}
+                placeholder="Paste the full posting: what you'd do and what they're looking for."
+                className="field mt-1.5 resize-y"
+              />
               <span className="hint mt-1.5 block">
-                Paste it now so the posting is one click away when they reply.
+                Postings often come down before they reply. Saved here, you keep it, and JobBear can
+                check it against your resume.
               </span>
             </label>
             <div className="flex flex-col gap-2 sm:col-span-2 sm:flex-row sm:items-end">
@@ -118,6 +133,18 @@ export default function NewApplication() {
                 }))}
               />
               <DatePicker name="applied_at" label="Applied on" required />
+              {/* TODO(me): options from the user's resume versions; "None" stays allowed. */}
+              <Select
+                name="resume_id"
+                label="Resume sent"
+                icon="file"
+                placeholder="Choose a version"
+                hint="So you can see which resume gets replies."
+                options={sampleResumes.map((resume) => ({
+                  value: String(resume.id),
+                  label: resume.name,
+                }))}
+              />
             </div>
           </Panel>
           {/* TODO(me): submit error here: <p role="alert" className="text-sm text-berry">…</p> */}

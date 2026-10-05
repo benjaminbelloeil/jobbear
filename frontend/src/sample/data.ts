@@ -333,3 +333,71 @@ export const sampleProviders: SampleProvider[] = [
     lastFour: null,
   },
 ]
+
+// --- Resume versions, saved postings and keyword match (v2, see CLAUDE.md "Business model"
+// and the README roadmap). These shapes are proposals for the screens only: when you build
+// the backend, design the real schemas yourself and mirror them in types.ts.
+
+export interface SampleResume {
+  id: number
+  name: string
+  file_name: string
+  updated_at: string
+  applications: number
+  /** 0–1 */
+  response_rate: number
+  /** 0–1 */
+  interview_rate: number
+}
+
+// prettier-ignore
+export const sampleResumes: SampleResume[] = [
+  { id: 1, name: 'Backend v3', file_name: 'backend-v3.pdf', updated_at: '2026-09-10', applications: 21, response_rate: 0.38, interview_rate: 0.14 },
+  { id: 2, name: 'Backend v2', file_name: 'backend-v2.pdf', updated_at: '2026-08-14', applications: 14, response_rate: 0.21, interview_rate: 0.07 },
+  { id: 3, name: 'Full-stack', file_name: 'fullstack.pdf', updated_at: '2026-08-20', applications: 9, response_rate: 0.22, interview_rate: 0.11 },
+  { id: 4, name: 'Data and ML', file_name: 'data-ml.pdf', updated_at: '2026-09-01', applications: 4, response_rate: 0.25, interview_rate: 0 },
+]
+
+/** Fewer sends than this and a rate says more about luck than about the resume. */
+export const SAMPLE_MIN_SENDS_TO_COMPARE = 5
+
+/** Which resume went out with each sample application, by application id. */
+// prettier-ignore
+export const sampleResumeByApplication: Record<number, number> = {
+  1: 1, 2: 1, 3: 2, 4: 3, 5: 1, 6: 2, 7: 1, 8: 4, 9: 1, 10: 3, 11: 1, 12: 4,
+}
+
+/** The posting text saved with an application, by application id. */
+export const samplePostings: Record<number, { saved_at: string; text: string }> = {
+  1: {
+    saved_at: '2026-09-12',
+    text: `Northwind Labs builds the payments API behind 2,000 online shops. As a Backend Engineer Intern you'll join the payments team for six months and ship to production from week two.
+
+What you'll do
+- Build and maintain REST APIs in Python (FastAPI)
+- Design PostgreSQL schemas and write the migrations
+- Write tests with pytest and keep CI/CD green
+- Help move our event pipeline to Kafka
+
+What we're looking for
+- Python and SQL you can show us (projects count)
+- Some experience with Docker
+- Curiosity about Kubernetes and distributed systems
+- Clear written communication in English`,
+  },
+}
+
+export interface SampleKeywordMatch {
+  resume_id: number
+  matched: string[]
+  missing: string[]
+}
+
+/** Skills from the saved posting found (or not) in the resume that was sent, by application id. */
+export const sampleKeywordMatch: Record<number, SampleKeywordMatch> = {
+  1: {
+    resume_id: 1,
+    matched: ['Python', 'FastAPI', 'REST APIs', 'PostgreSQL', 'SQL', 'pytest', 'CI/CD', 'Docker'],
+    missing: ['Kafka', 'Kubernetes'],
+  },
+}

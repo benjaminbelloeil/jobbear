@@ -10,6 +10,8 @@ interface NavItem {
   icon: IconName
   /** Optional count shown as a badge, e.g. emails waiting for review. */
   count?: number
+  /** On phones, show this as an icon in the top bar instead of a bottom tab. */
+  mobileTopBar?: boolean
 }
 
 interface SidebarProps {
@@ -91,9 +93,12 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
 
   const progress = weekly ? Math.min(1, weekly.done / Math.max(1, weekly.goal)) : 0
   const remaining = weekly ? Math.max(0, weekly.goal - weekly.done) : 0
-  // Mobile tab bar: two tabs, the raised "New" button, then the rest.
-  const leading = items.slice(0, 2)
-  const trailing = items.slice(2)
+  // Mobile tab bar: two tabs, the raised "New" button, then the rest. Rarely used pages
+  // (settings) sit in the top bar instead, so the tab bar keeps four thumb-sized tabs.
+  const tabs = items.filter((item) => !item.mobileTopBar)
+  const topBarItems = items.filter((item) => item.mobileTopBar)
+  const leading = tabs.slice(0, 2)
+  const trailing = tabs.slice(2)
 
   return (
     <>
@@ -230,7 +235,30 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
       <header className="sticky top-0 z-30 border-b border-birch/10 bg-bark/95 text-birch-50 backdrop-blur-md lg:hidden">
         <div className="flex h-14 items-center gap-1 px-4">
           <Brand compact />
-          <Link to="/" aria-label="JobBear website" className={`ml-auto ${topBarButton}`}>
+          {topBarItems.map((item, index) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              aria-label={item.label}
+              className={({ isActive }) =>
+                [
+                  index === 0 && 'ml-auto',
+                  isActive ? topBarButton.replace('text-birch-300', 'text-honey') : topBarButton,
+                ]
+                  .filter(Boolean)
+                  .join(' ')
+              }
+            >
+              <Icon name={item.icon} size={19} />
+            </NavLink>
+          ))}
+          <Link
+            to="/"
+            aria-label="JobBear website"
+            className={[topBarItems.length === 0 && 'ml-auto', topBarButton]
+              .filter(Boolean)
+              .join(' ')}
+          >
             <Icon name="globe" size={19} />
           </Link>
           {onLogout && (
