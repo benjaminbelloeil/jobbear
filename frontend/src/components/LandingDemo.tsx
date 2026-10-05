@@ -146,22 +146,27 @@ export default function LandingDemo() {
         >
           {[46, 154].map((x) => (
             <g key={x} className={x > 100 && MOOD[beat] === 'waving' ? 'paw paw-let-go' : 'paw'}>
+              {/* A round paw with the same birch rim as the bear (5 units outside the fur),
+                  and three toe pads where the paw curls over the card's edge. */}
               <ellipse
                 cx={x}
                 cy="20"
-                rx="22"
-                ry="17"
+                rx="21"
+                ry="16"
                 className="fill-bark stroke-birch-50"
-                strokeWidth="5"
+                strokeWidth="10"
                 paintOrder="stroke"
               />
-              {/* Three fingers curled over the rim */}
-              <path
-                d={`M${x - 8} 22v8M${x} 23v9M${x + 8} 22v8`}
-                className="stroke-birch-300/60"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-              />
+              {[-8, 0, 8].map((dx) => (
+                <ellipse
+                  key={dx}
+                  cx={x + dx}
+                  cy={dx === 0 ? 27 : 25}
+                  rx="4.4"
+                  ry="3.8"
+                  className="fill-honey/80"
+                />
+              ))}
             </g>
           ))}
         </svg>
@@ -313,14 +318,17 @@ export default function LandingDemo() {
             </div>
           </div>
 
-          {/* The flow: inbox → bear → tracker. The current station lights up honey. */}
+          {/* The flow: inbox → bear → tracker. The current station lights up honey; once the
+              update lands, all three settle to white as done. */}
           <ol
             aria-hidden
             className="mt-4 grid grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto] items-start gap-x-2 pt-1"
           >
             {STATIONS.map((station, index) => {
-              const active = index === step && beat > 0
-              const done = index < step
+              // On the last beat the update has landed: every station reads as done (white).
+              const finished = beat === LAST
+              const active = !finished && index === step && beat > 0
+              const done = finished || index < step
               return (
                 <Fragment key={station.label}>
                   {index > 0 && (

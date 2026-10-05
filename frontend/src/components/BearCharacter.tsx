@@ -40,9 +40,17 @@ export default function BearCharacter({
     >
       {outlined && (
         <defs>
-          {/* Grow the silhouette by a few units, paint it birch, and lay the bear on top */}
-          <filter id={rimId} x="-15%" y="-15%" width="130%" height="130%">
-            <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grown" />
+          {/* Grow the silhouette by ~5 units, paint it birch, and lay the bear on top.
+              Growing = blur the shape's alpha, then cut it off at a low threshold. Unlike
+              feMorphology (a square brush, which gave the ears boxy corners) this grows
+              evenly in every direction, so round shapes keep a round rim.
+              The region is fixed in artboard units with room on every side, so the waving
+              arm and the ears never reach its edge. */}
+          <filter id={rimId} filterUnits="userSpaceOnUse" x="-60" y="-60" width="320" height="340">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="soft" />
+            <feComponentTransfer in="soft" result="grown">
+              <feFuncA type="linear" slope="30" intercept="-0.9" />
+            </feComponentTransfer>
             <feFlood className="bear-rim" />
             <feComposite in2="grown" operator="in" result="rim" />
             <feMerge>
@@ -57,11 +65,24 @@ export default function BearCharacter({
         <g className="bear-body">
           <ellipse cx="100" cy="178" rx="60" ry="46" className="fill-bark" />
           <ellipse cx="100" cy="186" rx="34" ry="28" className="fill-bark-700" />
-          {/* Arms are capsules hinged at the shoulder. Reading holds the envelope instead. */}
+          {/* Arms hang down the bear's sides and follow the curve of its body. Every point
+              stays inside the body's outline (checked against the ellipse at each height),
+              so nothing pokes out of the silhouette. A faint lighter edge on the inner side
+              gives each arm its shape; honey toe pads mark the paws. The right arm hinges at
+              its shoulder to wave. Reading holds the envelope instead. */}
           {mood !== 'reading' && (
-            <g className="stroke-bark" strokeWidth="26" strokeLinecap="round">
-              <path d="M60 152L48 190" />
-              <path d="M140 152L152 190" className="bear-arm" />
+            <g fill="none" strokeLinecap="round">
+              <Arm d="M66 156Q53 176 67 199" x={67} nudge={-1} />
+              {/* The waving arm: curved at rest, straight while it's raised. Both share the
+                  shoulder hinge; index.css cross-fades them in step with the wave. */}
+              <g className="bear-arm">
+                <g className="bear-arm-rest">
+                  <Arm d="M134 156Q147 176 133 199" x={133} nudge={1} />
+                </g>
+                <g className="bear-arm-raised">
+                  <Arm d="M134 156L134 199" x={134} nudge={0} />
+                </g>
+              </g>
             </g>
           )}
         </g>
@@ -137,5 +158,25 @@ export default function BearCharacter({
         )}
       </g>
     </svg>
+  )
+}
+
+/** One arm: a soft lighter edge, the bark limb, and honey toe pads at the paw end. */
+function Arm({ d, x, nudge }: { d: string; x: number; nudge: number }) {
+  return (
+    <>
+      <path d={d} className="stroke-bark-700" strokeWidth="25" opacity="0.55" />
+      <path d={d} className="stroke-bark" strokeWidth="23" transform={`translate(${nudge} 0)`} />
+      {[-5.5, 0, 5.5].map((dx) => (
+        <ellipse
+          key={dx}
+          cx={x + dx}
+          cy={dx === 0 ? 204 : 202.5}
+          rx="2.6"
+          ry="2.2"
+          className="fill-honey/80"
+        />
+      ))}
+    </>
   )
 }

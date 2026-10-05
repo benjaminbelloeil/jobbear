@@ -1,3 +1,4 @@
+import Icon from './Icon'
 import type { SampleProvider } from '../sample/data'
 
 interface ProviderKeyRowProps {
@@ -40,18 +41,21 @@ export default function ProviderKeyRow({ provider }: ProviderKeyRowProps) {
         <label htmlFor={fieldId} className="sr-only">
           {provider.name} {provider.keyLabel ?? 'server address'}
         </label>
-        <input
-          id={fieldId}
-          type={provider.keyLabel ? 'password' : 'url'}
-          autoComplete="off"
-          spellCheck={false}
-          placeholder={
-            provider.connected && provider.lastFour
-              ? `Saved, ends in ${provider.lastFour}`
-              : provider.keyPlaceholder
-          }
-          className="field min-w-0 flex-1 font-mono text-[0.8125rem]"
-        />
+        <span className="field-group min-w-0 flex-1">
+          <Icon name={provider.keyLabel ? 'key' : 'link'} size={17} className="field-icon" />
+          <input
+            id={fieldId}
+            type={provider.keyLabel ? 'password' : 'url'}
+            autoComplete="off"
+            spellCheck={false}
+            placeholder={
+              provider.connected && provider.lastFour
+                ? `Saved, ends in ${provider.lastFour}`
+                : provider.keyPlaceholder
+            }
+            className="field font-mono text-[0.8125rem]"
+          />
+        </span>
         <div className="flex shrink-0 items-center gap-2">
           <button type="button" className="btn-primary">
             {provider.connected ? 'Replace' : 'Save'}

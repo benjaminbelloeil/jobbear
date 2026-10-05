@@ -8,39 +8,39 @@ import Icon, { type IconName } from '../Icon'
 // typically do at each moment of a search, next to what JobBear does.
 const ROWS: [icon: IconName, moment: string, board: string, sheet: string, bear: string][] = [
   [
-    'plus',
-    'Where it starts',
-    'Listings to scroll through',
-    'A blank sheet you fill in',
-    'The applications you already sent',
+    'briefcase',
+    'What it’s for',
+    'Finding roles and sending applications',
+    'Whatever list you build and keep up yourself',
+    'Following every application after you send it',
   ],
   [
     'mail',
-    'A recruiter replies',
-    'Nothing changes',
-    'You update the row by hand',
-    'The status updates itself from the email',
+    'A recruiter emails you',
+    'The reply goes to your inbox; the board never sees it',
+    'You read it, then edit the row by hand',
+    'It reads the email and updates the status for you',
   ],
   [
     'clock',
-    'Status history',
-    'None',
-    'Overwritten when you edit',
-    'Every change kept, with the email behind it',
+    'Seeing what happened',
+    'Usually just “Applied”, with little after that',
+    'Only the latest value, unless you log every change',
+    'Every status change, with the email that caused it',
   ],
   [
-    'dashboard',
-    'Which channels work',
-    'Not its job',
-    'Only if you build the formulas',
-    'Reply and interview rates per source',
+    'chart',
+    'Knowing what works',
+    'No view of which channels get replies',
+    'Possible, if you build the formulas and pivot tables',
+    'Reply and interview rates per source, built in',
   ],
   [
     'shield',
-    'Your data',
-    'On their servers',
-    'Wherever the file lives',
-    'On your own machine, open source',
+    'Where your data lives',
+    'On the job board’s servers',
+    'In whichever file or drive you keep it',
+    'On your own machine, and the code is open source',
   ],
 ]
 
@@ -75,7 +75,10 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
   return (
     <div ref={ref} className={inView ? 'revealed' : 'reveal-armed'}>
       {/* Tablet and up: a real comparison table */}
-      <div className="hidden md:block">
+      {/* A framed card: the comparison sits on white inside a soft border, and JobBear's
+          column is a raised bark panel inset from the frame. It arrives as one block; only
+          the grey comparison text fades in row by row, so the bark column stays whole. */}
+      <div className="reveal-item hidden rounded-[2rem] border border-birch-300 bg-white p-3 shadow-[0_1px_2px_rgba(42,31,25,0.05),0_40px_70px_-45px_rgba(42,31,25,0.45)] md:block">
         <table className="w-full table-fixed border-separate border-spacing-0 text-left">
           <caption className="sr-only">
             Job boards, spreadsheet trackers and JobBear compared
@@ -88,7 +91,7 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
           </colgroup>
           <thead>
             <tr className="align-bottom">
-              <th scope="col" className="pb-5">
+              <th scope="col" className="pb-5 pl-5">
                 <span className="sr-only">Moment</span>
               </th>
               <th scope="col" className="px-5 pb-5">
@@ -107,10 +110,7 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
                   Spreadsheets
                 </span>
               </th>
-              <th
-                scope="col"
-                className="rounded-t-[1.5rem] bg-bark px-6 pb-5 pt-7 text-birch-50 shadow-[0_-20px_40px_-30px_rgba(42,31,25,0.7)]"
-              >
+              <th scope="col" className="rounded-t-[1.25rem] bg-bark px-6 pb-5 pt-6 text-birch-50">
                 <span className="flex items-center gap-3 font-display text-xl font-bold">
                   <span className="grid h-11 w-11 place-items-center rounded-full bg-birch">
                     <BearMark size={30} />
@@ -122,10 +122,11 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
           </thead>
           <tbody>
             {ROWS.map(([icon, moment, board, sheet, bear], index) => (
-              <tr key={moment} className="reveal-item group" style={delay(index)}>
+              <tr key={moment} className="group">
                 <th
                   scope="row"
-                  className="border-t border-birch-300 py-5 pr-5 align-top transition-colors group-hover:bg-birch-200/40"
+                  className="reveal-fade rounded-l-2xl border-t border-birch-200 py-5 pl-5 pr-5 align-top transition-colors duration-200 group-hover:border-transparent group-hover:bg-birch-200/50"
+                  style={delay(index)}
                 >
                   <span className="flex items-center gap-3 font-display font-semibold">
                     <span className="grid h-9 w-9 shrink-0 place-items-center rounded-control bg-birch text-bark-700 ring-1 ring-birch-300">
@@ -134,19 +135,25 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
                     {moment}
                   </span>
                 </th>
-                <td className="border-t border-birch-300 px-5 py-5 align-top text-bark-500 transition-colors group-hover:bg-birch-200/40">
+                <td
+                  className="reveal-fade border-t border-birch-200 px-5 py-5 align-top text-bark-500 transition-colors duration-200 group-hover:border-transparent group-hover:bg-birch-200/50"
+                  style={delay(index)}
+                >
                   <span className="flex items-start gap-2.5">
                     <Nope />
                     {board}
                   </span>
                 </td>
-                <td className="border-t border-birch-300 px-5 py-5 align-top text-bark-500 transition-colors group-hover:bg-birch-200/40">
+                <td
+                  className="reveal-fade border-t border-birch-200 px-5 py-5 align-top text-bark-500 transition-colors duration-200 group-hover:border-transparent group-hover:bg-birch-200/50"
+                  style={delay(index)}
+                >
                   <span className="flex items-start gap-2.5">
                     <Nope />
                     {sheet}
                   </span>
                 </td>
-                <td className="border-t border-birch/10 bg-bark px-6 py-5 align-top font-medium text-birch-50 transition-colors group-hover:bg-[#33271f]">
+                <td className="border-t border-birch/10 bg-bark px-6 py-5 align-top font-medium text-birch-50 transition-colors duration-200 group-hover:bg-[#33271f]">
                   <span className="flex items-start gap-2.5">
                     <Yes />
                     {bear}
@@ -156,7 +163,7 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
             ))}
             <tr>
               <td colSpan={3} />
-              <td className="rounded-b-[1.5rem] bg-bark px-6 pb-7 pt-3 shadow-[0_30px_50px_-30px_rgba(42,31,25,0.8)]">
+              <td className="rounded-b-[1.25rem] bg-bark px-6 pb-6 pt-3">
                 <a href={repoUrl} className="btn-honey btn-lift w-full py-3 font-semibold">
                   <Icon name="github" size={18} />
                   Get the code

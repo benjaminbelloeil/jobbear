@@ -19,7 +19,7 @@ interface GoingQuietListProps {
  */
 export default function GoingQuietList({ items, ghostAfterDays }: GoingQuietListProps) {
   return (
-    <ul className="space-y-4">
+    <ul className="space-y-1.5">
       {items.map((item, index) => {
         const share = Math.min(1, item.daysQuiet / ghostAfterDays)
         const left = Math.max(0, ghostAfterDays - item.daysQuiet)
@@ -28,15 +28,25 @@ export default function GoingQuietList({ items, ghostAfterDays }: GoingQuietList
           <li key={item.applicationId}>
             <Link
               to={`/applications/${item.applicationId}`}
-              className="block rounded-control transition-colors hover:text-bark-700"
+              className="-mx-2 block rounded-control px-2 py-2 transition-colors duration-150 hover:bg-white"
             >
               <span className="flex items-baseline justify-between gap-3 text-sm">
                 <span className="min-w-0 truncate">
                   <span className="font-medium">{item.company}</span>
                   <span className="text-bark-500">, {item.position}</span>
                 </span>
-                <span className="whitespace-nowrap tabular-nums text-bark-500">
+                <span className="flex items-center gap-2 whitespace-nowrap tabular-nums text-bark-500">
                   {item.daysQuiet} days quiet
+                  <span
+                    aria-hidden
+                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                      late
+                        ? 'bg-honey-50 text-honey-800 ring-1 ring-inset ring-honey/40'
+                        : 'bg-birch-200/70 text-bark-700'
+                    }`}
+                  >
+                    {left === 0 ? 'ghosted' : `${left}d left`}
+                  </span>
                 </span>
               </span>
               <span
@@ -48,7 +58,11 @@ export default function GoingQuietList({ items, ghostAfterDays }: GoingQuietList
                 aria-label={`${item.company}: ${left} days until marked ghosted`}
               >
                 <span
-                  className={`fill-in block h-full rounded-full ${late ? 'bg-honey' : 'bg-bark-700'}`}
+                  className={`fill-in block h-full rounded-full ${
+                    late
+                      ? 'meter-warn bg-gradient-to-r from-honey-600 to-honey'
+                      : 'bg-gradient-to-r from-bark to-bark-700'
+                  }`}
                   style={
                     {
                       width: `${share * 100}%`,
