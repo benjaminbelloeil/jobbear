@@ -9,6 +9,8 @@
     caret-color: theme('colors.honey.600');
     scrollbar-color: theme('colors.birch.300') transparent;
     text-underline-offset: 0.2em;
+    /* Nav links glide to their section; the reduced-motion block below turns this off. */
+    scroll-behavior: smooth;
   }
 
   input,
@@ -52,6 +54,24 @@
 
   .btn-ghost {
     @apply btn text-bark-500 hover:bg-birch-200/60 hover:text-bark;
+  }
+
+  /* Marketing sizes: bigger, heavier, and they lift a little on hover. App screens keep
+     the compact .btn sizes above. */
+  .btn-lg {
+    @apply gap-2.5 px-6 py-3.5 text-base font-semibold;
+  }
+  .btn-lift {
+    @apply ease-arrive transition duration-200 hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none;
+  }
+  .btn-primary.btn-lift {
+    box-shadow: 0 12px 28px -14px rgb(42 31 25 / 0.7);
+  }
+  .btn-outline-light {
+    @apply btn border border-birch/25 text-birch-50 hover:border-birch/50 hover:bg-birch/10;
+  }
+  .btn-outline-dark {
+    @apply btn border-2 border-bark/80 text-bark hover:bg-bark hover:text-honey;
   }
 
   .field {
@@ -133,47 +153,63 @@
   }
 }
 
-/* Landing demo: one authored sequence (~3.6s). An email arrives, the bear reads it, the
-   application's status flips and the history gains a row. Default styles are the FINAL
-   state, so with reduced motion (or no animation support) the outcome simply shows. */
-.demo [data-step] {
-  animation-duration: 600ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  animation-fill-mode: both;
+/* Faint birch dots behind the hero demo, fading out towards the edges. */
+.demo-dots {
+  background-image: radial-gradient(rgb(243 244 239 / 0.13) 1px, transparent 1.5px);
+  background-size: 18px 18px;
+  mask-image: radial-gradient(ellipse at center, black 35%, transparent 75%);
 }
-.demo [data-step='email'] {
-  animation-name: demo-slide;
+
+/* Landing demo: the beats are timed in LandingDemo.tsx; these are the pieces it toggles.
+   The highlight sweeps across the key phrase, the bear's bubble pops in on every new line,
+   the status badge pops and the tracker card glows once when it updates itself. */
+.demo-mark {
+  background-color: transparent;
+  background-image: linear-gradient(rgb(233 168 37 / 0.45), rgb(233 168 37 / 0.45));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  border-radius: 0.2em;
+  padding: 0 0.15em;
 }
-.demo [data-step='link-1'] {
-  animation-name: demo-draw;
-  animation-delay: 650ms;
+.demo-mark-on {
+  background-size: 100% 100%;
 }
-.demo [data-step='read'] {
-  animation-name: demo-pop;
-  animation-delay: 1150ms;
+.bubble-in {
+  transform-origin: bottom right;
+  animation: bubble-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.demo [data-step='meter'] {
-  animation-name: fill-in;
-  animation-duration: 800ms;
-  animation-delay: 1500ms;
-  transform-origin: left center;
+.badge-pop {
+  animation: badge-pop 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.demo [data-step='link-2'] {
-  animation-name: demo-draw;
-  animation-delay: 2350ms;
+.tracker-glow {
+  animation: tracker-glow 1200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.demo [data-step='old-badge'] {
-  animation-name: demo-out;
-  animation-delay: 2900ms;
-  opacity: 0;
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(6px);
+  }
 }
-.demo [data-step='new-badge'] {
-  animation-name: demo-in;
-  animation-delay: 2950ms;
+@keyframes badge-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
 }
-.demo [data-step='history'] {
-  animation-name: demo-slide-down;
-  animation-delay: 3150ms;
+@keyframes tracker-glow {
+  from {
+    box-shadow: 0 0 0 0 rgb(233 168 37 / 0.75);
+  }
+  to {
+    box-shadow: 0 0 0 18px rgb(233 168 37 / 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bubble-in,
+  .badge-pop,
+  .tracker-glow {
+    animation: none;
+  }
 }
 
 @keyframes demo-slide {
@@ -221,7 +257,7 @@
 }
 
 /* How-it-works scenes. A scene renders its FINAL state by default; adding `.play`
-   replays its little sequence. Each animated part names its motion in data-a and its
+   plays its little sequence (held by .scene-wait until on screen). Each animated part names its motion in data-a and its
    start time in --d. */
 .scene.play [data-a] {
   animation-duration: 600ms;
@@ -256,6 +292,11 @@
 .scene.play [data-a='travel'] {
   animation-name: scene-travel;
   animation-duration: 900ms;
+}
+
+/* Until its scene is on screen, the motion holds at its first frame. */
+.scene-wait [data-a] {
+  animation-play-state: paused;
 }
 
 @keyframes scene-travel {
@@ -311,16 +352,17 @@
   transform-origin: right bottom;
   animation: bear-ear 7s ease-in-out infinite;
 }
-.bear-reading .bear-pupils {
-  animation: bear-scan 2.6s ease-in-out infinite;
-}
 .bear-reading .bear-head {
   transform-origin: center bottom;
   transform: rotate(-4deg) translateY(4px);
 }
+/* The arm hinges at its shoulder (140, 152 on the artboard), so it stays attached. */
+.bear .bear-arm {
+  transform-box: view-box;
+  transform-origin: 140px 152px;
+}
 .bear-waving .bear-arm {
-  transform-origin: 30% 10%;
-  animation: bear-wave 1.1s cubic-bezier(0.45, 0, 0.55, 1) 3;
+  animation: bear-wave 2.6s cubic-bezier(0.45, 0, 0.55, 1) 1;
 }
 .bear-z {
   animation: bear-z 3s ease-out infinite both;
@@ -358,25 +400,22 @@
     transform: rotate(3deg);
   }
 }
-@keyframes bear-scan {
-  0%,
-  100% {
-    transform: translate(-2px, 3px);
-  }
-  50% {
-    transform: translate(2px, 3px);
-  }
-}
 @keyframes bear-wave {
   0%,
+  92%,
   100% {
     transform: rotate(0);
   }
-  30% {
-    transform: translate(6px, -46px) rotate(-28deg);
+  18%,
+  50% {
+    transform: rotate(-135deg);
   }
-  60% {
-    transform: translate(6px, -46px) rotate(-8deg);
+  34%,
+  66% {
+    transform: rotate(-112deg);
+  }
+  78% {
+    transform: rotate(-130deg);
   }
 }
 @keyframes bear-z {
@@ -393,9 +432,146 @@
   }
 }
 
+/* The birch rim that lets a bark bear read on a bark background. */
+.bear-rim {
+  flood-color: theme('colors.birch.50');
+}
+
+/* Paws gripping the hero card. The right one lets go for exactly as long as bear-wave
+   holds the arm up, so arm and paw never show at once. */
+.paw {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.paw-let-go {
+  animation: paw-let-go 2.6s cubic-bezier(0.45, 0, 0.55, 1) 1;
+}
+@keyframes paw-let-go {
+  0%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+  10%,
+  86% {
+    opacity: 0;
+    transform: translateY(-30%) scale(0.85);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bear,
-  .bear * {
+  .bear *,
+  .paw-let-go {
     animation: none !important;
+  }
+}
+
+/* Bring-your-own-AI ring: honey signal flows into the bear, the bear pulses on arrival,
+   the dotted outer ring drifts. Everything stops off screen and under reduced motion. */
+.ai-flow {
+  animation: ai-flow 0.9s linear infinite;
+}
+.ai-pulse {
+  animation: ai-pulse 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+.ai-orbit {
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+  animation: ai-orbit 90s linear infinite;
+}
+.ai-board-paused .ai-flow,
+.ai-board-paused .ai-orbit {
+  animation-play-state: paused;
+}
+@keyframes ai-flow {
+  to {
+    stroke-dashoffset: -4;
+  }
+}
+@keyframes ai-pulse {
+  from {
+    box-shadow: 0 0 0 0 rgb(233 168 37 / 0.55);
+  }
+  to {
+    box-shadow: 0 0 0 26px rgb(233 168 37 / 0);
+  }
+}
+@keyframes ai-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* The model's logo runs the length of the relay track, then hands off to the badge.
+   The wrapper is the track's full width, so translateX(100%) lands at its far end. */
+.ai-relay {
+  opacity: 0;
+  animation: ai-relay 850ms cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0ms) both;
+}
+@keyframes ai-relay {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-flow,
+  .ai-pulse,
+  .ai-orbit {
+    animation: none !important;
+  }
+  .ai-relay {
+    display: none;
+  }
+}
+
+/* Scroll reveal for a group of rows. Only armed by JS, so without it nothing is hidden. */
+.reveal-armed .reveal-item {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.revealed .reveal-item {
+  transition:
+    opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--d, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-armed .reveal-item {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Route loader: the bear bobs while a page chunk loads. */
+.loader-bob {
+  animation: loader-bob 1.1s ease-in-out infinite;
+}
+.loader-dot {
+  animation: loader-dot 1.2s ease-in-out infinite;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes loader-bob {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes loader-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

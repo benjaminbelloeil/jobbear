@@ -74,7 +74,7 @@ export function InboxScene() {
     'An update on your application',
   ]
   return (
-    <div className="grid h-full grid-cols-[minmax(0,1fr)_3rem_auto] items-center gap-3 sm:gap-4">
+    <div className="grid h-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:grid-cols-[minmax(0,1fr)_3rem_auto] sm:gap-4">
       <div className="space-y-2.5">
         {emails.map((subject, i) => (
           <div
@@ -88,11 +88,11 @@ export function InboxScene() {
           </div>
         ))}
       </div>
-      <span aria-hidden className="relative h-[3px] w-full">
+      <span aria-hidden className="relative hidden h-[3px] w-full sm:block">
         <span data-a="draw" style={d(700)} className="absolute inset-0 rounded-full bg-honey" />
       </span>
       <div data-a="pop" style={d(950)} className="flex flex-col items-center text-center">
-        <BearCharacter mood="reading" size={112} />
+        <BearCharacter mood="reading" size={112} className="h-auto w-20 sm:w-28" />
         <span className="mt-1 text-sm font-medium">3 emails read</span>
         <span className="text-xs text-bark-500">read-only access</span>
       </div>

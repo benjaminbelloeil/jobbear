@@ -1,19 +1,30 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 
+import ErrorBoundary from './components/ErrorBoundary'
 import Layout from './components/Layout'
-import ApplicationDetail from './pages/ApplicationDetail'
-import Applications from './pages/Applications'
-import Dashboard from './pages/Dashboard'
-import Inbox from './pages/Inbox'
+import PageLoader from './components/PageLoader'
 import Landing from './pages/Landing'
-import Login from './pages/Login'
-import NewApplication from './pages/NewApplication'
-import Settings from './pages/Settings'
+import NotFound from './pages/NotFound'
 
-// Dev-only page; lazy so it never ships in the production bundle.
+// The landing page loads eagerly (it's the front door); app pages load on demand behind
+// the bear loader, which keeps the first download small.
+const ApplicationDetail = lazy(() => import('./pages/ApplicationDetail'))
+const Applications = lazy(() => import('./pages/Applications'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Inbox = lazy(() => import('./pages/Inbox'))
+const Login = lazy(() => import('./pages/Login'))
+const NewApplication = lazy(() => import('./pages/NewApplication'))
+const Settings = lazy(() => import('./pages/Settings'))
+
+// Dev-only pages; lazy so they never ship in the production bundle.
 const Styleguide = import.meta.env.DEV ? lazy(() => import('./dev/Styleguide')) : null
+
+/** Dev-only: throws on render, to preview the error page at /__error. */
+function Crash(): never {
+  throw new Error('This is a test crash from the /__error route.')
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,11 +32,13 @@ const queryClient = new QueryClient({
   },
 })
 
-export default function App() {
+function AppRoutes() {
+  const { pathname } = useLocation()
+
   // TODO(me): add a route guard that redirects to /login when there is no token.
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+    <ErrorBoundary resetKey={pathname}>
+      <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route index element={<Landing />} />
           <Route path="/login" element={<Login />} />
@@ -36,19 +49,21 @@ export default function App() {
             <Route path="/applications/:id" element={<ApplicationDetail />} />
             <Route path="/inbox" element={<Inbox />} />
             <Route path="/settings" element={<Settings />} />
-            {Styleguide && (
-              <Route
-                path="/styleguide"
-                element={
-                  <Suspense fallback={null}>
-                    <Styleguide />
-                  </Suspense>
-                }
-              />
-            )}
+            {Styleguide && <Route path="/styleguide" element={<Styleguide />} />}
           </Route>
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          {import.meta.env.DEV && <Route path="/__error" element={<Crash />} />}
+          <Route path="*" element={<NotFound />} />
         </Routes>
+      </Suspense>
+    </ErrorBoundary>
+  )
+}
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AppRoutes />
       </BrowserRouter>
     </QueryClientProvider>
   )

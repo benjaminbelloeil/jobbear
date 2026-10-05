@@ -1,7 +1,9 @@
+import { Suspense } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import { tokenStorage } from '../api/client'
 import { sampleEmails } from '../sample/data'
+import PageLoader from './PageLoader'
 import Sidebar from './Sidebar'
 
 export default function Layout() {
@@ -34,7 +36,10 @@ export default function Layout() {
       <main id="main" className="lg:pl-60">
         {/* Keyed by route so each view arrives with a short fade (continuity, not choreography). */}
         <div key={location.pathname} className="view-in px-4 pb-16 pt-6 sm:px-8 lg:px-10 lg:pt-10">
-          <Outlet />
+          {/* Page code loads here, so the sidebar stays put while it does. */}
+          <Suspense fallback={<PageLoader inline />}>
+            <Outlet />
+          </Suspense>
         </div>
       </main>
     </div>
