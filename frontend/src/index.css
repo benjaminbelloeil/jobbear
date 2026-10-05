@@ -83,22 +83,31 @@
     box-shadow: 0 1px 2px rgb(42 31 25 / 0.06);
   }
 
+  /* Outlined variants come before .btn-lg so the size class wins over their base .btn size. */
+  .btn-outline-light {
+    @apply btn border border-birch/25 text-birch-50 hover:border-birch/50 hover:bg-birch/10;
+  }
+  .btn-outline-dark {
+    @apply btn border-2 border-bark/80 text-bark hover:bg-bark hover:text-honey;
+  }
+
   /* Marketing sizes: bigger, heavier, and they lift a little on hover. App screens keep
      the compact .btn sizes above. */
   .btn-lg {
     @apply gap-2.5 px-6 py-3.5 text-base font-semibold;
+  }
+  /* Borders add height, so outlined large buttons trim their padding to match the solid ones. */
+  .btn-lg.btn-outline-light {
+    @apply py-[13px];
+  }
+  .btn-lg.btn-outline-dark {
+    @apply py-3;
   }
   .btn-lift {
     @apply ease-arrive transition duration-200 hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none;
   }
   .btn-primary.btn-lift {
     box-shadow: 0 12px 28px -14px rgb(42 31 25 / 0.7);
-  }
-  .btn-outline-light {
-    @apply btn border border-birch/25 text-birch-50 hover:border-birch/50 hover:bg-birch/10;
-  }
-  .btn-outline-dark {
-    @apply btn border-2 border-bark/80 text-bark hover:bg-bark hover:text-honey;
   }
 
   /* Fields are birch paper pressed into the panel: warm fill and a soft inner shadow at
