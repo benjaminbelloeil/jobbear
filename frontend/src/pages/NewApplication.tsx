@@ -29,9 +29,21 @@ export default function NewApplication() {
         />
       </div>
 
-      <form className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <Panel title="The job" icon="briefcase" iconTone="honey">
+      <form className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <Panel title="The job" icon="briefcase" description="What you applied to.">
           <div className="grid gap-5 sm:grid-cols-2">
+            <label className="block sm:col-span-2">
+              <span className="label">
+                Job posting link <span className="font-normal text-bark-500">(optional)</span>
+              </span>
+              <span className="field-group mt-1.5">
+                <Icon name="link" size={17} className="field-icon" />
+                <input type="url" name="job_url" placeholder="https://" className="field" />
+              </span>
+              <span className="hint mt-1.5 block">
+                Paste it now so the posting is one click away when they reply.
+              </span>
+            </label>
             <div className="flex flex-col gap-2 sm:col-span-2 sm:flex-row sm:items-end">
               <Select
                 id="company_id"
@@ -61,28 +73,23 @@ export default function NewApplication() {
                 />
               </span>
             </label>
-            <label className="block sm:col-span-2">
-              <span className="label">Job posting link</span>
-              <span className="field-group mt-1.5">
-                <Icon name="link" size={17} className="field-icon" />
-                <input type="url" name="job_url" placeholder="https://" className="field" />
-              </span>
-            </label>
             <label className="block">
-              <span className="label">Location</span>
+              <span className="label">
+                Location <span className="font-normal text-bark-500">(optional)</span>
+              </span>
               <span className="field-group mt-1.5">
                 <Icon name="pin" size={17} className="field-icon" />
                 <input name="location" placeholder="Zürich" className="field" />
               </span>
             </label>
             <label className="flex min-h-[2.75rem] cursor-pointer items-center justify-between gap-3 self-end rounded-control border border-birch-300 bg-birch px-3.5 transition-colors hover:border-bark-400 has-[:checked]:border-honey-600 has-[:checked]:bg-honey-50/60">
-              <span>
-                <span className="block text-sm font-semibold text-bark-700">Remote</span>
-              </span>
+              <span className="text-sm font-semibold text-bark-700">Remote</span>
               <input type="checkbox" name="remote" className="switch" />
             </label>
             <label className="block sm:col-span-2">
-              <span className="label">Notes</span>
+              <span className="label">
+                Notes <span className="font-normal text-bark-500">(optional)</span>
+              </span>
               <textarea
                 name="notes"
                 rows={4}
@@ -93,14 +100,18 @@ export default function NewApplication() {
           </div>
         </Panel>
 
-        <div className="space-y-6">
-          <Panel title="How you applied" icon="send" iconTone="lake">
+        {/* Stays in view on wide screens, so saving never needs a scroll back. */}
+        <div className="space-y-6 lg:sticky lg:top-6">
+          <Panel
+            title="How you applied"
+            icon="send"
+            description="Feeds your response rates by channel."
+          >
             <div className="space-y-5">
               <Select
                 name="source"
                 label="Source"
                 defaultValue="ATS"
-                hint="Used to compare response rates between channels."
                 options={APPLICATION_SOURCES.map((source) => ({
                   value: source,
                   label: SOURCE_LABELS[source],
@@ -110,12 +121,12 @@ export default function NewApplication() {
             </div>
           </Panel>
           {/* TODO(me): submit error here: <p role="alert" className="text-sm text-berry">…</p> */}
-          <div className="flex gap-2">
-            <button type="submit" className="btn-honey flex-1 py-2.5">
-              <Icon name="check" size={16} />
+          <div className="space-y-2">
+            <button type="submit" className="btn-honey w-full py-3 text-base">
+              <Icon name="check" size={18} />
               Save application
             </button>
-            <Link to="/applications" className="btn-ghost">
+            <Link to="/applications" className="btn-ghost w-full">
               Cancel
             </Link>
           </div>

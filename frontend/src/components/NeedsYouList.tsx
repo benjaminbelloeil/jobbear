@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 
 import Icon, { type IconName } from './Icon'
-import { TONE_TILE } from './statusStyles'
 
 export interface NeedsYouItem {
   id: number
@@ -13,8 +12,8 @@ export interface NeedsYouItem {
   tone: 'honey' | 'pine' | 'heather' | 'bark'
 }
 
-// Each tone is a kind of task: honey = a scheduled interview, heather = an assessment,
-// pine = a decision, bark = a nudge you send.
+// Each tone is a kind of task, shown by its icon: honey = a scheduled interview,
+// heather = an assessment, pine = a decision, bark = a nudge you send.
 const TONE_ICON: Record<NeedsYouItem['tone'], IconName> = {
   honey: 'calendar',
   heather: 'code',
@@ -35,9 +34,7 @@ export default function NeedsYouList({ items }: { items: NeedsYouItem[] }) {
               to={`/applications/${item.applicationId}`}
               className="group flex items-center gap-3.5 rounded-control px-2 py-2.5 transition-colors duration-150 hover:bg-white"
             >
-              <span
-                className={`icon-tile ease-arrive transition-transform duration-200 group-hover:scale-105 ${TONE_TILE[item.tone]}`}
-              >
+              <span className="icon-tile ease-arrive transition-transform duration-200 group-hover:scale-105">
                 <Icon name={TONE_ICON[item.tone]} size={17} />
               </span>
               <span className="min-w-0 flex-1">

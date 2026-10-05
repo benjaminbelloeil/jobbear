@@ -113,7 +113,6 @@ export default function Dashboard() {
           title="Needs you"
           description="Soonest first."
           icon="clock"
-          iconTone="honey"
           className="dash-in panel-hover xl:col-span-5"
           style={order(2)}
           actions={
@@ -167,7 +166,6 @@ export default function Dashboard() {
           title="Response rate by source"
           description="Which channel gets answers. Put your time where the replies are."
           icon="funnel"
-          iconTone="lake"
           className="dash-in panel-hover xl:col-span-8"
           style={order(5)}
         >
@@ -178,7 +176,6 @@ export default function Dashboard() {
           title="Going quiet"
           description={`No reply yet. JobBear marks an application ghosted after ${SAMPLE_GHOST_AFTER_DAYS} days.`}
           icon="hourglass"
-          iconTone="berry"
           className="dash-in panel-hover xl:col-span-7"
           style={order(6)}
         >
@@ -189,7 +186,6 @@ export default function Dashboard() {
           title="Where things stand"
           description="Every application, by its current status."
           icon="pie"
-          iconTone="pine"
           className="dash-in panel-hover xl:col-span-5"
           style={order(7)}
         >

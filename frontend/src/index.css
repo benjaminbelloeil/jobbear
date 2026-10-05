@@ -236,8 +236,10 @@
   }
 
   /* An icon on a tinted square, used beside panel titles and list rows. */
+  /* One neutral tile for every icon. Colour is reserved for status and honey for what's urgent,
+     so tiles never compete with them. */
   .icon-tile {
-    @apply grid h-9 w-9 shrink-0 place-items-center rounded-[0.7rem];
+    @apply grid h-9 w-9 shrink-0 place-items-center rounded-[0.7rem] bg-birch-200/70 text-bark-700 ring-1 ring-inset ring-birch-300;
   }
 }
 

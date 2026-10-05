@@ -1,15 +1,13 @@
 import type { CSSProperties, ReactNode } from 'react'
 
 import Icon, { type IconName } from './Icon'
-import { type PanelTone, TONE_TILE } from './statusStyles'
 
 interface PanelProps {
   title?: string
   description?: ReactNode
   actions?: ReactNode
-  /** Optional icon on a tinted tile beside the title. */
+  /** Optional icon on a neutral tile beside the title. */
   icon?: IconName
-  iconTone?: PanelTone
   id?: string
   className?: string
   style?: CSSProperties
@@ -22,7 +20,6 @@ export default function Panel({
   description,
   actions,
   icon,
-  iconTone = 'bark',
   id,
   className = '',
   style,
@@ -34,7 +31,7 @@ export default function Panel({
         <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
           <div className="flex min-w-0 items-start gap-3">
             {icon && (
-              <span className={`icon-tile ${TONE_TILE[iconTone]}`}>
+              <span className="icon-tile">
                 <Icon name={icon} size={18} />
               </span>
             )}
