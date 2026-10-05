@@ -1,3 +1,5 @@
+import Select from '../components/form/Select'
+import Slider from '../components/form/Slider'
 import Icon from '../components/Icon'
 import PageHeader from '../components/PageHeader'
 import Panel from '../components/Panel'
@@ -33,13 +35,8 @@ export default function Settings() {
           <Panel title="Email" description="Where JobBear reads recruiter emails from. Choose one.">
             <fieldset className="grid gap-3 md:grid-cols-2">
               <legend className="sr-only">Email source</legend>
-              <label className="flex cursor-pointer gap-3 rounded-control border-2 border-bark bg-white p-4">
-                <input
-                  type="radio"
-                  name="email-source"
-                  defaultChecked
-                  className="mt-1 accent-bark"
-                />
+              <label className="choice">
+                <input type="radio" name="email-source" defaultChecked className="radio" />
                 <span>
                   <span className="block font-medium">Gmail</span>
                   <span className="mt-0.5 block text-sm text-bark-500">
@@ -47,8 +44,8 @@ export default function Settings() {
                   </span>
                 </span>
               </label>
-              <label className="flex cursor-pointer gap-3 rounded-control border border-birch-300 bg-white p-4 hover:border-bark-400">
-                <input type="radio" name="email-source" className="mt-1 accent-bark" />
+              <label className="choice">
+                <input type="radio" name="email-source" className="radio" />
                 <span>
                   <span className="block font-medium">Forwarding address</span>
                   <span className="mt-0.5 block text-sm text-bark-500">
@@ -64,33 +61,23 @@ export default function Settings() {
         <div className="space-y-6 xl:col-span-4">
           <Panel title="Email reading" description="Which model reads, and when it may act alone.">
             <div className="space-y-5">
-              <label className="block">
-                <span className="label">Model</span>
-                <select className="field mt-1.5" defaultValue="anthropic">
-                  {connected.map((provider) => (
-                    <option key={provider.id} value={provider.id}>
-                      {provider.name} {provider.product}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="block">
-                <span className="flex items-baseline justify-between">
-                  <span className="label">Act on its own above</span>
-                  <span className="font-medium tabular-nums">80%</span>
-                </span>
-                <input
-                  type="range"
-                  min={50}
-                  max={99}
-                  defaultValue={80}
-                  className="mt-3 w-full accent-bark"
-                />
-                <span className="mt-1.5 block text-xs leading-relaxed text-bark-500">
-                  Below this confidence, emails wait in your Inbox. Higher means fewer surprises and
-                  more to review.
-                </span>
-              </label>
+              <Select
+                label="Model"
+                icon="sparkle"
+                defaultValue="anthropic"
+                options={connected.map((provider) => ({
+                  value: provider.id,
+                  label: `${provider.name} ${provider.product}`,
+                }))}
+              />
+              <Slider
+                label="Act on its own above"
+                min={50}
+                max={99}
+                defaultValue={80}
+                format={(value) => `${value}%`}
+                hint="Below this confidence, emails wait in your Inbox. Higher means fewer surprises and more to review."
+              />
             </div>
           </Panel>
 

@@ -10,7 +10,7 @@ integrations, migrations and their tests) himself to learn Python backend develo
 |---|---|
 | Bugs | Issues with clear steps to reproduce, always welcome |
 | Frontend presentation | Components, styling, accessibility, responsive fixes (`frontend/src/components`, `frontend/src/pages`) |
-| Docs | README, setup guides, typos, diagrams (`docs/`) |
+| Docs | README, setup guides, typos, diagrams |
 | Tooling / CI | GitHub Actions, Docker, lint config |
 | Backend core | **Please open an issue to discuss first.** Until v1 ships, backend logic is written by the maintainer; suggestions and reviews are very welcome, finished implementations usually won't be merged |
 

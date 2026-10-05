@@ -1,7 +1,9 @@
+import { Suspense } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import { tokenStorage } from '../api/client'
-import { sampleEmails } from '../sample/data'
+import { sampleEmails, sampleWeekly } from '../sample/data'
+import PageLoader from './PageLoader'
 import Sidebar from './Sidebar'
 
 export default function Layout() {
@@ -22,6 +24,10 @@ export default function Layout() {
     { to: '/settings', label: 'Settings', icon: 'settings' as const },
   ]
 
+  // TODO(me): this week's count from GET /stats/weekly (the last week) and the user's goal.
+  const thisWeek = sampleWeekly.weeks[sampleWeekly.weeks.length - 1]
+  const weekly = { done: thisWeek?.applications ?? 0, goal: sampleWeekly.goal }
+
   return (
     <div className="min-h-screen">
       <a
@@ -30,11 +36,17 @@ export default function Layout() {
       >
         Skip to content
       </a>
-      <Sidebar items={items} onLogout={handleLogout} />
+      <Sidebar items={items} onLogout={handleLogout} weekly={weekly} />
       <main id="main" className="lg:pl-60">
         {/* Keyed by route so each view arrives with a short fade (continuity, not choreography). */}
-        <div key={location.pathname} className="view-in px-4 pb-16 pt-6 sm:px-8 lg:px-10 lg:pt-10">
-          <Outlet />
+        <div
+          key={location.pathname}
+          className="view-in px-4 pb-32 pt-6 sm:px-8 lg:px-10 lg:pb-16 lg:pt-10"
+        >
+          {/* Page code loads here, so the sidebar stays put while it does. */}
+          <Suspense fallback={<PageLoader inline />}>
+            <Outlet />
+          </Suspense>
         </div>
       </main>
     </div>

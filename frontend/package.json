@@ -22,7 +22,8 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-router-dom": "^6.28.0",
-    "recharts": "^2.15.0"
+    "recharts": "^2.15.0",
+    "simple-icons": "^16.34.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

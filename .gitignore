@@ -12,13 +12,34 @@ token*.json
 *.p12
 .env.local
 
-# Local Claude Code / tool state (machine-specific, may hold personal paths or consent)
-.claude/settings.local.json
-.claude/projects/
-.claude/todos/
-.impeccable/config.local.json
-.impeccable/hook.cache.json
-.impeccable/live/
+# Local Claude Code / tool state (machine-specific, may hold personal paths or consent).
+# The **/ prefix matters: a pattern with a slash in the middle only matches at the repo
+# root, and the Impeccable hook also writes its cache under frontend/.
+**/.claude/settings.local.json
+**/.claude/projects/
+**/.claude/todos/
+**/.claude/worktrees/
+**/.impeccable/config.local.json
+**/.impeccable/hook.cache.json
+**/.impeccable/hook.pending.json
+**/.impeccable/live/
+
+# Personal data: your real job-search history never belongs in a public repo.
+# Put Notion/CSV exports in one of these folders before importing them.
+imports/
+exports/
+*.notion.csv
+backend/data/
+
+# Private docs: product research, replica outputs and deploy notes stay local.
+docs/
+
+# Local databases and dumps
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.backup
 
 # Python
 __pycache__/

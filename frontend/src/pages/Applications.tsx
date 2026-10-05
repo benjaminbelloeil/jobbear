@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import ApplicationRow from '../components/ApplicationRow'
 import Icon from '../components/Icon'
+import Select from '../components/form/Select'
 import PageHeader from '../components/PageHeader'
 import Pagination from '../components/Pagination'
 import PipelineBoard from '../components/PipelineBoard'
@@ -62,12 +63,15 @@ export default function Applications() {
         <>
           <div className="mb-5 flex flex-col gap-3 2xl:flex-row 2xl:items-center 2xl:justify-between">
             <StatusFilterChips selected={[]} onToggle={() => {}} />
-            <label className="sm:max-w-xs 2xl:w-72">
-              <span className="sr-only">Company</span>
-              <select className="field" defaultValue="">
-                <option value="">All companies</option>
-              </select>
-            </label>
+            {/* TODO(me): fill options from GET /companies and filter the list by it. */}
+            <Select
+              label="Company"
+              hideLabel
+              icon="building"
+              defaultValue=""
+              options={[{ value: '', label: 'All companies' }]}
+              className="sm:max-w-xs 2xl:w-72"
+            />
           </div>
 
           <div className="panel overflow-hidden">

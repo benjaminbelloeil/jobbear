@@ -4,6 +4,7 @@ import DetailList from '../components/DetailList'
 import EmptyState from '../components/EmptyState'
 import Icon from '../components/Icon'
 import PageHeader from '../components/PageHeader'
+import Select from '../components/form/Select'
 import Panel from '../components/Panel'
 import StatusBadge from '../components/StatusBadge'
 import { NEXT_ACTION_LABELS, SOURCE_LABELS, STATUS_META } from '../components/statusStyles'
@@ -111,19 +112,21 @@ export default function ApplicationDetail() {
           <Panel title="Change status" description="Each change is added to the history.">
             {/* TODO(me): list only the transitions status_rules allows; submit the change. */}
             <div className="space-y-3">
-              <label className="block">
-                <span className="label">New status</span>
-                <select className="field mt-1.5" defaultValue={app.status}>
-                  {APPLICATION_STATUSES.map((status) => (
-                    <option key={status} value={status}>
-                      {STATUS_META[status].label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <Select
+                label="New status"
+                defaultValue={app.status}
+                options={APPLICATION_STATUSES.map((status) => ({
+                  value: status,
+                  label: STATUS_META[status].label,
+                  dot: STATUS_META[status].hex,
+                }))}
+              />
               <label className="block">
                 <span className="label">Note (optional)</span>
-                <input className="field mt-1.5" placeholder="e.g. Phone screen went well" />
+                <span className="field-group mt-1.5">
+                  <Icon name="note" size={17} className="field-icon" />
+                  <input className="field" placeholder="e.g. Phone screen went well" />
+                </span>
               </label>
               <button type="button" className="btn-primary w-full">
                 Save status

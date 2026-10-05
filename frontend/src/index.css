@@ -9,6 +9,8 @@
     caret-color: theme('colors.honey.600');
     scrollbar-color: theme('colors.birch.300') transparent;
     text-underline-offset: 0.2em;
+    /* Nav links glide to their section; the reduced-motion block below turns this off. */
+    scroll-behavior: smooth;
   }
 
   input,
@@ -27,6 +29,10 @@
   :focus-visible {
     @apply outline outline-2 outline-offset-2 outline-bark;
   }
+  /* A bark ring vanishes on bark surfaces (sidebar, insight card): use honey there. */
+  .bg-bark :focus-visible {
+    @apply outline-honey;
+  }
 
   ::selection {
     @apply bg-honey/40;
@@ -38,28 +44,200 @@
     @apply rounded-panel border border-birch-200 bg-birch-50;
   }
 
+  /* Every button presses in a touch when clicked: the one bit of physical feedback the
+     app shares with the landing page. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-control px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-control px-4 py-2 text-sm font-medium transition duration-150 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transform-none;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .btn-primary {
     @apply btn bg-bark text-birch-50 hover:bg-bark-700;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.08),
+      0 6px 14px -8px rgb(42 31 25 / 0.6);
   }
 
+  /* Honey reads as a little slab: a lighter top edge and a darker lip underneath. */
   .btn-honey {
-    @apply btn bg-honey text-bark hover:bg-honey-600;
+    @apply btn bg-honey font-semibold text-bark hover:bg-[#F0B43A];
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.35),
+      inset 0 -2px 0 rgb(122 82 8 / 0.25),
+      0 6px 14px -8px rgb(201 138 14 / 0.9);
+  }
+  .btn-honey:hover {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.4),
+      inset 0 -2px 0 rgb(122 82 8 / 0.25),
+      0 10px 20px -10px rgb(201 138 14 / 0.95);
   }
 
   .btn-ghost {
     @apply btn text-bark-500 hover:bg-birch-200/60 hover:text-bark;
   }
 
+  /* Secondary action on a light surface: a quiet outlined button. */
+  .btn-soft {
+    @apply btn border border-birch-300 bg-birch-50 text-bark hover:border-bark-400 hover:bg-white;
+    box-shadow: 0 1px 2px rgb(42 31 25 / 0.06);
+  }
+
+  /* Marketing sizes: bigger, heavier, and they lift a little on hover. App screens keep
+     the compact .btn sizes above. */
+  .btn-lg {
+    @apply gap-2.5 px-6 py-3.5 text-base font-semibold;
+  }
+  .btn-lift {
+    @apply ease-arrive transition duration-200 hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none;
+  }
+  .btn-primary.btn-lift {
+    box-shadow: 0 12px 28px -14px rgb(42 31 25 / 0.7);
+  }
+  .btn-outline-light {
+    @apply btn border border-birch/25 text-birch-50 hover:border-birch/50 hover:bg-birch/10;
+  }
+  .btn-outline-dark {
+    @apply btn border-2 border-bark/80 text-bark hover:bg-bark hover:text-honey;
+  }
+
+  /* Fields are birch paper pressed into the panel: warm fill and a soft inner shadow at
+     rest, lifting to white with a honey halo when they have focus. */
   .field {
-    @apply block w-full rounded-control border border-birch-300 bg-white px-3 py-2 text-sm text-bark placeholder:text-bark-500 focus:border-bark focus:outline-none focus:ring-2 focus:ring-honey/50;
+    @apply block min-h-[2.75rem] w-full rounded-control border border-birch-300 bg-birch px-3.5 py-2.5 text-sm text-bark transition duration-200 placeholder:text-bark-500 hover:border-bark-400 hover:bg-birch-50 focus:outline-none;
+    box-shadow: inset 0 1.5px 2px rgb(42 31 25 / 0.06);
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .field:focus,
+  .field[aria-expanded='true'] {
+    @apply border-bark bg-white;
+    box-shadow:
+      0 0 0 4px rgb(233 168 37 / 0.28),
+      0 8px 20px -14px rgb(42 31 25 / 0.45);
+  }
+  .field[aria-invalid='true'] {
+    @apply border-berry;
+  }
+  textarea.field {
+    @apply leading-relaxed;
+  }
+  /* Autofill keeps our paper colour instead of the browser's blue/yellow wash. */
+  .field:-webkit-autofill {
+    -webkit-text-fill-color: theme('colors.bark.DEFAULT');
+    box-shadow: inset 0 0 0 100px theme('colors.honey.50');
+  }
+
+  /* A field with an icon inside on the left. The icon warms up while the field has focus. */
+  .field-group {
+    @apply relative block;
+  }
+  .field-group > .field {
+    @apply pl-10;
+  }
+  .field-icon {
+    @apply pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-bark-400 transition-colors duration-200;
+  }
+  .field-group:focus-within .field-icon {
+    @apply text-honey-800;
   }
 
   .label {
-    @apply text-sm font-medium text-bark-700;
+    @apply text-sm font-semibold text-bark-700;
+  }
+  .hint {
+    @apply mt-1.5 block text-xs leading-relaxed text-bark-500;
+  }
+
+  /* On/off switch drawn over a real checkbox, so forms and keyboards treat it as one. */
+  .switch {
+    @apply relative h-6 w-11 shrink-0 cursor-pointer appearance-none rounded-full bg-birch-300 transition-colors duration-200;
+    box-shadow: inset 0 1.5px 3px rgb(42 31 25 / 0.15);
+  }
+  .switch::before {
+    @apply absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform duration-300;
+    content: '';
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 4px rgb(42 31 25 / 0.25);
+  }
+  .switch:checked {
+    @apply bg-honey;
+  }
+  .switch:checked::before {
+    transform: translateX(1.25rem);
+  }
+
+  /* Radio: a ring that fills with a bark dot. */
+  .radio {
+    @apply relative mt-0.5 grid h-5 w-5 shrink-0 cursor-pointer appearance-none place-items-center rounded-full border-[1.5px] border-bark-400 bg-white transition-colors duration-150;
+  }
+  .radio::before {
+    @apply h-2.5 w-2.5 scale-0 rounded-full bg-bark transition-transform duration-200;
+    content: '';
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .radio:checked {
+    @apply border-bark;
+  }
+  .radio:checked::before {
+    @apply scale-100;
+  }
+
+  /* Range slider: a recessed track that fills honey up to the thumb (--fill, set by
+     <Slider />), with a white knob ringed in bark. */
+  .range {
+    @apply h-2 w-full cursor-pointer appearance-none rounded-full bg-transparent;
+    background-image: linear-gradient(
+      to right,
+      theme('colors.honey.DEFAULT') var(--fill, 50%),
+      theme('colors.birch.200') var(--fill, 50%)
+    );
+    box-shadow: inset 0 1px 2px rgb(42 31 25 / 0.12);
+  }
+  .range::-webkit-slider-thumb {
+    @apply h-5 w-5 appearance-none rounded-full border-[3px] border-bark bg-white transition-transform duration-150;
+    box-shadow: 0 2px 6px rgb(42 31 25 / 0.3);
+  }
+  .range::-moz-range-thumb {
+    @apply h-4 w-4 rounded-full border-[3px] border-bark bg-white;
+  }
+  .range:hover::-webkit-slider-thumb,
+  .range:focus-visible::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+
+  /* Floating surface for dropdowns and the date picker. */
+  .popover {
+    @apply absolute z-40 mt-2 overflow-hidden rounded-xl border border-birch-300 bg-white p-1.5;
+    box-shadow:
+      0 24px 48px -20px rgb(42 31 25 / 0.45),
+      0 2px 6px rgb(42 31 25 / 0.06);
+    transform-origin: top;
+    animation: popover-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .option {
+    @apply flex w-full cursor-pointer select-none items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm text-bark-700 transition-colors duration-100;
+  }
+  .option[data-active='true'] {
+    @apply bg-birch text-bark;
+  }
+  .option[aria-selected='true'] {
+    @apply font-semibold text-bark;
+  }
+
+  /* A choice card (radio or checkbox inside a label) that lights up when picked. */
+  .choice {
+    @apply flex cursor-pointer gap-3 rounded-control border border-birch-300 bg-white p-4 transition duration-150 hover:border-bark-400;
+  }
+  .choice:has(:checked) {
+    @apply border-honey-600 bg-honey-50/60 ring-4 ring-honey/20;
+  }
+  .choice:has(:focus-visible) {
+    @apply outline outline-2 outline-offset-2 outline-bark;
+  }
+
+  /* An icon on a tinted square, used beside panel titles and list rows. */
+  .icon-tile {
+    @apply grid h-9 w-9 shrink-0 place-items-center rounded-[0.7rem];
   }
 }
 
@@ -89,11 +267,61 @@
   }
 }
 
+/* The dashboard's one authored moment: panels settle into place in reading order, a
+   little blur clearing as they land. Capped so the last panel is in by ~450ms. */
+.dash-in {
+  animation: dash-in 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(min(var(--i, 0), 7) * 55ms);
+}
+@keyframes dash-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+    filter: blur(4px);
+  }
+}
+
+/* Panels answer the pointer with a slightly deeper shadow, nothing more. */
+.panel-hover {
+  transition: box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.panel-hover:hover {
+  box-shadow: 0 18px 40px -28px rgb(42 31 25 / 0.35);
+}
+
+/* A meter that is about to tip over (ghosting soon) breathes gently. */
+.meter-warn {
+  animation: meter-warn 2.4s ease-in-out infinite;
+}
+@keyframes meter-warn {
+  50% {
+    filter: brightness(1.12) saturate(1.1);
+  }
+}
+
+/* Recharts bars: hovering one dims its neighbours so the eye lands on it. */
+.chart-focus .recharts-bar-rectangle {
+  transition: opacity 180ms ease;
+}
+.chart-focus:hover .recharts-bar-rectangle {
+  opacity: 0.45;
+}
+.chart-focus:hover .recharts-bar-rectangle:hover {
+  opacity: 1;
+}
+
 /* Recharts bars rise from the baseline when the chart's data arrives. */
 .chart-rise .recharts-bar-rectangle path {
   transform-box: fill-box;
   transform-origin: bottom;
   animation: rise 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
 }
 
 @keyframes fill-in {
@@ -119,6 +347,9 @@
   /* Keep state legible without movement: fills and views simply appear. */
   .fill-in,
   .view-in,
+  .dash-in,
+  .meter-warn,
+  .popover,
   .list-in > *,
   .chart-rise .recharts-bar-rectangle path {
     animation: none !important;
@@ -133,47 +364,63 @@
   }
 }
 
-/* Landing demo: one authored sequence (~3.6s). An email arrives, the bear reads it, the
-   application's status flips and the history gains a row. Default styles are the FINAL
-   state, so with reduced motion (or no animation support) the outcome simply shows. */
-.demo [data-step] {
-  animation-duration: 600ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  animation-fill-mode: both;
+/* Faint birch dots behind the hero demo, fading out towards the edges. */
+.demo-dots {
+  background-image: radial-gradient(rgb(243 244 239 / 0.13) 1px, transparent 1.5px);
+  background-size: 18px 18px;
+  mask-image: radial-gradient(ellipse at center, black 35%, transparent 75%);
 }
-.demo [data-step='email'] {
-  animation-name: demo-slide;
+
+/* Landing demo: the beats are timed in LandingDemo.tsx; these are the pieces it toggles.
+   The highlight sweeps across the key phrase, the bear's bubble pops in on every new line,
+   the status badge pops and the tracker card glows once when it updates itself. */
+.demo-mark {
+  background-color: transparent;
+  background-image: linear-gradient(rgb(233 168 37 / 0.45), rgb(233 168 37 / 0.45));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  border-radius: 0.2em;
+  padding: 0 0.15em;
 }
-.demo [data-step='link-1'] {
-  animation-name: demo-draw;
-  animation-delay: 650ms;
+.demo-mark-on {
+  background-size: 100% 100%;
 }
-.demo [data-step='read'] {
-  animation-name: demo-pop;
-  animation-delay: 1150ms;
+.bubble-in {
+  transform-origin: bottom right;
+  animation: bubble-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.demo [data-step='meter'] {
-  animation-name: fill-in;
-  animation-duration: 800ms;
-  animation-delay: 1500ms;
-  transform-origin: left center;
+.badge-pop {
+  animation: badge-pop 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.demo [data-step='link-2'] {
-  animation-name: demo-draw;
-  animation-delay: 2350ms;
+.tracker-glow {
+  animation: tracker-glow 1200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.demo [data-step='old-badge'] {
-  animation-name: demo-out;
-  animation-delay: 2900ms;
-  opacity: 0;
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(6px);
+  }
 }
-.demo [data-step='new-badge'] {
-  animation-name: demo-in;
-  animation-delay: 2950ms;
+@keyframes badge-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
 }
-.demo [data-step='history'] {
-  animation-name: demo-slide-down;
-  animation-delay: 3150ms;
+@keyframes tracker-glow {
+  from {
+    box-shadow: 0 0 0 0 rgb(233 168 37 / 0.75);
+  }
+  to {
+    box-shadow: 0 0 0 18px rgb(233 168 37 / 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bubble-in,
+  .badge-pop,
+  .tracker-glow {
+    animation: none;
+  }
 }
 
 @keyframes demo-slide {
@@ -217,5 +464,517 @@
 @media (prefers-reduced-motion: reduce) {
   .demo [data-step] {
     animation: none !important;
+  }
+}
+
+/* How-it-works scenes. A scene renders its FINAL state by default; adding `.play`
+   plays its little sequence (held by .scene-wait until on screen). Each animated part names its motion in data-a and its
+   start time in --d. */
+.scene.play [data-a] {
+  animation-duration: 600ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+  animation-delay: var(--d, 0ms);
+}
+.scene.play [data-a='slide'] {
+  animation-name: demo-slide;
+}
+.scene.play [data-a='drop'] {
+  animation-name: demo-slide-down;
+}
+.scene.play [data-a='pop'] {
+  animation-name: demo-pop;
+}
+.scene.play [data-a='in'] {
+  animation-name: demo-in;
+}
+.scene.play [data-a='fill'] {
+  animation-name: fill-in;
+  animation-duration: 900ms;
+  transform-origin: left center;
+}
+.scene.play [data-a='draw'] {
+  animation-name: demo-draw;
+  transform-origin: left center;
+}
+.scene.play [data-a='out'] {
+  animation-name: demo-out;
+}
+.scene.play [data-a='travel'] {
+  animation-name: scene-travel;
+  animation-duration: 900ms;
+}
+
+/* Until its scene is on screen, the motion holds at its first frame. */
+.scene-wait [data-a] {
+  animation-play-state: paused;
+}
+
+@keyframes scene-travel {
+  from {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.96);
+  }
+}
+
+/* Hero headline: each line rises out of its own mask, once, on load. */
+.mask-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+.mask-line > span {
+  display: block;
+  animation: line-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes line-rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+/* Data visuals that wait until they're on screen before filling. */
+.await-view .fill-in,
+.await-view .chart-rise .recharts-bar-rectangle path {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene.play [data-a],
+  .mask-line > span {
+    animation: none !important;
+  }
+}
+
+/* Mascot motion. Loops are slow and small; .bear-paused stops them off screen. */
+.bear * {
+  transform-box: fill-box;
+}
+.bear-body {
+  transform-origin: center bottom;
+  animation: bear-breathe 4.5s ease-in-out infinite;
+}
+.bear-eyes {
+  transform-origin: center;
+  animation: bear-blink 5.5s ease-in-out infinite;
+}
+.bear-ear-left {
+  transform-origin: right bottom;
+  animation: bear-ear 7s ease-in-out infinite;
+}
+.bear-reading .bear-head {
+  transform-origin: center bottom;
+  transform: rotate(-4deg) translateY(4px);
+}
+/* The arm hinges at its shoulder (134, 156 on the artboard), so it stays attached. */
+.bear .bear-arm {
+  transform-box: view-box;
+  transform-origin: 134px 156px;
+}
+.bear-waving .bear-arm {
+  animation: bear-wave 2.6s cubic-bezier(0.45, 0, 0.55, 1) 1;
+}
+/* Straight while raised, curved at rest: the two arm shapes swap early in the lift and
+   late in the return, while the arm is moving, so the change reads as the elbow
+   straightening rather than a cut. Outside the wave only the curved arm shows. */
+.bear-arm-raised {
+  opacity: 0;
+}
+.bear-waving .bear-arm-raised {
+  animation: bear-arm-raised 2.6s linear 1;
+}
+.bear-waving .bear-arm-rest {
+  animation: bear-arm-rest 2.6s linear 1;
+}
+.bear-z {
+  animation: bear-z 3s ease-out infinite both;
+}
+.bear-paused,
+.bear-paused * {
+  animation-play-state: paused !important;
+}
+
+@keyframes bear-breathe {
+  50% {
+    transform: scale(1.012, 1.025);
+  }
+}
+@keyframes bear-blink {
+  0%,
+  91%,
+  100% {
+    transform: scaleY(1);
+  }
+  94% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes bear-ear {
+  0%,
+  86%,
+  100% {
+    transform: rotate(0);
+  }
+  89% {
+    transform: rotate(-9deg);
+  }
+  92% {
+    transform: rotate(3deg);
+  }
+}
+@keyframes bear-wave {
+  0%,
+  92%,
+  100% {
+    transform: rotate(0);
+  }
+  18%,
+  50% {
+    transform: rotate(-152deg);
+  }
+  34%,
+  66% {
+    transform: rotate(-128deg);
+  }
+  78% {
+    transform: rotate(-148deg);
+  }
+}
+@keyframes bear-arm-raised {
+  0%,
+  4% {
+    opacity: 0;
+  }
+  10%,
+  88% {
+    opacity: 1;
+  }
+  95%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes bear-arm-rest {
+  0%,
+  4% {
+    opacity: 1;
+  }
+  10%,
+  88% {
+    opacity: 0;
+  }
+  95%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes bear-z {
+  from {
+    opacity: 0;
+    transform: translate(0, 10px);
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(10px, -14px);
+  }
+}
+
+/* The birch rim that lets a bark bear read on a bark background. */
+.bear-rim {
+  flood-color: theme('colors.birch.50');
+}
+
+/* Paws gripping the hero card. The right one lets go for exactly as long as bear-wave
+   holds the arm up, so arm and paw never show at once. */
+.paw {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.paw-let-go {
+  animation: paw-let-go 2.6s cubic-bezier(0.45, 0, 0.55, 1) 1;
+}
+@keyframes paw-let-go {
+  0%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+  10%,
+  86% {
+    opacity: 0;
+    transform: translateY(-30%) scale(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bear,
+  .bear *,
+  .paw-let-go {
+    animation: none !important;
+  }
+}
+
+/* Bring-your-own-AI ring: honey signal flows into the bear, the bear pulses on arrival,
+   the dotted outer ring drifts. Everything stops off screen and under reduced motion. */
+.ai-flow {
+  animation: ai-flow 0.9s linear infinite;
+}
+.ai-pulse {
+  animation: ai-pulse 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+.ai-orbit {
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+  animation: ai-orbit 90s linear infinite;
+}
+.ai-board-paused .ai-flow,
+.ai-board-paused .ai-orbit {
+  animation-play-state: paused;
+}
+@keyframes ai-flow {
+  to {
+    stroke-dashoffset: -4;
+  }
+}
+@keyframes ai-pulse {
+  from {
+    box-shadow: 0 0 0 0 rgb(233 168 37 / 0.55);
+  }
+  to {
+    box-shadow: 0 0 0 26px rgb(233 168 37 / 0);
+  }
+}
+@keyframes ai-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* The AI card's hand-off, one 3s timeline shared by every part so the percentages line
+   up: email lands (0–10%), logo pins on (12–26%), scan + highlight read it (18–46%),
+   email lifts away (52–62%), tracker row settles in (56–68%), Applied flips to
+   Interviewing (74–92%), honey pulse (84–100%). Every part's resting style is the END
+   state, so reduced motion (no animation) simply shows the result. */
+.handoff > *,
+.handoff * {
+  animation-duration: 3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+.handoff-email {
+  opacity: 0;
+  animation-name: handoff-email;
+}
+.handoff-logo {
+  animation-name: handoff-logo;
+}
+.handoff-scan {
+  opacity: 0;
+  animation-name: handoff-scan;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+}
+.handoff-mark {
+  background-color: transparent;
+  background-image: linear-gradient(rgb(233 168 37 / 0.45), rgb(233 168 37 / 0.45));
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border-radius: 0.2em;
+  padding: 0 0.15em;
+  animation-name: handoff-mark;
+}
+.handoff-row {
+  animation-name: handoff-row;
+}
+.handoff-applied {
+  opacity: 0;
+  animation-name: handoff-applied;
+}
+.handoff-interviewing {
+  animation-name: handoff-interviewing;
+}
+.handoff-glow {
+  animation-name: handoff-glow;
+}
+
+@keyframes handoff-email {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  10%,
+  52% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  62%,
+  100% {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.96);
+    filter: blur(6px);
+  }
+}
+@keyframes handoff-logo {
+  0%,
+  12% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-30deg);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.15) rotate(6deg);
+  }
+  26%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes handoff-scan {
+  0%,
+  18% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  22% {
+    opacity: 1;
+  }
+  44% {
+    opacity: 1;
+  }
+  48%,
+  100% {
+    opacity: 0;
+    transform: translateX(calc(100% + 5rem));
+  }
+}
+@keyframes handoff-mark {
+  0%,
+  24% {
+    background-size: 0% 100%;
+  }
+  42%,
+  100% {
+    background-size: 100% 100%;
+  }
+}
+@keyframes handoff-row {
+  0%,
+  56% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+    filter: blur(4px);
+  }
+  68%,
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+@keyframes handoff-applied {
+  0%,
+  74% {
+    opacity: 1;
+    transform: none;
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.8);
+  }
+}
+@keyframes handoff-interviewing {
+  0%,
+  76% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.5);
+  }
+  86% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  92%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes handoff-glow {
+  0%,
+  84% {
+    box-shadow: 0 0 0 0 rgb(233 168 37 / 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgb(233 168 37 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-flow,
+  .ai-pulse,
+  .ai-orbit,
+  .handoff > *,
+  .handoff * {
+    animation: none !important;
+  }
+}
+
+/* Scroll reveal for a group of rows. Only armed by JS, so without it nothing is hidden. */
+.reveal-armed .reveal-item {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.revealed .reveal-item {
+  transition:
+    opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--d, 0ms);
+}
+/* Lighter companion: content inside an already-revealed block fades in place, no
+   movement, so shapes that span several rows (a table column) never break apart. */
+.reveal-armed .reveal-fade {
+  opacity: 0;
+}
+.revealed .reveal-fade {
+  /* Hover colours keep their own quick, undelayed transition alongside the fade. */
+  transition:
+    opacity 600ms cubic-bezier(0.16, 1, 0.3, 1) calc(250ms + var(--d, 0ms)),
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-armed .reveal-item,
+  .reveal-armed .reveal-fade {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Route loader: the bear bobs while a page chunk loads. */
+.loader-bob {
+  animation: loader-bob 1.1s ease-in-out infinite;
+}
+.loader-dot {
+  animation: loader-dot 1.2s ease-in-out infinite;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes loader-bob {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes loader-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

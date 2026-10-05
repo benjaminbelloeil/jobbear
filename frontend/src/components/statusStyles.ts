@@ -95,3 +95,15 @@ export const CLASSIFICATION_LABELS: Record<EmailClassification, string> = {
   CONFIRMATION: 'Application received',
   OTHER: 'Other',
 }
+
+export type PanelTone = 'honey' | 'pine' | 'lake' | 'heather' | 'berry' | 'bark'
+
+/** Tinted tile behind a panel or row icon. Shared so tones mean the same thing everywhere. */
+export const TONE_TILE: Record<PanelTone, string> = {
+  honey: 'bg-honey-50 text-honey-800 ring-1 ring-inset ring-honey/30',
+  pine: 'bg-pine-50 text-pine ring-1 ring-inset ring-pine/20',
+  lake: 'bg-lake-50 text-lake ring-1 ring-inset ring-lake/20',
+  heather: 'bg-heather-50 text-heather ring-1 ring-inset ring-heather/20',
+  berry: 'bg-berry-50 text-berry ring-1 ring-inset ring-berry/20',
+  bark: 'bg-birch-200/70 text-bark ring-1 ring-inset ring-birch-300',
+}
