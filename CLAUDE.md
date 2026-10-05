@@ -109,6 +109,15 @@ Supabase-style, but with **no free hosted tier**: I never pay for users who don'
 - Full numbers: `docs/replica/hosting-costs.md` (local only, `docs/` is gitignored and must never be committed).
 - v1 stays single-user and billing-free. Multi-user, BYOK storage, forwarding inbox and billing are v2, and the backend for all of it is mine to write.
 
+## Product roadmap after v1 (decided 2026-10-05)
+
+The screens exist on sample data (`/resumes`, the posting and keyword-match panels on an application, the description and resume fields on New application). The backend is mine.
+
+1. **v1.5: save the posting.** Store the description text with the application. Fill it from Greenhouse, Lever and Ashby public job APIs when the link points there; everywhere else the user pastes it. Never scrape LinkedIn or Indeed (blocked and against their terms).
+2. **v2: resume versions.** Upload PDFs as named versions, record which one went to each application, and compare response and interview rates per version like the per-source stats. Below 5 sends, a version is "too few to compare".
+3. **v2: keyword match, not an "ATS score".** Skills from the saved posting found or missing in the resume that was sent, shown with the evidence. It compares wording, not experience, and the UI says so.
+- **Not doing:** AI that rewrites resumes. Invented skills and metrics are Jobright's #2 complaint. If it ever comes back: suggestions only, each tied to a line in the posting, never adding a skill the user doesn't have.
+
 ## Design: Impeccable, always on
 
 The [Impeccable](https://github.com/pbakaus/impeccable) skill lives in `.claude/skills/impeccable/` (Apache 2.0, v4.5.0). Use it for **every** frontend change, however small:

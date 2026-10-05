@@ -248,6 +248,9 @@ The backend tests use a separate `jobbear_test` database. Docker Compose creates
 - [ ] Dashboard analytics
 - [ ] Gmail sync + Claude classification
 - [ ] Deploy to Railway
+- [ ] **v1.5** Save the job posting with each application (paste it, or fill it from Greenhouse, Lever and Ashby links)
+- [ ] **v2** Resume versions: record which resume went to each application and compare their response rates
+- [ ] **v2** Keyword match: which skills in the saved posting your resume covers and which it misses, with the evidence shown
 - [ ] Bring your own AI provider (OpenAI, Gemini, Grok, Ollama)
 - [ ] Forwarding address for any email provider
 - [ ] Production compose file for VPS hosting
