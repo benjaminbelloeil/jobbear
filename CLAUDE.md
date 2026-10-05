@@ -90,6 +90,10 @@ Outputs go in `docs/replica/` so every later step can read them.
 
 Scope guard: this is a 2–3 week project. A replica output can add features to the roadmap, but each feature has to fit the build order. Keep a "v2 / later" list instead of growing v1.
 
+## Private notes
+
+Business model and the post-v1 roadmap are in `CLAUDE.local.md` (gitignored, local only). Read it before suggesting pricing, hosting, email-intake or roadmap changes.
+
 ## Design: Impeccable, always on
 
 The [Impeccable](https://github.com/pbakaus/impeccable) skill lives in `.claude/skills/impeccable/` (Apache 2.0, v4.5.0). Use it for **every** frontend change, however small:

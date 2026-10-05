@@ -59,11 +59,34 @@ const SELF_HOSTED = [
   'You run updates and backups',
 ]
 
-const CLOUD = [
+// Hosted passes: one-time payments that end on their own. Founding prices hold for the first 50
+// people; the regular price shows struck through. See "Business model" in CLAUDE.md.
+const PASSES = [
+  {
+    name: 'Hunt Pass',
+    days: 30,
+    price: '$12',
+    founding: '$9',
+    blurb: 'For a short, focused search. Nothing to install.',
+    featured: false,
+  },
+  {
+    name: 'Season Pass',
+    days: 90,
+    price: '$29',
+    founding: '$19',
+    blurb: 'Most searches run longer than a month. Under $7 a month at the founding price.',
+    featured: true,
+  },
+]
+
+const PASS_FEATURES = [
   'Everything in self-hosted',
   'AI included, no key needed',
   'One-click email connection',
   'Updates and backups handled for you',
+  '7-day free trial',
+  'Your data stays readable after it ends',
 ]
 
 const NAV_LINKS: NavLink[] = [
@@ -298,22 +321,36 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* Pricing: two plans, no subscriptions anywhere */}
+        {/* Pricing: free to self-host, or a hosted pass that ends on its own. No subscriptions.
+          The business model behind this lives in CLAUDE.md ("Business model"). */}
         <section
           id="pricing"
           className="mx-auto max-w-[90rem] scroll-mt-20 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
         >
-          <div className="max-w-3xl">
-            <h2 className={H2}>Free to run yourself. A pass if you’d rather not.</h2>
-            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-bark-700">
-              No subscription either way. Self-host it for free, or buy 30 days of the hosted
-              version while you’re actively searching. It ends on its own.
-            </p>
+          <div className="flex flex-wrap items-end justify-between gap-8">
+            <div className="max-w-3xl">
+              <h2 className={H2}>Free to run yourself. A pass if you’d rather not.</h2>
+              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-bark-700">
+                No subscription either way. Self-host it for free, or let us host it for the 30 or
+                90 days you’re searching. Every pass starts with a 7-day free trial and ends on its
+                own.
+              </p>
+            </div>
+            {/* TODO(me): once the route guard exists, point this at a public demo route that
+              renders the sample data without a login. */}
+            <Link to="/dashboard" className="btn-outline-dark btn-lg group">
+              Try the demo, no sign-up
+              <Icon
+                name="arrowRight"
+                size={18}
+                className="transition-transform duration-200 group-hover:translate-x-1"
+              />
+            </Link>
           </div>
 
           <div
             ref={plansRef}
-            className={`mt-14 grid gap-6 md:grid-cols-2 ${plansInView ? 'revealed' : 'reveal-armed'}`}
+            className={`mt-14 grid gap-6 lg:grid-cols-3 ${plansInView ? 'revealed' : 'reveal-armed'}`}
           >
             {/* Self-hosted */}
             <article className="reveal-item flex flex-col rounded-[1.75rem] border border-birch-300 bg-birch-50 p-7 sm:p-9">
@@ -322,7 +359,7 @@ export default function Landing() {
                 <span className="font-display text-6xl font-extrabold tracking-tight">$0</span>
                 <span className="text-bark-500">free, forever</span>
               </p>
-              <p className="mt-3 text-bark-700">
+              <p className="mt-3 text-bark-700 lg:min-h-12">
                 Run it on your own machine or server with Docker.
               </p>
               <ul className="mt-8 space-y-3.5 border-t border-birch-300 pt-8">
@@ -334,68 +371,125 @@ export default function Landing() {
                 ))}
               </ul>
               <div className="mt-auto pt-10">
-                <a href={REPO_URL} className="btn-primary btn-lg btn-lift w-full">
+                <a href={`${REPO_URL}#self-hosting`} className="btn-outline-dark btn-lg w-full">
                   <Icon name="github" size={20} />
-                  Get the code
+                  Self-hosting guide
                 </a>
               </div>
             </article>
 
-            {/* Cloud */}
-            <article
-              className="reveal-item relative flex flex-col overflow-hidden rounded-[1.75rem] bg-bark p-7 text-birch-50 shadow-[0_40px_80px_-40px_rgba(42,31,25,0.8)] sm:p-9"
-              style={delay(120)}
-            >
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h3 className="font-display text-2xl font-bold">JobBear Cloud</h3>
-                <span className="rounded-full bg-honey px-3 py-1 text-xs font-bold text-bark">
-                  Early access
-                </span>
-              </div>
-              <p className="mt-4 flex items-baseline gap-2">
-                <span className="font-display text-6xl font-extrabold tracking-tight text-honey">
-                  $12
-                </span>
-                <span className="text-birch-300">for 30 days</span>
-              </p>
-              <p className="mt-3 text-birch-300">
-                Nothing to install. No auto-renew, nothing to cancel.
-              </p>
-              <ul className="mt-8 space-y-3.5 border-t border-birch/15 pt-8">
-                {CLOUD.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <Icon name="check" size={18} className="mt-0.5 shrink-0 text-honey" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-auto pt-10">
-                {/* TODO(me): store the email (waitlist endpoint or a form service) and count
-                  submissions: this is the willingness-to-pay test in docs/replica/pricing.md. */}
-                <form
-                  className="flex flex-col gap-2 sm:flex-row"
-                  onSubmit={(e) => e.preventDefault()}
+            {/* Passes: same features, different length. Season is the one to pick. */}
+            {PASSES.map((pass, index) => {
+              const dark = pass.featured
+              return (
+                <article
+                  key={pass.name}
+                  className={`reveal-item relative flex flex-col rounded-[1.75rem] p-7 sm:p-9 ${
+                    dark
+                      ? 'bg-bark text-birch-50 shadow-[0_40px_80px_-40px_rgba(42,31,25,0.8)]'
+                      : 'border border-birch-300 bg-birch-50'
+                  }`}
+                  style={delay((index + 1) * 120)}
                 >
-                  <label htmlFor="waitlist-email" className="sr-only">
-                    Email
-                  </label>
-                  <input
-                    id="waitlist-email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    placeholder="you@example.com"
-                    className="field border-birch/20 py-3"
-                  />
-                  <button type="submit" className="btn-honey btn-lg btn-lift shrink-0">
-                    Join the waitlist
-                  </button>
-                </form>
-                <p className="mt-3 text-sm text-birch-300">
-                  We’ll email you once, when Cloud opens.
-                </p>
-              </div>
-            </article>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <h3 className="font-display text-2xl font-bold">{pass.name}</h3>
+                    {dark && (
+                      <span className="rounded-full bg-honey px-3 py-1 text-xs font-bold text-bark">
+                        Best value
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-4 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                    <span className="sr-only">
+                      {`Founding price ${pass.founding}, regular price ${pass.price}, for ${pass.days} days.`}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className={`font-display text-6xl font-extrabold tracking-tight ${dark ? 'text-honey' : ''}`}
+                    >
+                      {pass.founding}
+                    </span>
+                    <s aria-hidden="true" className={dark ? 'text-birch-300' : 'text-bark-500'}>
+                      {pass.price}
+                    </s>
+                    <span aria-hidden="true" className={dark ? 'text-birch-300' : 'text-bark-500'}>
+                      for {pass.days} days
+                    </span>
+                  </p>
+                  <p className={`mt-3 lg:min-h-12 ${dark ? 'text-birch-300' : 'text-bark-700'}`}>
+                    {pass.blurb}
+                  </p>
+                  <ul
+                    className={`mt-8 space-y-3.5 border-t pt-8 ${dark ? 'border-birch/15' : 'border-birch-300'}`}
+                  >
+                    {PASS_FEATURES.map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <Icon
+                          name="check"
+                          size={18}
+                          className={`mt-0.5 shrink-0 ${dark ? 'text-honey' : 'text-pine'}`}
+                        />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-auto pt-10">
+                    <a
+                      href="#reserve"
+                      className={`btn-lg btn-lift w-full ${dark ? 'btn-honey' : 'btn-primary'}`}
+                    >
+                      Reserve the {pass.name}
+                    </a>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+
+          {/* One reservation form for both passes */}
+          <div
+            id="reserve"
+            tabIndex={-1}
+            className="mt-6 grid scroll-mt-24 items-center gap-6 rounded-[1.75rem] border border-birch-300 bg-birch-50 p-7 sm:p-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:gap-12"
+          >
+            <div>
+              <h3 id="reserve-title" className="font-display text-2xl font-bold">
+                Founding prices for the first 50
+              </h3>
+              <p className="mt-2 max-w-xl text-bark-700">
+                JobBear Cloud isn’t open yet. Reserve a pass now and keep the founding price, or
+                start a 7-day free trial when it opens.
+              </p>
+            </div>
+            <div>
+              {/* TODO(me): store the email and which pass they want (waitlist endpoint or a form
+                service), and count submissions: this is the willingness-to-pay test in
+                docs/replica/pricing.md. Later this becomes a pre-sale checkout. */}
+              <form
+                aria-labelledby="reserve-title"
+                className="flex flex-col gap-2 sm:flex-row"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <label htmlFor="waitlist-email" className="sr-only">
+                  Email
+                </label>
+                <input
+                  id="waitlist-email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  placeholder="you@example.com"
+                  aria-describedby="reserve-note"
+                  className="field py-3"
+                />
+                <button type="submit" className="btn-primary btn-lg btn-lift shrink-0">
+                  Reserve my pass
+                </button>
+              </form>
+              <p id="reserve-note" className="mt-3 text-sm text-bark-500">
+                We’ll email you once, when Cloud opens. Nothing is charged today.
+              </p>
+            </div>
           </div>
         </section>
 

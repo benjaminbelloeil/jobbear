@@ -67,3 +67,6 @@ npm-debug.log*
 .vscode/
 *.swp
 Thumbs.db
+
+# Personal Claude Code notes (business decisions, private roadmap)
+CLAUDE.local.md
