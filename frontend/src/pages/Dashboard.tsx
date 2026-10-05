@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { Link } from 'react-router-dom'
 
 import BearCharacter from '../components/BearCharacter'
@@ -32,6 +32,14 @@ const today = new Intl.DateTimeFormat(undefined, {
   month: 'long',
 })
 
+// Three calm views instead of one wall of charts. The metric strip stays above all of them.
+const TABS = [
+  { id: 'today', label: 'Today' },
+  { id: 'progress', label: 'Progress' },
+  { id: 'channels', label: 'What works' },
+] as const
+type TabId = (typeof TABS)[number]['id']
+
 function greeting(hour: number) {
   if (hour < 5) return 'Up late'
   if (hour < 12) return 'Good morning'
@@ -50,12 +58,23 @@ export default function Dashboard() {
   //   Show <Skeleton /> blocks while loading.
   const now = new Date()
   const waiting = sampleEmails.length
+  const [tab, setTab] = useState<TabId>('today')
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
+
+  // Arrow keys move between tabs, as in any tab list.
+  const onTabKey = (event: KeyboardEvent, index: number) => {
+    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
+    event.preventDefault()
+    const next = (index + (event.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length
+    setTab(TABS[next]?.id ?? 'today')
+    tabRefs.current[next]?.focus()
+  }
 
   return (
     <>
       <header className="dash-in mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 lg:mb-8">
-        <div className="flex min-w-0 items-end gap-4">
-          <BearCharacter mood="waving" size={64} className="-mb-1 hidden shrink-0 sm:block" />
+        <div className="flex min-w-0 items-center gap-4">
+          <BearCharacter mood="waving" size={64} className="hidden shrink-0 sm:block" />
           <div className="min-w-0">
             <h1 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
               {greeting(now.getHours())}
@@ -69,6 +88,7 @@ export default function Dashboard() {
               </span>
               <a
                 href="#needs-you"
+                onClick={() => setTab('today')}
                 className="group inline-flex items-center gap-2 rounded-full bg-honey-50 py-1 pl-2.5 pr-3 text-sm font-semibold text-honey-800 ring-1 ring-inset ring-honey/50 transition-colors duration-150 hover:bg-honey/25"
               >
                 <span aria-hidden className="relative flex h-2 w-2">
@@ -107,90 +127,144 @@ export default function Dashboard() {
         <MetricStrip metrics={sampleMetrics} />
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-12">
-        <Panel
-          id="needs-you"
-          title="Needs you"
-          description="Soonest first."
-          icon="clock"
-          className="dash-in panel-hover xl:col-span-5"
-          style={order(2)}
-          actions={
-            <Link
-              to="/applications"
-              className="group inline-flex items-center gap-1 rounded-control text-sm font-medium text-bark-500 transition-colors hover:text-bark"
+      <div
+        role="tablist"
+        aria-label="Dashboard views"
+        className="dash-in mt-8 flex gap-1 border-b border-birch-300"
+        style={order(2)}
+      >
+        {TABS.map((item, index) => {
+          const selected = tab === item.id
+          return (
+            <button
+              key={item.id}
+              ref={(el) => {
+                tabRefs.current[index] = el
+              }}
+              type="button"
+              role="tab"
+              id={`tab-${item.id}`}
+              aria-selected={selected}
+              aria-controls={`panel-${item.id}`}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => setTab(item.id)}
+              onKeyDown={(event) => onTabKey(event, index)}
+              className={`relative -mb-px px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+                selected ? 'text-bark' : 'text-bark-500 hover:text-bark'
+              }`}
             >
-              All applications
-              <Icon
-                name="arrowRight"
-                size={14}
-                className="ease-arrive transition-transform duration-200 group-hover:translate-x-0.5"
+              {item.label}
+              <span
+                aria-hidden
+                className={`ease-arrive absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-honey transition-transform duration-300 ${
+                  selected ? 'scale-x-100' : 'scale-x-0'
+                }`}
               />
-            </Link>
-          }
-        >
-          <NeedsYouList items={sampleNeedsYou} />
-        </Panel>
+            </button>
+          )
+        })}
+      </div>
 
-        <Panel
-          title="Applications per week"
-          description={`Bars turn honey when you hit your goal of ${sampleWeekly.goal}.`}
-          icon="chart"
-          className="dash-in panel-hover xl:col-span-7"
-          style={order(3)}
-        >
-          <WeeklyVolumeChart weeks={sampleWeekly.weeks} goal={sampleWeekly.goal} height={260} />
-        </Panel>
+      <div
+        role="tabpanel"
+        id={`panel-${tab}`}
+        aria-labelledby={`tab-${tab}`}
+        key={tab}
+        className="view-in mt-6 grid items-stretch gap-6 xl:grid-cols-12"
+      >
+        {tab === 'today' && (
+          <>
+            <Panel
+              id="needs-you"
+              title="Needs you"
+              description="Soonest first."
+              icon="clock"
+              className="dash-in panel-hover xl:col-span-7"
+              style={order(2)}
+              actions={
+                <Link
+                  to="/applications"
+                  className="group inline-flex items-center gap-1 rounded-control text-sm font-medium text-bark-500 transition-colors hover:text-bark"
+                >
+                  All applications
+                  <Icon
+                    name="arrowRight"
+                    size={14}
+                    className="ease-arrive transition-transform duration-200 group-hover:translate-x-0.5"
+                  />
+                </Link>
+              }
+            >
+              <NeedsYouList items={sampleNeedsYou} />
+            </Panel>
 
-        <section
-          className="dash-in relative min-w-0 overflow-hidden rounded-panel bg-bark p-6 text-birch-50 sm:p-7 xl:col-span-4"
-          style={order(4)}
-        >
-          <div aria-hidden className="demo-dots pointer-events-none absolute inset-0" />
-          <BearCharacter
-            mood="reading"
-            size={76}
-            outlined
-            className="pointer-events-none absolute -right-1 -top-1"
-          />
-          <div className="relative">
-            <h2 className="pr-16 text-lg font-bold tracking-tight">What’s working</h2>
-            <p className="mb-6 mt-0.5 pr-16 text-sm text-birch-300">
-              From your last 48 applications.
-            </p>
-            <InsightList insights={sampleInsights} />
-          </div>
-        </section>
+            <Panel
+              title="Going quiet"
+              description={`No reply yet. JobBear marks an application ghosted after ${SAMPLE_GHOST_AFTER_DAYS} days.`}
+              icon="hourglass"
+              className="dash-in panel-hover xl:col-span-5"
+              style={order(6)}
+            >
+              <GoingQuietList items={sampleGoingQuiet} ghostAfterDays={SAMPLE_GHOST_AFTER_DAYS} />
+            </Panel>
+          </>
+        )}
+        {tab === 'progress' && (
+          <>
+            <Panel
+              title="Applications per week"
+              description={`Bars turn honey when you hit your goal of ${sampleWeekly.goal}.`}
+              icon="chart"
+              className="dash-in panel-hover xl:col-span-8"
+              style={order(3)}
+            >
+              <WeeklyVolumeChart weeks={sampleWeekly.weeks} goal={sampleWeekly.goal} height={260} />
+            </Panel>
 
-        <Panel
-          title="Response rate by source"
-          description="Which channel gets answers. Put your time where the replies are."
-          icon="funnel"
-          className="dash-in panel-hover xl:col-span-8"
-          style={order(5)}
-        >
-          <SourceFunnel rows={sampleFunnel} />
-        </Panel>
+            <Panel
+              title="Where things stand"
+              description="Every application, by its current status."
+              icon="pie"
+              className="dash-in panel-hover xl:col-span-4"
+              style={order(7)}
+            >
+              <StatusBreakdown items={sampleStatusCounts} />
+            </Panel>
+          </>
+        )}
+        {tab === 'channels' && (
+          <>
+            <section
+              className="dash-in relative min-w-0 overflow-hidden rounded-panel bg-bark p-6 text-birch-50 sm:p-7 xl:col-span-4"
+              style={order(4)}
+            >
+              <div aria-hidden className="demo-dots pointer-events-none absolute inset-0" />
+              <BearCharacter
+                mood="reading"
+                size={76}
+                outlined
+                className="pointer-events-none absolute -right-1 -top-1"
+              />
+              <div className="relative">
+                <h2 className="pr-16 text-lg font-bold tracking-tight">What’s working</h2>
+                <p className="mb-6 mt-0.5 pr-16 text-sm text-birch-300">
+                  From your last 48 applications.
+                </p>
+                <InsightList insights={sampleInsights} />
+              </div>
+            </section>
 
-        <Panel
-          title="Going quiet"
-          description={`No reply yet. JobBear marks an application ghosted after ${SAMPLE_GHOST_AFTER_DAYS} days.`}
-          icon="hourglass"
-          className="dash-in panel-hover xl:col-span-7"
-          style={order(6)}
-        >
-          <GoingQuietList items={sampleGoingQuiet} ghostAfterDays={SAMPLE_GHOST_AFTER_DAYS} />
-        </Panel>
-
-        <Panel
-          title="Where things stand"
-          description="Every application, by its current status."
-          icon="pie"
-          className="dash-in panel-hover xl:col-span-5"
-          style={order(7)}
-        >
-          <StatusBreakdown items={sampleStatusCounts} />
-        </Panel>
+            <Panel
+              title="Response rate by source"
+              description="Which channel gets answers. Put your time where the replies are."
+              icon="funnel"
+              className="dash-in panel-hover xl:col-span-8"
+              style={order(5)}
+            >
+              <SourceFunnel rows={sampleFunnel} />
+            </Panel>
+          </>
+        )}
       </div>
     </>
   )

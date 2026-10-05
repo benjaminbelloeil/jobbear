@@ -17,6 +17,8 @@ const Inbox = lazy(() => import('./pages/Inbox'))
 const Login = lazy(() => import('./pages/Login'))
 const NewApplication = lazy(() => import('./pages/NewApplication'))
 const Resumes = lazy(() => import('./pages/Resumes'))
+const Calendar = lazy(() => import('./pages/Calendar'))
+const Profile = lazy(() => import('./pages/Profile'))
 const Settings = lazy(() => import('./pages/Settings'))
 
 // Dev-only pages; lazy so they never ship in the production bundle.
@@ -48,6 +50,8 @@ function AppRoutes() {
             <Route path="/applications" element={<Applications />} />
             <Route path="/applications/new" element={<NewApplication />} />
             <Route path="/applications/:id" element={<ApplicationDetail />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/resumes" element={<Resumes />} />
             <Route path="/inbox" element={<Inbox />} />
             <Route path="/settings" element={<Settings />} />

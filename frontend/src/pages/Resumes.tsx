@@ -56,7 +56,7 @@ function VersionCard({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`ease-arrive group relative flex w-full flex-col rounded-panel p-5 text-left transition duration-200 hover:-translate-y-0.5 motion-reduce:transform-none ${
+      className={`ease-arrive group relative flex h-full w-full flex-col rounded-panel p-5 text-left transition duration-200 hover:-translate-y-0.5 motion-reduce:transform-none ${
         best
           ? 'bg-bark text-birch-50 shadow-[0_24px_48px_-30px_rgba(42,31,25,0.9)]'
           : 'border border-birch-200 bg-birch-50 hover:border-birch-300'
@@ -141,7 +141,7 @@ export default function Resumes() {
 
       <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resume versions">
         {resumes.map((resume) => (
-          <li key={resume.id}>
+          <li key={resume.id} className="h-full">
             <VersionCard
               resume={resume}
               best={resume.id === best?.id}
@@ -153,26 +153,26 @@ export default function Resumes() {
       </ul>
 
       {selected && (
-        <div className="mt-6 grid gap-6 xl:grid-cols-12">
-          <Panel
-            title={selected.name}
-            icon="file"
-            description={`${selected.file_name}, updated ${plainDate.format(new Date(selected.updated_at))}`}
-            className="xl:col-span-5"
-            actions={
-              <button type="button" className="btn-soft">
-                <Icon name="external" size={15} />
-                Download
-              </button>
-            }
-          >
-            <dl className="grid grid-cols-3 gap-3">
+        <Panel
+          title={selected.name}
+          icon="file"
+          description={`${selected.file_name}, updated ${plainDate.format(new Date(selected.updated_at))}`}
+          className="mt-6"
+          actions={
+            <button type="button" className="btn-soft">
+              <Icon name="external" size={15} />
+              Download
+            </button>
+          }
+        >
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+            <dl className="flex gap-3">
               {[
                 { label: 'Sent', value: String(selected.applications) },
                 { label: 'Replies', value: percent(selected.response_rate) },
                 { label: 'Interviews', value: percent(selected.interview_rate) },
               ].map((stat) => (
-                <div key={stat.label} className="rounded-control bg-birch px-3 py-3">
+                <div key={stat.label} className="min-w-24 rounded-control bg-birch px-4 py-3">
                   <dt className="text-xs text-bark-500">{stat.label}</dt>
                   <dd className="mt-1 font-display text-2xl font-bold tabular-nums">
                     {stat.value}
@@ -180,46 +180,42 @@ export default function Resumes() {
                 </div>
               ))}
             </dl>
-            <p className="mt-4 text-sm text-bark-700">
+            <p className="text-sm text-bark-700">
               <span className="font-semibold">
                 {Math.abs(Math.round((selected.response_rate - average) * 100))} points{' '}
                 {selected.response_rate >= average ? 'above' : 'below'}
               </span>{' '}
               your average reply rate of {percent(average)}.
             </p>
-          </Panel>
+          </div>
 
-          <Panel
-            title="Sent with"
-            icon="send"
-            description="Applications that went out with this version."
-            className="xl:col-span-7"
-          >
-            {sentWith.length > 0 ? (
-              <ul className="-mx-2 divide-y divide-birch-200/80">
-                {sentWith.map((app) => (
-                  <li key={app.id}>
-                    <Link
-                      to={`/applications/${app.id}`}
-                      className="flex items-center gap-3 rounded-control px-2 py-2.5 transition-colors duration-150 hover:bg-white"
-                    >
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate font-medium">{app.position}</span>
-                        <span className="block truncate text-sm text-bark-500">
-                          {app.company?.name}
-                        </span>
+          <h3 className="mt-6 border-t border-birch-200 pt-5 text-sm font-semibold text-bark-700">
+            Sent with
+          </h3>
+          {sentWith.length > 0 ? (
+            <ul className="-mx-2 mt-2 grid gap-x-6 md:grid-cols-2">
+              {sentWith.map((app) => (
+                <li key={app.id}>
+                  <Link
+                    to={`/applications/${app.id}`}
+                    className="flex items-center gap-3 rounded-control px-2 py-2.5 transition-colors duration-150 hover:bg-white"
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-medium">{app.position}</span>
+                      <span className="block truncate text-sm text-bark-500">
+                        {app.company?.name}
                       </span>
-                      <StatusBadge status={app.status} />
-                      <Icon name="chevronRight" size={16} className="text-bark-500" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-bark-500">No applications use this version yet.</p>
-            )}
-          </Panel>
-        </div>
+                    </span>
+                    <StatusBadge status={app.status} />
+                    <Icon name="chevronRight" size={16} className="text-bark-500" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-sm text-bark-500">No applications use this version yet.</p>
+          )}
+        </Panel>
       )}
 
       <Panel

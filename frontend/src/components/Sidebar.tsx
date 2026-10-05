@@ -12,6 +12,8 @@ interface NavItem {
   count?: number
   /** On phones, show this as an icon in the top bar instead of a bottom tab. */
   mobileTopBar?: boolean
+  /** On desktop, list this at the foot of the sidebar (e.g. settings), not in the main nav. */
+  footer?: boolean
 }
 
 interface SidebarProps {
@@ -39,12 +41,6 @@ function Brand({ compact = false }: { compact?: boolean }) {
       <span aria-hidden className={compact ? 'text-lg' : 'text-xl'}>
         JobBear
       </span>
-      <span
-        aria-hidden
-        className="rounded-full border border-honey/40 px-1.5 py-px font-sans text-[0.625rem] font-semibold uppercase tracking-wider text-honey"
-      >
-        App
-      </span>
     </Link>
   )
 }
@@ -61,7 +57,7 @@ function CountBadge({ count, className = '' }: { count: number; className?: stri
 }
 
 const footerLink =
-  'group flex w-full items-center gap-3 rounded-control px-2 py-1.5 text-sm text-birch-300 transition-colors hover:bg-birch/5 hover:text-birch-50'
+  'group flex w-full items-center gap-3 rounded-control px-3 py-2.5 text-sm text-birch-300 transition-colors hover:bg-birch/5 hover:text-birch-50'
 const topBarButton =
   'grid h-10 w-10 place-items-center rounded-control text-birch-300 transition-colors hover:bg-birch/5 hover:text-birch-50'
 
@@ -95,6 +91,8 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
   const remaining = weekly ? Math.max(0, weekly.goal - weekly.done) : 0
   // Mobile tab bar: two tabs, the raised "New" button, then the rest. Rarely used pages
   // (settings) sit in the top bar instead, so the tab bar keeps four thumb-sized tabs.
+  const mainItems = items.filter((item) => !item.footer)
+  const footerItems = items.filter((item) => item.footer)
   const tabs = items.filter((item) => !item.mobileTopBar)
   const topBarItems = items.filter((item) => item.mobileTopBar)
   const leading = tabs.slice(0, 2)
@@ -120,9 +118,6 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
         </Link>
 
         <nav aria-label="Main" className="relative mt-7 flex-1">
-          <p className="mb-2 px-3 text-[0.6875rem] font-semibold uppercase tracking-wider text-birch-300/70">
-            Workspace
-          </p>
           <div className="relative">
             {pill && (
               <div
@@ -136,12 +131,12 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
               </div>
             )}
             <ul ref={listRef} className="relative space-y-0.5">
-              {items.map((item) => (
+              {mainItems.map((item) => (
                 <li key={item.to}>
                   <NavLink
                     to={item.to}
                     className={({ isActive }) =>
-                      `group flex items-center gap-3 rounded-control px-2 py-1.5 text-sm transition-colors duration-150 ${
+                      `group flex items-center gap-3 rounded-control px-3 py-2.5 text-sm transition-colors duration-150 ${
                         isActive
                           ? 'font-semibold text-birch-50'
                           : 'text-birch-300 hover:bg-birch/5 hover:text-birch-50'
@@ -150,15 +145,11 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
                   >
                     {({ isActive }) => (
                       <>
-                        <span
-                          className={`ease-arrive grid h-8 w-8 place-items-center rounded-lg transition duration-200 ${
-                            isActive
-                              ? 'bg-honey text-bark shadow-[0_4px_12px_-4px_rgb(233_168_37/0.6)]'
-                              : 'bg-birch/5 group-hover:-translate-y-px group-hover:bg-birch/10'
-                          }`}
-                        >
-                          <Icon name={item.icon} size={17} />
-                        </span>
+                        <Icon
+                          name={item.icon}
+                          size={18}
+                          className={`transition-colors duration-150 ${isActive ? 'text-honey' : ''}`}
+                        />
                         {item.label}
                         {item.count ? <CountBadge count={item.count} className="ml-auto" /> : null}
                       </>
@@ -209,22 +200,25 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
         )}
 
         <div className="relative mt-4 space-y-0.5 border-t border-birch/10 pt-4">
-          <Link to="/" className={footerLink}>
-            <span className="grid h-8 w-8 place-items-center">
-              <Icon name="globe" size={17} />
-            </span>
-            JobBear website
-            <Icon
-              name="external"
-              size={14}
-              className="ml-auto opacity-0 transition-opacity group-hover:opacity-100"
-            />
-          </Link>
+          {footerItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `${footerLink} ${isActive ? 'bg-birch/10 font-semibold text-birch-50' : ''}`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <Icon name={item.icon} size={18} className={isActive ? 'text-honey' : ''} />
+                  {item.label}
+                </>
+              )}
+            </NavLink>
+          ))}
           {onLogout && (
             <button type="button" onClick={onLogout} className={footerLink}>
-              <span className="grid h-8 w-8 place-items-center">
-                <Icon name="logout" size={17} />
-              </span>
+              <Icon name="logout" size={18} />
               Log out
             </button>
           )}
@@ -252,15 +246,6 @@ export default function Sidebar({ items, onLogout, weekly }: SidebarProps) {
               <Icon name={item.icon} size={19} />
             </NavLink>
           ))}
-          <Link
-            to="/"
-            aria-label="JobBear website"
-            className={[topBarItems.length === 0 && 'ml-auto', topBarButton]
-              .filter(Boolean)
-              .join(' ')}
-          >
-            <Icon name="globe" size={19} />
-          </Link>
           {onLogout && (
             <button type="button" onClick={onLogout} aria-label="Log out" className={topBarButton}>
               <Icon name="logout" size={19} />

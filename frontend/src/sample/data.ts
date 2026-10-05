@@ -441,3 +441,38 @@ export const sampleEmailLinks: Record<number, SampleEmailLink[]> = {
     },
   ],
 }
+
+/** "Today" for the sample calendar, so the agenda groups the same way on every visit. */
+export const SAMPLE_TODAY = '2026-10-05'
+
+export interface SampleAgendaItem {
+  id: number
+  application_id: number
+  kind: 'INTERVIEW' | 'ASSESSMENT' | 'FOLLOW_UP' | 'DECISION'
+  title: string
+  /** Local date and time, "YYYY-MM-DDTHH:mm"; no time means it's due that day. */
+  at: string
+  minutes?: number
+}
+
+/** Interviews, assessment deadlines, decisions and follow-ups, from emails and next steps. */
+// prettier-ignore
+export const sampleAgenda: SampleAgendaItem[] = [
+  { id: 1, application_id: 6, kind: 'FOLLOW_UP', title: 'Follow up: no reply in 17 days', at: '2026-10-05' },
+  { id: 2, application_id: 1, kind: 'INTERVIEW', title: 'Technical screen', at: '2026-10-06T14:00', minutes: 45 },
+  { id: 3, application_id: 2, kind: 'ASSESSMENT', title: 'Online assessment due', at: '2026-10-07T23:59', minutes: 90 },
+  { id: 4, application_id: 5, kind: 'DECISION', title: 'Offer expires', at: '2026-10-09' },
+  { id: 5, application_id: 8, kind: 'INTERVIEW', title: 'Call with the data platform lead', at: '2026-10-12T10:00', minutes: 30 },
+  { id: 6, application_id: 9, kind: 'FOLLOW_UP', title: 'Follow up: three weeks quiet', at: '2026-10-15' },
+  { id: 7, application_id: 11, kind: 'FOLLOW_UP', title: 'Follow up: two weeks quiet', at: '2026-10-21' },
+]
+
+/** The signed-in person and what they are looking for (Profile page). Fictional. */
+export const sampleProfile = {
+  name: 'Sam Keller',
+  email: 'sam@example.com',
+  searching_since: '2026-07-27',
+  roles: ['Backend Engineer', 'Platform Engineer', 'Python Developer'],
+  locations: ['Zürich', 'Basel', 'Remote'],
+  work_styles: ['Hybrid', 'Remote'],
+}

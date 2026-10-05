@@ -1,18 +1,11 @@
 import Select from '../components/form/Select'
 import Slider from '../components/form/Slider'
-import Icon, { type IconName } from '../components/Icon'
+import Icon from '../components/Icon'
 import PageHeader from '../components/PageHeader'
 import Panel from '../components/Panel'
 import ProviderKeyRow from '../components/ProviderKeyRow'
 import ProviderLogo from '../components/ProviderLogo'
 import { SAMPLE_GHOST_AFTER_DAYS, sampleProviders, sampleWeekly } from '../sample/data'
-
-const SECTIONS: { id: string; label: string; icon: IconName }[] = [
-  { id: 'ai', label: 'AI model', icon: 'sparkle' },
-  { id: 'email', label: 'Email', icon: 'mail' },
-  { id: 'tracking', label: 'Tracking', icon: 'chart' },
-  { id: 'privacy', label: 'Privacy', icon: 'shield' },
-]
 
 const SYNC_OPTIONS = [
   { value: '15', label: 'Every 15 minutes' },
@@ -38,24 +31,7 @@ export default function Settings() {
         description="Your AI, your inbox, and how JobBear keeps score."
       />
 
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[12rem_minmax(0,1fr)] xl:gap-10">
-        {/* Section links: a sticky list on wide screens, a scrolling row of chips on phones. */}
-        <nav aria-label="Settings sections" className="xl:sticky xl:top-10 xl:self-start">
-          <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] xl:mx-0 xl:flex-col xl:gap-1 xl:overflow-visible xl:px-0">
-            {SECTIONS.map((section) => (
-              <li key={section.id} className="shrink-0">
-                <a
-                  href={`#${section.id}`}
-                  className="flex items-center gap-2.5 rounded-full border border-birch-300 bg-birch-50 px-3.5 py-2 text-sm font-medium text-bark-700 transition-colors hover:border-bark-400 hover:text-bark xl:rounded-control xl:border-transparent xl:bg-transparent xl:px-3 xl:hover:bg-birch-200/60"
-                >
-                  <Icon name={section.icon} size={16} />
-                  {section.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
+      <div>
         <div className="min-w-0 space-y-6">
           {/* AI model */}
           <section id="ai" aria-labelledby="ai-title" className="scroll-mt-24 space-y-6">

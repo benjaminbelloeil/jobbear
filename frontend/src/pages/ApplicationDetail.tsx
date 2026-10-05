@@ -75,7 +75,7 @@ export default function ApplicationDetail() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-12">
-        <div className="space-y-6 xl:col-span-8">
+        <div className="flex flex-col gap-6 xl:col-span-8">
           <Panel
             title="Details"
             actions={
@@ -136,7 +136,7 @@ export default function ApplicationDetail() {
             )}
           </Panel>
 
-          <Panel title="Notes" description="Only you see these.">
+          <Panel title="Notes" description="Only you see these." className="flex-1">
             <label className="block">
               <span className="sr-only">Notes</span>
               {/* TODO(me): controlled value + save with PATCH (on blur or a Save button). */}
@@ -150,7 +150,7 @@ export default function ApplicationDetail() {
           </Panel>
         </div>
 
-        <div className="space-y-6 xl:col-span-4">
+        <div className="flex flex-col gap-6 xl:col-span-4">
           <Panel title="Change status" description="Each change is added to the history.">
             {/* TODO(me): list only the transitions status_rules allows; submit the change. */}
             <div className="space-y-3">
@@ -189,7 +189,11 @@ export default function ApplicationDetail() {
             )}
           </Panel>
 
-          <Panel title="Keyword match" description="How much of the posting your resume covers.">
+          <Panel
+            title="Keyword match"
+            description="How much of the posting your resume covers."
+            className="flex-1"
+          >
             {match ? (
               <KeywordMatch
                 matched={match.matched}
