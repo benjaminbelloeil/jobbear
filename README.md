@@ -33,7 +33,6 @@ A full-stack job application tracker with analytics. It pulls job emails from Gm
 ```
 backend/            FastAPI app (api/, models/, schemas/, services/, integrations/, jobs/), Alembic, tests
 frontend/           React + Vite + Tailwind. src/pages, src/components, src/sample (demo data)
-docs/               Product research and proposals (see docs/README.md)
 infra/              Postgres init script
 .github/            CI, issue and PR templates, Dependabot
 .claude/skills/     Impeccable design skill used for all UI work (Apache-2.0)
