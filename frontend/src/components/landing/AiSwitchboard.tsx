@@ -2,6 +2,7 @@ import { useEffect, useId, useState, type CSSProperties } from 'react'
 import { siClaude, siGooglegemini, siOllama } from 'simple-icons'
 
 import { useInView } from '../../hooks/useInView'
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import BearMark from '../BearMark'
 import Icon from '../Icon'
 import { grokLogo, openaiLogo, type LogoPath } from './providerLogos'
@@ -77,19 +78,6 @@ function ProviderGlyph({ provider, size }: { provider: Provider; size: number })
       />
     </svg>
   )
-}
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false)
-  useEffect(() => {
-    if (typeof window.matchMedia !== 'function') return
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReduced(query.matches)
-    const onChange = () => setReduced(query.matches)
-    query.addEventListener('change', onChange)
-    return () => query.removeEventListener('change', onChange)
-  }, [])
-  return reduced
 }
 
 /**

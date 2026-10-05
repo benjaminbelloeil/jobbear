@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState, type ReactNode } from 'react'
 
 import { useInView } from '../hooks/useInView'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import BearCharacter, { type BearMood } from './BearCharacter'
 import BearMark from './BearMark'
 import Icon, { type IconName } from './Icon'
@@ -32,19 +33,6 @@ const OTHER_APPS: [company: string, role: string, status: string, tone: string][
   ['Northwind Labs', 'Backend Intern', 'Assessment', 'bg-heather-50 text-heather ring-heather/25'],
   ['Halcyon Data', 'Software Engineer', 'Applied', 'bg-lake-50 text-lake ring-lake/25'],
 ]
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false)
-  useEffect(() => {
-    if (typeof window.matchMedia !== 'function') return
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReduced(query.matches)
-    const onChange = () => setReduced(query.matches)
-    query.addEventListener('change', onChange)
-    return () => query.removeEventListener('change', onChange)
-  }, [])
-  return reduced
-}
 
 function Badge({ tone, children }: { tone: string; children: ReactNode }) {
   return (
@@ -78,17 +66,14 @@ export default function LandingDemo() {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.4, once: true })
   const reducedMotion = usePrefersReducedMotion()
   const [run, setRun] = useState(0)
-  const [beat, setBeat] = useState(0)
+  const [playedBeat, setPlayedBeat] = useState(0)
+  // Reduced motion skips straight to the end; otherwise the timers below step through it.
+  const beat = reducedMotion ? LAST : playedBeat
 
   useEffect(() => {
-    if (reducedMotion) {
-      setBeat(LAST)
-      return
-    }
-    if (!inView) return
-    setBeat(0)
+    if (reducedMotion || !inView) return
     const timers = BEATS.slice(1).map((ms, index) =>
-      window.setTimeout(() => setBeat(index + 1), ms),
+      window.setTimeout(() => setPlayedBeat(index + 1), ms),
     )
     return () => timers.forEach((timer) => window.clearTimeout(timer))
   }, [inView, run, reducedMotion])
@@ -111,7 +96,10 @@ export default function LandingDemo() {
 
       <button
         type="button"
-        onClick={() => setRun((count) => count + 1)}
+        onClick={() => {
+          setPlayedBeat(0)
+          setRun((count) => count + 1)
+        }}
         className="absolute left-1 top-16 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-birch-300 ring-1 ring-birch/20 hover:bg-birch/10 hover:text-birch-50 sm:top-20"
       >
         <Icon name="refresh" size={14} />
