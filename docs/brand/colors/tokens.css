@@ -1,0 +1,30 @@
+:root {
+  /* JobBear colour tokens. Source of truth: frontend/tailwind.config.ts */
+  --color-birch: #F3F4EF;
+  --color-birch-50: #FAFAF7;
+  --color-birch-200: #E4E5DD;
+  --color-birch-300: #D3D4C9;
+  --color-bark: #2A1F19;
+  --color-bark-700: #4A3A30;
+  --color-bark-500: #76695F;
+  --color-bark-400: #9A8F86;
+  --color-honey: #E9A825;
+  --color-honey-50: #FDF5E2;
+  --color-honey-600: #C98A0E;
+  --color-honey-800: #7A5208;
+  --color-pine: #2E5E4E;
+  --color-pine-50: #E7F0EC;
+  --color-pine-700: #214539;
+  --color-lake: #3F6E8C;
+  --color-lake-50: #E8F0F5;
+  --color-heather: #6D5A9E;
+  --color-heather-50: #EFECF6;
+  --color-berry: #B23A55;
+  --color-berry-50: #F8E8EC;
+  --color-ash: #8A8A84;
+  --color-ash-50: #EEEEEA;
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: Onest, ui-sans-serif, system-ui, sans-serif;
+  --radius-panel: 1.125rem;
+  --radius-control: 0.625rem;
+}

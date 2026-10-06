@@ -1,0 +1,151 @@
+{
+  "$description": "JobBear colour tokens. Source of truth: frontend/tailwind.config.ts",
+  "color": {
+    "birch": {
+      "$description": "Paper. Page background and light surfaces",
+      "DEFAULT": {
+        "$type": "color",
+        "$value": "#F3F4EF"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#FAFAF7"
+      },
+      "200": {
+        "$type": "color",
+        "$value": "#E4E5DD"
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#D3D4C9"
+      }
+    },
+    "bark": {
+      "$description": "Ink. Text and dark surfaces",
+      "DEFAULT": {
+        "$type": "color",
+        "$value": "#2A1F19"
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#4A3A30"
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#76695F"
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#9A8F86"
+      }
+    },
+    "honey": {
+      "$description": "The one accent. Primary actions, focus, goal line, Interviewing",
+      "DEFAULT": {
+        "$type": "color",
+        "$value": "#E9A825"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#FDF5E2"
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#C98A0E"
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#7A5208"
+      }
+    },
+    "pine": {
+      "$description": "Good news. Offer, Accepted",
+      "DEFAULT": {
+        "$type": "color",
+        "$value": "#2E5E4E"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#E7F0EC"
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#214539"
+      }
+    },
+    "lake": {
+      "$description": "Applied",
+      "DEFAULT": {
+        "$type": "color",
+        "$value": "#3F6E8C"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#E8F0F5"
+      }
+    },
+    "heather": {
+      "$description": "Online assessment (OA)",
+      "DEFAULT": {
+        "$type": "color",
+        "$value": "#6D5A9E"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#EFECF6"
+      }
+    },
+    "berry": {
+      "$description": "No. Rejected, errors",
+      "DEFAULT": {
+        "$type": "color",
+        "$value": "#B23A55"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#F8E8EC"
+      }
+    },
+    "ash": {
+      "$description": "Silence. Ghosted, withdrawn, muted",
+      "DEFAULT": {
+        "$type": "color",
+        "$value": "#8A8A84"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#EEEEEA"
+      }
+    }
+  },
+  "font": {
+    "display": {
+      "$type": "fontFamily",
+      "$value": [
+        "Bricolage Grotesque",
+        "ui-sans-serif",
+        "system-ui",
+        "sans-serif"
+      ]
+    },
+    "sans": {
+      "$type": "fontFamily",
+      "$value": [
+        "Onest",
+        "ui-sans-serif",
+        "system-ui",
+        "sans-serif"
+      ]
+    }
+  },
+  "radius": {
+    "panel": {
+      "$type": "dimension",
+      "$value": "1.125rem"
+    },
+    "control": {
+      "$type": "dimension",
+      "$value": "0.625rem"
+    }
+  }
+}

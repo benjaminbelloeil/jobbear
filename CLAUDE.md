@@ -73,12 +73,12 @@ Don't lecture. Keep it short and move on.
 
 Goal: build something like Jobright, but better. I use the [replica skills](https://github.com/Jakeschincariol/replica-skill) to work out *what* to build. I still write the code myself. The rules above take priority over anything a replica skill says to do.
 
-Outputs go in `docs/replica/` so every later step can read them.
+Outputs go in `notes/replica/` so every later step can read them.
 
 | Skill | Use it? | How |
 |---|---|---|
-| `/replica-recon` | ✅ Full | Map Jobright's screens, flows, features, and data model from public info. Output: `docs/replica/recon-map.md`, `features.csv` |
-| `/replica-entrepreneur` | ✅ Full | Mine real user complaints about Jobright and turn them into JobBear's "better" features. Output: `docs/replica/opportunities.md` |
+| `/replica-recon` | ✅ Full | Map Jobright's screens, flows, features, and data model from public info. Output: `notes/replica/recon-map.md`, `features.csv` |
+| `/replica-entrepreneur` | ✅ Full | Mine real user complaints about Jobright and turn them into JobBear's "better" features. Output: `notes/replica/opportunities.md` |
 | `/replica-architect` | ✅ As a proposal | Suggest stack, schema, and API changes as a doc. **I** decide, then write the models, migrations, and endpoints myself |
 | `/replica-design` | ✅ Full | Design tokens and Tailwind theme (frontend presentation is allowed) |
 | `/replica-brand` | ✅ Full | Keep JobBear's own name and identity. Nothing from Jobright's logo, copy, or content |
