@@ -31,8 +31,9 @@ exports/
 *.notion.csv
 backend/data/
 
-# Private docs: product research, replica outputs and deploy notes stay local.
-docs/
+# Private notes: product research, replica outputs, planning and costs stay local.
+# docs/ is public (guides and brand kit); anything private goes in notes/.
+notes/
 
 # Local databases and dumps
 *.sqlite
