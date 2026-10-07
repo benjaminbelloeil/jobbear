@@ -12,6 +12,19 @@
       ],
       "port": 5173,
       "autoPort": true
+    },
+    {
+      "name": "api",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "--directory",
+        "backend",
+        "run",
+        "uvicorn",
+        "app.main:app",
+        "--reload"
+      ],
+      "port": 8000
     }
   ]
 }
