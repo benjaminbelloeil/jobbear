@@ -262,7 +262,7 @@ export const sampleEmails: Email[] = [
   {
     id: 13,
     application_id: null,
-    gmail_message_id: 'sample-3',
+    message_id: 'sample-3',
     sender: 'careers@meridian.example',
     subject: 'Meridian Maps: scheduling your interview',
     snippet:
@@ -275,7 +275,7 @@ export const sampleEmails: Email[] = [
   {
     id: 11,
     application_id: null,
-    gmail_message_id: 'sample-1',
+    message_id: 'sample-1',
     sender: 'talent@halcyon.example',
     subject: 'Next steps for your Software Engineer application',
     snippet:
@@ -288,7 +288,7 @@ export const sampleEmails: Email[] = [
   {
     id: 12,
     application_id: null,
-    gmail_message_id: 'sample-2',
+    message_id: 'sample-2',
     sender: 'no-reply@greenhouse-mail.example',
     subject: 'An update on your application',
     snippet:

@@ -10,13 +10,14 @@ class EmailRead(BaseModel):
 
     id: int
     application_id: int | None
-    gmail_message_id: str
+    message_id: str
     sender: str
     subject: str
     snippet: str | None
     received_at: datetime
     classification: EmailClassification | None
     confidence: float | None
+    reviewed_at: datetime | None
     processed_at: datetime | None
 
 

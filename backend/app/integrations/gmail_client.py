@@ -5,7 +5,7 @@ Scope: https://www.googleapis.com/auth/gmail.readonly (never request more).
 Fetching:
     Fetch messages received since the last successful sync (use the newest
     emails.received_at as the cursor, or a stored checkpoint). Skip messages whose
-    gmail_message_id is already in the emails table.
+    message_id is already in the emails table.
 
 Matching, in order:
     1. Sender domain -> companies.domain (handle subdomains, e.g. `mail.stripe.com`,
@@ -31,7 +31,7 @@ GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
 @dataclass(frozen=True)
 class GmailMessage:
-    gmail_message_id: str
+    message_id: str
     sender: str
     subject: str
     snippet: str

@@ -90,7 +90,7 @@ export interface TokenResponse {
 export interface Email {
   id: number
   application_id: number | null
-  gmail_message_id: string
+  message_id: string
   sender: string
   subject: string
   snippet: string | null

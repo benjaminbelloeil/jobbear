@@ -9,6 +9,8 @@ from app.models.enums import ApplicationSource, ApplicationStatus, NextAction
 
 if TYPE_CHECKING:
     from app.models.company import Company
+    from app.models.email import Email
+    from app.models.status_event import StatusEvent
 
 
 class Application(Base):
@@ -36,8 +38,11 @@ class Application(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
-
-    # TODO(me): add relationships to Company, StatusEvent (cascade), and Email.
-    company: Mapped["Company"] = relationship("Company", back_populates="applications")
-    # TODO(me): decide which columns need indexes (think: what do the list filters and
-    #           the ghosting job query on?).
+    company: Mapped["Company"] = relationship(back_populates="applications")
+    emails: Mapped[list["Email"]] = relationship(back_populates="application")
+    status_events: Mapped[list["StatusEvent"]] = relationship(
+        back_populates="application",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+        order_by="desc(StatusEvent.occurred_at)",
+    )
