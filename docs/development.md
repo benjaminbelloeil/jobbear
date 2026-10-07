@@ -5,6 +5,9 @@ request, read [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Architecture
 
+New to the backend? Start with the [backend map](backend-map.md): the four tables and one
+request traced from URL to database and back.
+
 ```mermaid
 flowchart LR
     UI["React app<br/>(Vite, TanStack Query)"] -- "REST + JWT" --> API["FastAPI<br/>routers"]
