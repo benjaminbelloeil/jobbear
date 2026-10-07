@@ -11,7 +11,7 @@ Enabled only when settings.scheduler_enabled is true (see main.py lifespan).
 Note: with several uvicorn workers each process would run its own scheduler.
 """
 
-from apscheduler.schedulers.background import BackgroundScheduler  # type: ignore[import-untyped]
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.schemas.email import EmailSyncResult
 
