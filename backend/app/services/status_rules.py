@@ -23,6 +23,7 @@ Allowed transitions: decide and document them. Questions to answer:
           round option like INTERVIEWING or OA should it be accepted.
 """
 
+from datetime import UTC, datetime
 from typing import assert_never
 
 from sqlalchemy.orm import Session
@@ -137,4 +138,23 @@ def change_status(
         3. Add a StatusEvent(from_status, to_status, source, note).
         4. Return the event. Let the caller decide when to commit.
     """
-    raise NotImplementedError
+
+    if not is_transition_allowed(application.status, to_status):
+        raise InvalidTransitionError(application.status, to_status)
+
+    from_status = application.status
+    application.status = to_status
+    application.next_action = default_next_action(to_status)
+    application.last_activity_at = datetime.now(UTC)
+
+    status_event = StatusEvent(
+        application=application,
+        from_status=from_status,
+        to_status=to_status,
+        source=source,
+        note=note,
+        occurred_at=datetime.now(UTC),
+    )
+    db.add(status_event)
+
+    return status_event
