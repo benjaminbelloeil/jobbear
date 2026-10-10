@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from app.api.deps import DbSession
@@ -11,8 +12,8 @@ router = APIRouter(prefix="/companies", tags=["companies"])
 @router.get("", response_model=list[CompanyRead])
 def list_companies(db: DbSession) -> list[CompanyRead]:
     """Return all companies ordered by name."""
-    # TODO(me): query companies.
-    raise NotImplementedError
+    db_companies = db.scalars(select(Company).order_by(Company.name)).all()
+    return [CompanyRead.model_validate(db_company) for db_company in db_companies]
 
 
 @router.post("", response_model=CompanyRead, status_code=status.HTTP_201_CREATED)
