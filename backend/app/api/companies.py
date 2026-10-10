@@ -48,12 +48,42 @@ def get_company(company_id: int, db: DbSession) -> CompanyRead:
 @router.patch("/{company_id}", response_model=CompanyRead)
 def update_company(company_id: int, payload: CompanyUpdate, db: DbSession) -> CompanyRead:
     """Apply only the fields that were sent (`payload.model_dump(exclude_unset=True)`)."""
-    # TODO(me): partial update; 404 if missing, 409 on duplicate name.
-    raise NotImplementedError
+    db_company = db.get(Company, company_id)
+    if db_company is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Company with id '{company_id}' not found.",
+        )
+    changes = payload.model_dump(exclude_unset=True)
+    if "name" in changes and changes["name"] is None:
+        raise HTTPException(
+            status_code=422,
+            detail="Company name cannot be null.",
+        )
+
+    for field, value in changes.items():
+        setattr(db_company, field, value)
+
+    try:
+        db.commit()
+    except IntegrityError as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail=f"Company with name '{payload.name}' already exists.",
+        ) from e
+    db.refresh(db_company)
+    return CompanyRead.model_validate(db_company)
 
 
 @router.delete("/{company_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_company(company_id: int, db: DbSession) -> None:
     """Delete a company. Decide: block (409) if it still has applications, or cascade?"""
-    # TODO(me): delete; pick and document the behaviour when applications reference it.
-    raise NotImplementedError
+    db_company = db.get(Company, company_id)
+    if db_company is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Company with id '{company_id}' not found.",
+        )
+    db.delete(db_company)
+    db.commit()
