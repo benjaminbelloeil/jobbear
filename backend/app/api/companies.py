@@ -1,6 +1,8 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 
 from app.api.deps import DbSession
+from app.models.company import Company
 from app.schemas.company import CompanyCreate, CompanyRead, CompanyUpdate
 
 router = APIRouter(prefix="/companies", tags=["companies"])
@@ -16,8 +18,18 @@ def list_companies(db: DbSession) -> list[CompanyRead]:
 @router.post("", response_model=CompanyRead, status_code=status.HTTP_201_CREATED)
 def create_company(payload: CompanyCreate, db: DbSession) -> CompanyRead:
     """Create a company. Return 409 if the name already exists."""
-    # TODO(me): insert the company; handle the unique-name conflict.
-    raise NotImplementedError
+    db_company = Company(**payload.model_dump())
+    db.add(db_company)
+    try:
+        db.commit()
+    except IntegrityError as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail=f"Company with name '{payload.name}' already exists.",
+        ) from e
+    db.refresh(db_company)
+    return CompanyRead.model_validate(db_company)
 
 
 @router.get("/{company_id}", response_model=CompanyRead)
