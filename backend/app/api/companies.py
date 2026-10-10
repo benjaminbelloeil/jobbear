@@ -35,8 +35,13 @@ def create_company(payload: CompanyCreate, db: DbSession) -> CompanyRead:
 @router.get("/{company_id}", response_model=CompanyRead)
 def get_company(company_id: int, db: DbSession) -> CompanyRead:
     """Return one company or 404."""
-    # TODO(me): fetch by id, 404 if missing.
-    raise NotImplementedError
+    db_company = db.get(Company, company_id)
+    if db_company is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Company with id '{company_id}' not found.",
+        )
+    return CompanyRead.model_validate(db_company)
 
 
 @router.patch("/{company_id}", response_model=CompanyRead)
