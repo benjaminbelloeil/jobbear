@@ -85,5 +85,10 @@ def delete_company(company_id: int, db: DbSession) -> None:
             status_code=404,
             detail=f"Company with id '{company_id}' not found.",
         )
+    if db_company.applications:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Company with id '{company_id}' cannot be deleted because it has applications.",
+        )
     db.delete(db_company)
     db.commit()
