@@ -262,41 +262,41 @@ def hero(t: Theme) -> str:
 
 
 def button(t: Theme, label: str, icon_name: str | None, primary: bool, icon_after: bool = False, h: float = 64) -> str:
-    size, pad, isz, igap, m = 22, 30, 24, 12, 10
+    # Flat solid shapes: no border, no shadow, so nothing faint frames the button.
+    size, pad, isz, igap, m = 22, 30, 24, 12, 4
     text_w = BOLD.width(label, size, TIGHT)
     inner = text_w + (isz + igap if icon_name else 0)
     w, H = inner + pad * 2, h
     if primary:
-        fill, ink, stroke = HONEY, BARK, f'stroke="{"#C98A0E" if t is LIGHT else HONEY}"'
+        fill, ink = HONEY, BARK
     elif t is LIGHT:
-        fill, ink, stroke = BIRCH_50, BARK, f'stroke="{BIRCH_300}" stroke-width="1.5"'
+        fill, ink = BIRCH_200, BARK
     else:
-        fill, ink, stroke = NIGHT_CARD, BIRCH, f'stroke="{NIGHT_LINE}" stroke-width="1.5"'
-    x0, y0 = m, m - 2
+        fill, ink = NIGHT_CARD, BIRCH
+    x0, y0 = m, m
     cy = y0 + H / 2
     tx = x0 + pad + (0 if icon_after or not icon_name else isz + igap)
-    parts = [f'<rect x="{x0}" y="{y0}" width="{w:.1f}" height="{H}" rx="16" fill="{fill}" {stroke} filter="url(#s)"/>']
+    parts = [f'<rect x="{x0}" y="{y0}" width="{w:.1f}" height="{H}" rx="16" fill="{fill}"/>']
     if icon_name:
         ix = tx + text_w + igap if icon_after else x0 + pad
         parts.append(icon(icon_name, ix, cy - isz / 2, isz, ink))
     parts.append(BOLD.path(label, size, tx, cy + size * 0.36, ink, TIGHT))
-    defs = shadow("s", 3, 4, (0.14 if primary else 0.07) if t is LIGHT else 0.4)
-    return svg(w + m * 2, H + m * 2, label, "".join(parts), defs)
+    return svg(w + m * 2, H + m * 2, label, "".join(parts))
 
 
 def pill(t: Theme, label: str, current: bool) -> str:
     size, pad, h, m = 17, 18, 40, 3
     w = REGULAR.width(label, size) + pad * 2
     if current:
-        fill, ink, stroke = (BARK, BIRCH, "") if t is LIGHT else (HONEY, BARK, "")
+        fill, ink = (BARK, BIRCH) if t is LIGHT else (HONEY, BARK)
         face = BOLD
         w = BOLD.width(label, size, TIGHT) + pad * 2
     elif t is LIGHT:
-        fill, ink, stroke, face = BIRCH_50, BARK, f'stroke="{BIRCH_300}"', REGULAR
+        fill, ink, face = BIRCH_200, BARK, REGULAR
     else:
-        fill, ink, stroke, face = NIGHT_CARD, BIRCH, f'stroke="{NIGHT_LINE}"', REGULAR
+        fill, ink, face = NIGHT_CARD, BIRCH, REGULAR
     track = TIGHT if current else 0.0
-    body = f'<rect x="{m}" y="{m}" width="{w:.1f}" height="{h}" rx="{h / 2}" fill="{fill}" {stroke}/>' + face.path(
+    body = f'<rect x="{m}" y="{m}" width="{w:.1f}" height="{h}" rx="{h / 2}" fill="{fill}"/>' + face.path(
         label, size, m + pad, m + h / 2 + size * 0.36, ink, track
     )
     return svg(w + m * 2, h + m * 2, label, body)
