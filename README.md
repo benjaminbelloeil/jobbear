@@ -1,15 +1,35 @@
+<h1 align="center">
+  <a href="https://github.com/benjaminbelloeil/jobbear">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/logo/lockup-on-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="docs/brand/logo/lockup.svg">
+      <img alt="JobBear" src="docs/brand/logo/lockup.svg" height="80">
+    </picture>
+  </a>
+</h1>
+
 <p align="center">
-  <img src="docs/brand/logo/lockup.svg" alt="JobBear" height="72">
+  <b>The open-source job application tracker that reads your inbox.</b><br>
+  Your pipeline updates itself: no spreadsheet, no copy-paste.
 </p>
 
 <p align="center">
-  A job application tracker that reads your inbox, so your pipeline updates itself.
+  <a href="https://github.com/benjaminbelloeil/jobbear/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/benjaminbelloeil/jobbear/ci.yml?branch=main&label=CI&style=flat-square" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-E9A825?style=flat-square&labelColor=2A1F19" alt="License: AGPL-3.0"></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-E9A825?style=flat-square&labelColor=2A1F19" alt="PRs welcome"></a>
+  <a href="https://github.com/benjaminbelloeil/jobbear/stargazers"><img src="https://img.shields.io/github/stars/benjaminbelloeil/jobbear?style=flat-square&labelColor=2A1F19&color=E9A825" alt="GitHub stars"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/benjaminbelloeil/jobbear/actions/workflows/ci.yml"><img src="https://github.com/benjaminbelloeil/jobbear/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-2A1F19.svg" alt="License: AGPL-3.0"></a>
+  <a href="#features">Features</a> ·
+  <a href="#how-it-works">How it works</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="docs/self-hosting.md">Self-hosting</a> ·
+  <a href="#roadmap">Roadmap</a> ·
+  <a href="#contributing">Contributing</a>
 </p>
+
+<br>
 
 JobBear pulls job emails from Gmail, classifies them with the Claude API and moves each
 application along on its own. You see your real pipeline: response rate, OA rate and time to
@@ -23,12 +43,30 @@ first reply.
 
 ## Features
 
-- Applications, companies and a full status history (Applied → OA → Interviewing → Offer)
-- Read-only Gmail sync with AI classification: rejection, OA invite, interview invite, offer
-- Marks an application "Ghosted" after 21 days of silence (configurable)
-- Dashboard: response, OA and interview rates, days to first reply, weekly volume vs. goal
-- Import from a Notion CSV export
-- Open source: self-host it for free, on your own AI key
+| | |
+|---|---|
+| **Applications and history** | Applications, companies and a full status history (Applied → OA → Interviewing → Offer) |
+| **Reads your inbox** | Read-only Gmail sync with AI classification: rejection, OA invite, interview invite, offer |
+| **Asks before it acts** | Low-confidence or unmatched emails go to a review inbox instead of changing a status on their own |
+| **Ghosting detection** | Marks an application "Ghosted" after 21 days of silence (configurable) |
+| **Real numbers** | Response, OA and interview rates, days to first reply, weekly volume vs. goal |
+| **Easy to leave Notion** | Import from a Notion CSV export |
+| **Yours to run** | Open source: self-host it for free, on your own AI key |
+
+## How it works
+
+```mermaid
+flowchart LR
+    A[Job email arrives] --> B[Match it to an application]
+    B --> C[Claude classifies it]
+    C -->|confident| D[Status updates itself]
+    C -->|not sure| E[Review inbox: you decide]
+    D --> F[Dashboard stats]
+    E --> D
+```
+
+Every status change is written to a history table, so the dashboard numbers always come from
+what actually happened and when.
 
 ## Ways to use it
 
@@ -88,9 +126,25 @@ Open http://localhost:5173. The full walkthrough, including Gmail, is in
 
 ## Contributing
 
-Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first: this is
-also a learning project, so backend core changes start as a discussion. Report security
-problems privately, as described in [SECURITY.md](.github/SECURITY.md).
+Contributions are welcome. JobBear is also a learning project: the maintainer writes the core
+backend (models, endpoints, services, integrations) himself, so **backend core changes start as
+an issue**, not a pull request. Everything else is open to you:
+
+- **Report a bug** with steps to reproduce
+- **Improve the frontend**: components, styling, accessibility, responsive fixes
+- **Improve the docs**: typos, guides, diagrams
+- **Tooling and CI**: GitHub Actions, Docker, lint config
+
+How to start:
+
+1. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, commit and PR conventions, and the
+   short contributor license agreement (CLA) you accept in the pull request template.
+2. Set JobBear up locally with [docs/development.md](docs/development.md). You can run the
+   frontend alone on sample data.
+3. Open a small, focused pull request. CI runs the same checks you can run locally.
+
+Please follow the [Code of Conduct](.github/CODE_OF_CONDUCT.md). Report security problems
+privately, as described in [SECURITY.md](.github/SECURITY.md).
 
 ## License
 
