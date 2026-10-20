@@ -3,6 +3,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy import func, select
+from sqlalchemy.orm import selectinload
 
 from app.api.deps import DbSession
 from app.models.application import Application
@@ -49,7 +50,20 @@ def list_applications(
     if applied_to is not None:
         db_query = db_query.where(Application.applied_at <= applied_to)
     total = db.scalar(select(func.count()).select_from(db_query.subquery())) or 0
-    rows = db.scalars(db_query.offset((page - 1) * page_size).limit(page_size)).all()
+    if sort == ApplicationSort.APPLIED_AT_DESC:
+        db_query = db_query.order_by(Application.applied_at.desc())
+    elif sort == ApplicationSort.APPLIED_AT_ASC:
+        db_query = db_query.order_by(Application.applied_at)
+    elif sort == ApplicationSort.LAST_ACTIVITY_DESC:
+        db_query = db_query.order_by(Application.last_activity_at.desc())
+    elif sort == ApplicationSort.COMPANY_ASC:
+        db_query = db_query.join(Company).order_by(Company.name)
+    db_query = db_query.order_by(Application.id)
+    rows = db.scalars(
+        db_query.offset((page - 1) * page_size)
+        .options(selectinload(Application.company))
+        .limit(page_size)
+    ).all()
     return ApplicationPage(
         items=[ApplicationRead.model_validate(application) for application in rows],
         total=total,
@@ -105,15 +119,46 @@ def update_application(
     application_id: int, payload: ApplicationUpdate, db: DbSession
 ) -> ApplicationRead:
     """Partial update of non-status fields."""
-    # TODO(me): apply exclude_unset fields; 404 if missing.
-    raise NotImplementedError
+    db_application = db.get(Application, application_id)
+    if db_application is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Application with id '{application_id}' not found.",
+        )
+    changes = payload.model_dump(exclude_unset=True)
+    required_fields = ["company_id", "position", "source", "remote", "next_action", "applied_at"]
+    for field in required_fields:
+        if field in changes and changes[field] is None:
+            raise HTTPException(
+                status_code=422,
+                detail=f"{field} cannot be null.",
+            )
+
+    if "company_id" in changes and db.get(Company, changes["company_id"]) is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Company with id '{changes['company_id']}' not found.",
+        )
+
+    for field, value in changes.items():
+        setattr(db_application, field, value)
+
+    db.commit()
+    db.refresh(db_application)
+    return ApplicationRead.model_validate(db_application)
 
 
 @router.delete("/{application_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_application(application_id: int, db: DbSession) -> None:
     """Delete an application; its status_events are removed by the FK cascade."""
-    # TODO(me): delete; 404 if missing.
-    raise NotImplementedError
+    db_application = db.get(Application, application_id)
+    if db_application is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Application with id '{application_id}' not found.",
+        )
+    db.delete(db_application)
+    db.commit()
 
 
 @router.post("/{application_id}/status", response_model=ApplicationRead)
@@ -125,5 +170,5 @@ def change_status(
     Keep this thin: delegate to `services.status_rules.change_status`, which validates
     the transition (422 if not allowed), sets the default next_action, and logs the event.
     """
-    # TODO(me): call the service and translate its errors to HTTP errors.
+
     raise NotImplementedError
