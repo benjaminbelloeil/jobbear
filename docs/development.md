@@ -53,7 +53,7 @@ docs/               Guides and the brand kit
 
 ## Run it locally
 
-You need Docker, [uv](https://docs.astral.sh/uv/) and Node 20+.
+You need Docker, [uv](https://docs.astral.sh/uv/) and Node 24+.
 
 ```bash
 cp .env.example .env
