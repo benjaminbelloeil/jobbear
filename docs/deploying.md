@@ -63,7 +63,7 @@ would sync Gmail twice.
    - `VITE_API_URL` = your Railway URL, e.g. `https://jobbear-api.up.railway.app`
    - Vite bakes this in at build time, so changing it needs a redeploy.
 
-Node 20 is pinned by `frontend/.nvmrc`, matching CI. There's no `404.html`, so Pages
+Node 24 is pinned by `frontend/.nvmrc`, and CI reads the same file. There's no `404.html`, so Pages
 serves `index.html` for unknown paths and React Router handles `/dashboard` and so on.
 `frontend/public/_headers` adds security headers and long caching for `/assets/*`.
 
