@@ -17,6 +17,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-2A1F19.svg" alt="License: AGPL-3.0"></a>
   <img src="https://img.shields.io/badge/python-3.12-2A1F19.svg" alt="Python 3.12">
   <img src="https://img.shields.io/badge/self--host-free%20forever-E9A825.svg" alt="Self-host: free forever">
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-E9A825.svg" alt="PRs welcome"></a>
 </p>
 
 <br>
@@ -60,6 +61,21 @@ first reply.
 | **Shows what works** | Response, OA and interview rates, days to first reply, weekly volume against your goal |
 | **Moves in with you** | Imports your existing applications from a Notion CSV export |
 | **Stays yours** | Open source. Self-host it for free, on your own AI key |
+
+## How it works
+
+```mermaid
+flowchart LR
+    A[Job email arrives] --> B[Match it to an application]
+    B --> C[Claude classifies it]
+    C -->|confident| D[Status updates itself]
+    C -->|not sure| E[Review inbox: you decide]
+    D --> F[Dashboard stats]
+    E --> D
+```
+
+Every status change is written to a history table, so the dashboard numbers always come from
+what actually happened and when.
 
 ## Ways to use it
 
@@ -126,9 +142,25 @@ Open http://localhost:5173. The full walkthrough, including Gmail, is in
 
 ## Contributing
 
-Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first: this is
-also a learning project, so backend core changes start as a discussion. Report security
-problems privately, as described in [SECURITY.md](.github/SECURITY.md).
+Contributions are welcome. JobBear is also a learning project: the maintainer writes the core
+backend (models, endpoints, services, integrations) himself, so **backend core changes start as
+an issue**, not a pull request. Everything else is open to you:
+
+- **Report a bug** with steps to reproduce
+- **Improve the frontend**: components, styling, accessibility, responsive fixes
+- **Improve the docs**: typos, guides, diagrams
+- **Tooling and CI**: GitHub Actions, Docker, lint config
+
+How to start:
+
+1. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, commit and PR conventions, and the
+   short contributor license agreement (CLA) you accept in the pull request template.
+2. Set JobBear up locally with [docs/development.md](docs/development.md). You can run the
+   frontend alone on sample data.
+3. Open a small, focused pull request. CI runs the same checks you can run locally.
+
+Please follow the [Code of Conduct](.github/CODE_OF_CONDUCT.md). Report security problems
+privately, as described in [SECURITY.md](.github/SECURITY.md).
 
 ## License
 
