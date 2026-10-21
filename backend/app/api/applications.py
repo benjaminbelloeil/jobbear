@@ -18,7 +18,8 @@ from app.schemas.application import (
     ApplicationUpdate,
     StatusChangeRequest,
 )
-from app.services.status_rules import default_next_action
+from app.services import status_rules
+from app.services.status_rules import InvalidTransitionError, default_next_action
 
 router = APIRouter(prefix="/applications", tags=["applications"])
 
@@ -170,5 +171,25 @@ def change_status(
     Keep this thin: delegate to `services.status_rules.change_status`, which validates
     the transition (422 if not allowed), sets the default next_action, and logs the event.
     """
-
-    raise NotImplementedError
+    db_application = db.get(Application, application_id)
+    if db_application is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Application with id '{application_id}' not found.",
+        )
+    try:
+        status_rules.change_status(
+            db=db,
+            application=db_application,
+            to_status=payload.to_status,
+            source=EventSource.MANUAL,
+            note=payload.note,
+        )
+    except InvalidTransitionError as e:
+        raise HTTPException(
+            status_code=422,
+            detail=f"{e}",
+        ) from e
+    db.commit()
+    db.refresh(db_application)
+    return ApplicationRead.model_validate(db_application)
