@@ -1,4 +1,14 @@
-# JobBear brand kit
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/headers/brand-dark.svg"><img src="readme/headers/brand-light.svg" alt="JobBear brand kit" width="100%"></picture></p>
+
+<p align="center">
+  <a href="../../README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/nav/home-dark.svg"><img src="readme/nav/home-light.svg" alt="Home" height="38"></picture></a>
+  <a href="../README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/nav/docs-dark.svg"><img src="readme/nav/docs-light.svg" alt="Docs" height="38"></picture></a>
+  <a href="../self-hosting.md"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/nav/self-hosting-dark.svg"><img src="readme/nav/self-hosting-light.svg" alt="Self-hosting" height="38"></picture></a>
+  <a href="../deploying.md"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/nav/deploying-dark.svg"><img src="readme/nav/deploying-light.svg" alt="Deploying" height="38"></picture></a>
+  <a href="../development.md"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/nav/development-dark.svg"><img src="readme/nav/development-light.svg" alt="Development" height="38"></picture></a>
+  <a href="../backend-map.md"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/nav/backend-map-dark.svg"><img src="readme/nav/backend-map-light.svg" alt="Backend map" height="38"></picture></a>
+  <a href="README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/nav/brand-current-dark.svg"><img src="readme/nav/brand-current-light.svg" alt="Brand kit" height="38"></picture></a>
+</p>
 
 Everything you need to make something that looks like JobBear: the bear, the wordmark, the
 colors and the type. The app's source of truth is
@@ -112,3 +122,19 @@ Edit the SVGs, then run:
 ```bash
 docs/brand/export.sh   # needs: brew install librsvg imagemagick
 ```
+
+The README and docs artwork (hero, buttons, page headers, nav pills, framed screenshots) lives
+in [`readme/`](readme) and is drawn by [`readme/build.py`](readme/build.py). Each image has a
+light and a dark version, and its text is outlined from the Bricolage Grotesque files in
+[`fonts/`](fonts) (SIL Open Font License). To change a label or add a page, edit the script, then:
+
+```bash
+uv run --with fonttools docs/brand/readme/build.py
+uv run --with fonttools docs/brand/readme/build.py --shots <folder of raw 2x screenshots>
+```
+
+---
+
+<p align="center">
+  <a href="../../README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/buttons/back-home-dark.svg"><img src="readme/buttons/back-home-light.svg" alt="Back to the README" height="64"></picture></a>
+</p>

@@ -1,4 +1,14 @@
-# Deploying JobBear
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/headers/deploying-dark.svg"><img src="brand/readme/headers/deploying-light.svg" alt="Deploying JobBear" width="100%"></picture></p>
+
+<p align="center">
+  <a href="../README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/nav/home-dark.svg"><img src="brand/readme/nav/home-light.svg" alt="Home" height="38"></picture></a>
+  <a href="README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/nav/docs-dark.svg"><img src="brand/readme/nav/docs-light.svg" alt="Docs" height="38"></picture></a>
+  <a href="self-hosting.md"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/nav/self-hosting-dark.svg"><img src="brand/readme/nav/self-hosting-light.svg" alt="Self-hosting" height="38"></picture></a>
+  <a href="deploying.md"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/nav/deploying-current-dark.svg"><img src="brand/readme/nav/deploying-current-light.svg" alt="Deploying" height="38"></picture></a>
+  <a href="development.md"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/nav/development-dark.svg"><img src="brand/readme/nav/development-light.svg" alt="Development" height="38"></picture></a>
+  <a href="backend-map.md"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/nav/backend-map-dark.svg"><img src="brand/readme/nav/backend-map-light.svg" alt="Backend map" height="38"></picture></a>
+  <a href="brand/README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/nav/brand-dark.svg"><img src="brand/readme/nav/brand-light.svg" alt="Brand kit" height="38"></picture></a>
+</p>
 
 ```
 Cloudflare Pages (frontend, static Vite build)
@@ -79,3 +89,9 @@ serves `index.html` for unknown paths and React Router handles `/dashboard` and 
 The Gmail OAuth client needs the deployed redirect URI added in Google Cloud Console, and
 `client_secret.json` / the token can't live in the image (`secrets/` is excluded by
 `.dockerignore`). Plan to load them from env vars or a Railway volume when you get there.
+
+---
+
+<p align="center">
+  <a href="development.md"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/buttons/next-development-dark.svg"><img src="brand/readme/buttons/next-development-light.svg" alt="Next: Development" height="64"></picture></a>
+</p>

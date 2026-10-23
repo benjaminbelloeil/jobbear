@@ -1,4 +1,14 @@
-# Contributing to JobBear
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/headers/contributing-dark.svg"><img src="docs/brand/readme/headers/contributing-light.svg" alt="Contributing to JobBear" width="100%"></picture></p>
+
+<p align="center">
+  <a href="README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/nav/home-dark.svg"><img src="docs/brand/readme/nav/home-light.svg" alt="Home" height="38"></picture></a>
+  <a href="docs/README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/nav/docs-dark.svg"><img src="docs/brand/readme/nav/docs-light.svg" alt="Docs" height="38"></picture></a>
+  <a href="docs/self-hosting.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/nav/self-hosting-dark.svg"><img src="docs/brand/readme/nav/self-hosting-light.svg" alt="Self-hosting" height="38"></picture></a>
+  <a href="docs/deploying.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/nav/deploying-dark.svg"><img src="docs/brand/readme/nav/deploying-light.svg" alt="Deploying" height="38"></picture></a>
+  <a href="docs/development.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/nav/development-dark.svg"><img src="docs/brand/readme/nav/development-light.svg" alt="Development" height="38"></picture></a>
+  <a href="docs/backend-map.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/nav/backend-map-dark.svg"><img src="docs/brand/readme/nav/backend-map-light.svg" alt="Backend map" height="38"></picture></a>
+  <a href="docs/brand/README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/nav/brand-dark.svg"><img src="docs/brand/readme/nav/brand-light.svg" alt="Brand kit" height="38"></picture></a>
+</p>
 
 Thanks for your interest! JobBear is an open-source job application tracker, and it is also
 a **learning project**: the maintainer writes the core backend (models, endpoints, services,
@@ -66,3 +76,9 @@ You keep the copyright to your contribution. This is a license grant, not a tran
 
 If you can't accept these terms, open an issue instead: ideas, bug reports and reviews are
 just as welcome.
+
+---
+
+<p align="center">
+  <a href="docs/development.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/buttons/next-development-dark.svg"><img src="docs/brand/readme/buttons/next-development-light.svg" alt="Next: Development" height="64"></picture></a>
+</p>

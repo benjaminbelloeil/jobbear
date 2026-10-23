@@ -1,32 +1,23 @@
-<h1 align="center">
-  <a href="https://github.com/benjaminbelloeil/jobbear">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/logo/lockup-on-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="docs/brand/logo/lockup.svg">
-      <img alt="JobBear" src="docs/brand/logo/lockup.svg" height="80">
-    </picture>
-  </a>
-</h1>
-
 <p align="center">
-  <b>The open-source job application tracker that reads your inbox.</b><br>
-  Your pipeline updates itself: no spreadsheet, no copy-paste.
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/hero/hero-dark.svg">
+    <img src="docs/brand/readme/hero/hero-light.svg" alt="JobBear: your pipeline updates itself. A job tracker that reads your inbox and moves each application along." width="100%">
+  </picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/benjaminbelloeil/jobbear/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/benjaminbelloeil/jobbear/ci.yml?branch=main&label=CI&style=flat-square" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-E9A825?style=flat-square&labelColor=2A1F19" alt="License: AGPL-3.0"></a>
-  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-E9A825?style=flat-square&labelColor=2A1F19" alt="PRs welcome"></a>
-  <a href="https://github.com/benjaminbelloeil/jobbear/stargazers"><img src="https://img.shields.io/github/stars/benjaminbelloeil/jobbear?style=flat-square&labelColor=2A1F19&color=E9A825" alt="GitHub stars"></a>
+  <a href="docs/self-hosting.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/buttons/self-host-dark.svg"><img src="docs/brand/readme/buttons/self-host-light.svg" alt="Self-host it free" height="64"></picture></a>
+  <a href="#quick-start"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/buttons/quick-start-dark.svg"><img src="docs/brand/readme/buttons/quick-start-light.svg" alt="Quick start" height="64"></picture></a>
+  <a href="docs/README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/buttons/docs-dark.svg"><img src="docs/brand/readme/buttons/docs-light.svg" alt="Read the docs" height="64"></picture></a>
+  <a href="#roadmap"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/buttons/roadmap-dark.svg"><img src="docs/brand/readme/buttons/roadmap-light.svg" alt="Roadmap" height="64"></picture></a>
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> ·
-  <a href="#how-it-works">How it works</a> ·
-  <a href="#quick-start">Quick start</a> ·
-  <a href="docs/self-hosting.md">Self-hosting</a> ·
-  <a href="#roadmap">Roadmap</a> ·
-  <a href="#contributing">Contributing</a>
+  <a href="https://github.com/benjaminbelloeil/jobbear/actions/workflows/ci.yml"><img src="https://github.com/benjaminbelloeil/jobbear/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-2A1F19.svg" alt="License: AGPL-3.0"></a>
+  <img src="https://img.shields.io/badge/python-3.12-2A1F19.svg" alt="Python 3.12">
+  <img src="https://img.shields.io/badge/self--host-free%20forever-E9A825.svg" alt="Self-host: free forever">
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-E9A825.svg" alt="PRs welcome"></a>
 </p>
 
 <br>
@@ -41,17 +32,35 @@ first reply.
 > **In active development.** The interface runs on sample data today; the API, Gmail sync
 > and AI classification are being built. See the [roadmap](#roadmap).
 
-## Features
+## See it
 
-| | |
+<p align="center">
+  <img src="docs/brand/readme/screens/dashboard.png" alt="The JobBear dashboard: response rate, applications, OA and interview rates, what needs you today, and applications going quiet" width="100%">
+</p>
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="docs/brand/readme/screens/applications.png" alt="The applications table with a status badge and next step for each application" width="100%">
+      <p><b>Every application, one place.</b> Status, next step and last activity at a glance, as a table or a board.</p>
+    </td>
+    <td width="50%" valign="top">
+      <img src="docs/brand/readme/screens/inbox.png" alt="The review inbox: recruiter emails JobBear was unsure about, each with its guess and confidence" width="100%">
+      <p><b>Nothing changes behind your back.</b> Emails the AI isn't sure about wait in a review inbox until you decide.</p>
+    </td>
+  </tr>
+</table>
+
+## What it does
+
+| Feature | Details |
 |---|---|
-| **Applications and history** | Applications, companies and a full status history (Applied → OA → Interviewing → Offer) |
-| **Reads your inbox** | Read-only Gmail sync with AI classification: rejection, OA invite, interview invite, offer |
-| **Asks before it acts** | Low-confidence or unmatched emails go to a review inbox instead of changing a status on their own |
-| **Ghosting detection** | Marks an application "Ghosted" after 21 days of silence (configurable) |
-| **Real numbers** | Response, OA and interview rates, days to first reply, weekly volume vs. goal |
-| **Easy to leave Notion** | Import from a Notion CSV export |
-| **Yours to run** | Open source: self-host it for free, on your own AI key |
+| **Tracks the whole story** | Applications, companies and a full status history: Applied → OA → Interviewing → Offer |
+| **Reads your inbox** | Read-only Gmail sync. The Claude API sorts each email: rejection, OA invite, interview invite, offer |
+| **Notices the silence** | Marks an application "Ghosted" after 21 days without a reply (configurable) |
+| **Shows what works** | Response, OA and interview rates, days to first reply, weekly volume against your goal |
+| **Moves in with you** | Imports your existing applications from a Notion CSV export |
+| **Stays yours** | Open source. Self-host it for free, on your own AI key |
 
 ## How it works
 
@@ -103,7 +112,14 @@ Open http://localhost:5173. The full walkthrough, including Gmail, is in
 
 ## Documentation
 
-| | |
+<p>
+  <a href="docs/self-hosting.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/buttons/guide-self-hosting-dark.svg"><img src="docs/brand/readme/buttons/guide-self-hosting-light.svg" alt="Self-hosting" height="64"></picture></a>
+  <a href="docs/deploying.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/buttons/guide-deploying-dark.svg"><img src="docs/brand/readme/buttons/guide-deploying-light.svg" alt="Deploying" height="64"></picture></a>
+  <a href="docs/development.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/buttons/guide-development-dark.svg"><img src="docs/brand/readme/buttons/guide-development-light.svg" alt="Development" height="64"></picture></a>
+  <a href="docs/brand/README.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/buttons/guide-brand-dark.svg"><img src="docs/brand/readme/buttons/guide-brand-light.svg" alt="Brand kit" height="64"></picture></a>
+</p>
+
+| Guide | What's in it |
 |---|---|
 | [Self-hosting](docs/self-hosting.md) | Install, Gmail setup, settings, backups, troubleshooting |
 | [Deploying](docs/deploying.md) | Railway + Cloudflare Pages |
@@ -150,5 +166,12 @@ privately, as described in [SECURITY.md](.github/SECURITY.md).
 
 [GNU AGPL-3.0](LICENSE). Use, modify and self-host JobBear freely. If you run a modified
 version as a hosted service, you must publish your changes under the same license.
+
+<br>
+
+<p align="center">
+  <img src="docs/brand/logo/bear-asleep.svg" alt="" width="56"><br>
+  <sub>Made for everyone sending out applications. <a href="#readme">Back to top</a></sub>
+</p>
 
 <!-- TODO(me): add a "What I learned" section after v1 ships. -->
