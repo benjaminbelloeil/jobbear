@@ -1,11 +1,18 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["fonttools>=4.50"]
+# ///
 """Builds the README and docs artwork: hero banner, buttons, page headers and nav pills.
 
 Every image comes in a light and a dark version so GitHub can swap them with
 `<picture>` and `prefers-color-scheme`. Text is outlined from Bricolage Grotesque
 (docs/brand/fonts), so it renders the same everywhere without the font installed.
 
-    uv run --with fonttools docs/brand/readme/build.py
-    uv run --with fonttools docs/brand/readme/build.py --shots path/to/raw/screenshots
+    uv run docs/brand/readme/build.py
+    uv run docs/brand/readme/build.py --shots path/to/raw/screenshots
+
+The block above lists the script's own dependencies (PEP 723), so uv installs fonttools
+for this run only and the backend environment stays clean.
 
 `--shots` also frames raw 2x app screenshots (dashboard.png, applications.png, inbox.png)
 into screens/*.png. Needs ImageMagick for that step.
@@ -19,9 +26,12 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-from fontTools.pens.svgPathPen import SVGPathPen
-from fontTools.pens.transformPen import TransformPen
-from fontTools.ttLib import TTFont
+# fonttools has no type hints and lives in the script's own environment (see the header), not
+# backend/.venv. mypy reports import-not-found or import-untyped depending on where it runs,
+# so these ignores name no code.
+from fontTools.pens.svgPathPen import SVGPathPen  # type: ignore
+from fontTools.pens.transformPen import TransformPen  # type: ignore
+from fontTools.ttLib import TTFont  # type: ignore
 
 HERE = Path(__file__).parent
 BRAND = HERE.parent
@@ -71,7 +81,7 @@ class Face:
 
     def width(self, text: str, size: float, tracking: float = 0.0) -> float:
         units = sum(self.glyphs[self.cmap[ord(c)]].width for c in text)
-        return units * size / self.upm + tracking * size * (len(text) - 1)
+        return float(units * size / self.upm + tracking * size * (len(text) - 1))
 
     def path(self, text: str, size: float, x: float, y: float, fill: str, tracking: float = 0.0) -> str:
         k = size / self.upm
@@ -89,7 +99,10 @@ REGULAR = Face(FONTS / "BricolageGrotesque-Regular.ttf")
 TIGHT = -0.025  # the wordmark's tracking
 
 # The outlined wordmark, lifted from the lockup so it never drifts from the logo.
-WORDMARK = re.search(r'<path fill="#2A1F19" transform="[^"]+" d="([^"]+)"', (BRAND / "logo/lockup.svg").read_text())[1]
+_wordmark = re.search(r'<path fill="#2A1F19" transform="[^"]+" d="([^"]+)"', (BRAND / "logo/lockup.svg").read_text())
+if _wordmark is None:
+    raise SystemExit("Wordmark path not found in logo/lockup.svg; did its fill or attribute order change?")
+WORDMARK = _wordmark[1]
 BEAR = (
     '<circle cx="15" cy="16" r="11" fill="#2A1F19"/><circle cx="49" cy="16" r="11" fill="#2A1F19"/>'
     '<circle cx="15" cy="16" r="5" fill="#E9A825"/><circle cx="49" cy="16" r="5" fill="#E9A825"/>'
@@ -387,7 +400,7 @@ def main() -> None:
         for slug, (nav, title, sub) in PAGES.items():
             (HERE / f"nav/{slug}-{t.name}.svg").write_text(pill(t, nav, False))
             (HERE / f"nav/{slug}-current-{t.name}.svg").write_text(pill(t, nav, True))
-            if title:
+            if title and sub:
                 (HERE / f"headers/{slug}-{t.name}.svg").write_text(page_header(t, title, sub))
     if args.shots:
         frame_screens(args.shots)

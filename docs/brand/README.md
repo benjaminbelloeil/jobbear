@@ -129,8 +129,8 @@ light and a dark version, and its text is outlined from the Bricolage Grotesque 
 [`fonts/`](fonts) (SIL Open Font License). To change a label or add a page, edit the script, then:
 
 ```bash
-uv run --with fonttools docs/brand/readme/build.py
-uv run --with fonttools docs/brand/readme/build.py --shots <folder of raw 2x screenshots>
+uv run docs/brand/readme/build.py
+uv run docs/brand/readme/build.py --shots <folder of raw 2x screenshots>
 ```
 
 ---
