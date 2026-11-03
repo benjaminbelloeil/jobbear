@@ -13,6 +13,10 @@ def create_application(client: TestClient) -> int:
     assert company_response.status_code == 201
     company_id = company_response.json()["id"]
 
+    return make_app(client, company_id)
+
+
+def make_app(client: TestClient, company_id: int) -> int:
     application_response = client.post(
         "/applications",
         json={
