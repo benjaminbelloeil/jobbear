@@ -44,7 +44,7 @@ function StepRow({ step, index }: { step: Step; index: number }) {
     <li className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
       <div className="max-w-md">
         <p className="font-display text-sm font-bold text-honey-800">Step {index + 1}</p>
-        <h3 className="mt-2 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
+        <h3 className="mt-2 text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl">
           {step.title}
         </h3>
         <p className="mt-4 text-lg leading-relaxed text-bark-700">{step.body}</p>
@@ -53,7 +53,7 @@ function StepRow({ step, index }: { step: Step; index: number }) {
         ref={ref}
         className="rounded-[1.75rem] border border-birch-200 bg-birch-50 p-5 shadow-[0_30px_60px_-40px_rgba(42,31,25,0.5)] sm:p-8"
       >
-        <div className={`scene play lg:h-[24rem] ${inView ? '' : 'scene-wait'}`}>
+        <div className={`scene play lg:h-96 ${inView ? '' : 'scene-wait'}`}>
           <Scene />
         </div>
       </div>

@@ -49,7 +49,7 @@ function ChipList({
         {items.map((item) => (
           <li
             key={item}
-            className="inline-flex items-center gap-1.5 rounded-full bg-white py-1 pl-3 pr-1 text-sm font-medium text-bark ring-1 ring-inset ring-birch-300"
+            className="inline-flex items-center gap-1.5 rounded-full bg-white py-1 pr-1 pl-3 text-sm font-medium text-bark ring-1 ring-birch-300 ring-inset"
           >
             <Icon name={icon} size={14} className="text-bark-500" />
             {item}
@@ -104,7 +104,7 @@ export default function Profile() {
           mood="reading"
           size={120}
           outlined
-          className="pointer-events-none absolute -bottom-3 right-4 hidden md:block"
+          className="pointer-events-none absolute right-4 -bottom-3 hidden md:block"
         />
         <div className="relative flex flex-wrap items-center gap-5 p-6 sm:p-8 md:pr-40">
           <span
@@ -124,7 +124,7 @@ export default function Profile() {
               {profile.roles.map((role) => (
                 <li
                   key={role}
-                  className="rounded-full px-3 py-1 text-sm font-medium text-honey ring-1 ring-inset ring-honey/40"
+                  className="rounded-full px-3 py-1 text-sm font-medium text-honey ring-1 ring-honey/40 ring-inset"
                 >
                   {role}
                 </li>
@@ -141,7 +141,7 @@ export default function Profile() {
               } ${i === 2 ? 'sm:border-l' : ''}`}
             >
               <dt className="text-xs text-birch-300">{stat.label}</dt>
-              <dd className="mt-1 font-display text-2xl font-bold tabular-nums text-honey">
+              <dd className="mt-1 font-display text-2xl font-bold text-honey tabular-nums">
                 {stat.value}
               </dd>
             </div>
@@ -236,11 +236,11 @@ export default function Profile() {
               <div className="space-y-5">
                 <label className="block">
                   <span className="label">Current password</span>
-                  <input type="password" autoComplete="current-password" className="field mt-1.5" />
+                  <input type="password" autoComplete="current-password" className="mt-1.5 field" />
                 </label>
                 <label className="block">
                   <span className="label">New password</span>
-                  <input type="password" autoComplete="new-password" className="field mt-1.5" />
+                  <input type="password" autoComplete="new-password" className="mt-1.5 field" />
                   <span className="hint mt-1.5 block">At least 12 characters.</span>
                 </label>
                 <button type="button" className="btn-soft">

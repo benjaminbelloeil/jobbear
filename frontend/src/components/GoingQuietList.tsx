@@ -35,13 +35,13 @@ export default function GoingQuietList({ items, ghostAfterDays }: GoingQuietList
                   <span className="font-medium">{item.company}</span>
                   <span className="text-bark-500">, {item.position}</span>
                 </span>
-                <span className="flex items-center gap-2 whitespace-nowrap tabular-nums text-bark-500">
+                <span className="flex items-center gap-2 whitespace-nowrap text-bark-500 tabular-nums">
                   {item.daysQuiet} days quiet
                   <span
                     aria-hidden
                     className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                       late
-                        ? 'bg-honey-50 text-honey-800 ring-1 ring-inset ring-honey/40'
+                        ? 'bg-honey-50 text-honey-800 ring-1 ring-honey/40 ring-inset'
                         : 'bg-birch-200/70 text-bark-700'
                     }`}
                   >
@@ -58,10 +58,10 @@ export default function GoingQuietList({ items, ghostAfterDays }: GoingQuietList
                 aria-label={`${item.company}: ${left} days until marked ghosted`}
               >
                 <span
-                  className={`fill-in block h-full rounded-full ${
+                  className={`block h-full fill-in rounded-full ${
                     late
-                      ? 'meter-warn bg-gradient-to-r from-honey-600 to-honey'
-                      : 'bg-gradient-to-r from-bark to-bark-700'
+                      ? 'meter-warn bg-linear-to-r from-honey-600 to-honey'
+                      : 'bg-linear-to-r from-bark to-bark-700'
                   }`}
                   style={
                     {

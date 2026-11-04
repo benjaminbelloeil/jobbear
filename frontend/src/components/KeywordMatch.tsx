@@ -19,7 +19,7 @@ export default function KeywordMatch({ matched, missing, resumeName }: KeywordMa
   return (
     <div>
       <p className="flex items-baseline gap-2">
-        <span className="font-display text-5xl font-extrabold tabular-nums tracking-tight">
+        <span className="font-display text-5xl font-extrabold tracking-tight tabular-nums">
           {Math.round(share * 100)}%
         </span>
         <span className="text-sm text-bark-500">
@@ -28,7 +28,7 @@ export default function KeywordMatch({ matched, missing, resumeName }: KeywordMa
       </p>
       <span aria-hidden className="mt-3 block h-2 overflow-hidden rounded-full bg-birch-200">
         <span
-          className="fill-in block h-full rounded-full bg-gradient-to-r from-bark to-bark-700"
+          className="block h-full fill-in rounded-full bg-linear-to-r from-bark to-bark-700"
           style={{ width: `${share * 100}%` }}
         />
       </span>
@@ -42,7 +42,7 @@ export default function KeywordMatch({ matched, missing, resumeName }: KeywordMa
         {matched.map((skill) => (
           <li
             key={skill}
-            className="inline-flex items-center gap-1 rounded-full bg-birch-200/70 py-1 pl-2 pr-2.5 text-sm text-bark ring-1 ring-inset ring-birch-300"
+            className="inline-flex items-center gap-1 rounded-full bg-birch-200/70 py-1 pr-2.5 pl-2 text-sm text-bark ring-1 ring-birch-300 ring-inset"
           >
             <Icon name="check" size={14} className="text-pine" />
             {skill}

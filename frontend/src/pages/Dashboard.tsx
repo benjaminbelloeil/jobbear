@@ -70,7 +70,7 @@ export default function Dashboard() {
           <BearCharacter mood="waving" size={64} className="hidden shrink-0 sm:block" />
           <div className="min-w-0">
             {/* The sky follows the clock: sunrise, sun, sunset, then the moon. */}
-            <h1 className="flex items-center gap-3 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
+            <h1 className="flex items-center gap-3 text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">
               {greeting(now.getHours())}
               <SkyMark phase={skyPhase(now.getHours())} size={40} className="-my-2" />
             </h1>
@@ -84,7 +84,7 @@ export default function Dashboard() {
               <a
                 href="#needs-you"
                 onClick={() => setTab('today')}
-                className="group inline-flex items-center gap-2 rounded-full bg-honey-50 py-1 pl-2.5 pr-3 text-sm font-semibold text-honey-800 ring-1 ring-inset ring-honey/50 transition-colors duration-150 hover:bg-honey/25"
+                className="group inline-flex items-center gap-2 rounded-full bg-honey-50 py-1 pr-3 pl-2.5 text-sm font-semibold text-honey-800 ring-1 ring-honey/50 transition-colors duration-150 ring-inset hover:bg-honey/25"
               >
                 <span aria-hidden className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-honey opacity-60" />
@@ -94,7 +94,7 @@ export default function Dashboard() {
                 <Icon
                   name="arrowRight"
                   size={14}
-                  className="ease-arrive transition-transform duration-200 group-hover:translate-x-0.5"
+                  className="transition-transform duration-200 ease-arrive group-hover:translate-x-0.5"
                 />
               </a>
             </div>
@@ -105,7 +105,7 @@ export default function Dashboard() {
             <Icon name="inbox" size={16} />
             Review inbox
             {waiting > 0 && (
-              <span className="rounded-full bg-honey px-1.5 text-xs font-semibold tabular-nums text-bark">
+              <span className="rounded-full bg-honey px-1.5 text-xs font-semibold text-bark tabular-nums">
                 {waiting}
                 <span className="sr-only"> waiting</span>
               </span>
@@ -150,7 +150,7 @@ export default function Dashboard() {
                   <Icon
                     name="arrowRight"
                     size={14}
-                    className="ease-arrive transition-transform duration-200 group-hover:translate-x-0.5"
+                    className="transition-transform duration-200 ease-arrive group-hover:translate-x-0.5"
                   />
                 </Link>
               }
@@ -202,11 +202,11 @@ export default function Dashboard() {
                 mood="reading"
                 size={76}
                 outlined
-                className="pointer-events-none absolute -right-1 -top-1"
+                className="pointer-events-none absolute -top-1 -right-1"
               />
               <div className="relative">
                 <h2 className="pr-16 text-lg font-bold tracking-tight">What’s working</h2>
-                <p className="mb-6 mt-0.5 pr-16 text-sm text-birch-300">
+                <p className="mt-0.5 mb-6 pr-16 text-sm text-birch-300">
                   From your last 48 applications.
                 </p>
                 <InsightList insights={sampleInsights} />

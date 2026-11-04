@@ -33,7 +33,7 @@ function Row({ item, index }: { item: NeedsYouItem; index: number }) {
         }`}
       >
         <span
-          className={`icon-tile ease-arrive transition-transform duration-200 group-hover:scale-105 ${
+          className={`icon-tile transition-transform duration-200 ease-arrive group-hover:scale-105 ${
             today ? 'bg-honey text-bark ring-honey-600/40' : ''
           }`}
         >
@@ -52,14 +52,14 @@ function Row({ item, index }: { item: NeedsYouItem; index: number }) {
           </span>
         </span>
         <span
-          className={`hidden whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium tabular-nums sm:inline-block ${pill}`}
+          className={`hidden rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap tabular-nums sm:inline-block ${pill}`}
         >
           {item.when}
         </span>
         <Icon
           name="chevronRight"
           size={16}
-          className="ease-arrive text-bark-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-bark"
+          className="text-bark-400 transition-transform duration-200 ease-arrive group-hover:translate-x-1 group-hover:text-bark"
         />
       </Link>
     </li>
@@ -81,11 +81,11 @@ export default function NeedsYouList({ items }: { items: NeedsYouItem[] }) {
       {today.length > 0 && (
         <section
           aria-labelledby="needs-today"
-          className="rounded-control bg-honey-50/70 p-2 ring-1 ring-inset ring-honey/40"
+          className="rounded-control bg-honey-50/70 p-2 ring-1 ring-honey/40 ring-inset"
         >
           <h3
             id="needs-today"
-            className="flex items-center gap-2 px-2 pb-1 pt-1 text-xs font-semibold text-honey-800"
+            className="flex items-center gap-2 px-2 pt-1 pb-1 text-xs font-semibold text-honey-800"
           >
             <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-honey-600" />
             Today
@@ -102,7 +102,7 @@ export default function NeedsYouList({ items }: { items: NeedsYouItem[] }) {
           <h3 id="needs-later" className="px-0 text-xs font-semibold text-bark-500">
             Later this week
           </h3>
-          <ol className="list-in -mx-2 mt-1 space-y-1">
+          <ol className="-mx-2 mt-1 list-in space-y-1">
             {later.map((item, index) => (
               <Row key={item.id} item={item} index={today.length + index} />
             ))}

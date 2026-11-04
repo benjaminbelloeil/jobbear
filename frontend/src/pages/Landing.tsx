@@ -101,7 +101,7 @@ const HEADLINE = ['Know which job', 'applications', 'actually work.']
 
 /** Section headings share one scale, a step below the hero. */
 const H2 =
-  'text-4xl font-extrabold leading-[1.04] tracking-[-0.025em] [text-wrap:balance] sm:text-5xl lg:text-6xl'
+  'text-4xl font-extrabold leading-[1.04] tracking-tight text-balance sm:text-5xl lg:text-6xl'
 
 const delay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties
 
@@ -128,9 +128,9 @@ export default function Landing() {
         {/* Hero: the claim and the way in on the left, the demo proving it on the right.
           Sized to fit one laptop screen under the header. */}
         <section className="bg-bark text-birch-50">
-          <div className="mx-auto grid max-w-[90rem] grid-cols-[minmax(0,1fr)] items-center gap-12 px-5 pb-16 pt-12 sm:px-8 sm:pt-16 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,34rem)] lg:gap-14 lg:px-12 lg:py-10 xl:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] xl:gap-20">
+          <div className="mx-auto grid max-w-360 grid-cols-[minmax(0,1fr)] items-center gap-12 px-5 pt-12 pb-16 sm:px-8 sm:pt-16 lg:min-h-[calc(100svh-4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,34rem)] lg:gap-14 lg:px-12 lg:py-10 xl:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] xl:gap-20">
             <div>
-              <h1 className="text-[2.625rem] font-extrabold leading-[0.98] tracking-[-0.03em] sm:text-6xl lg:text-[4rem] xl:text-[4.75rem]">
+              <h1 className="text-[2.625rem] leading-[0.98] font-extrabold tracking-[-0.03em] sm:text-6xl lg:text-[4rem] xl:text-[4.75rem]">
                 {HEADLINE.map((line, index) => (
                   <span key={line} className="mask-line">
                     <span style={delay(index * 90)}>{line}</span>{' '}
@@ -168,7 +168,7 @@ export default function Landing() {
                 </pre>
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
-                <a href={REPO_URL} className="btn-honey btn-lg btn-lift group">
+                <a href={REPO_URL} className="group btn-honey btn-lift btn-lg">
                   <Icon name="github" size={20} />
                   Get the code
                   <Icon
@@ -189,7 +189,7 @@ export default function Landing() {
 
         {/* Positioning: what JobBear is, next to the two things people mistake it for */}
         <section id="compare" className="scroll-mt-20 border-b border-birch-200 bg-birch-50">
-          <div className="mx-auto max-w-[90rem] px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+          <div className="mx-auto max-w-360 px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
             <div className="max-w-3xl">
               <h2 className={H2}>Not a job board. Not another spreadsheet.</h2>
               <p className="mt-5 max-w-2xl text-lg leading-relaxed text-bark-700">
@@ -207,7 +207,7 @@ export default function Landing() {
         {/* How it works: each step beside its own scene */}
         <section
           id="how"
-          className="mx-auto max-w-[90rem] scroll-mt-20 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
+          className="mx-auto max-w-360 scroll-mt-20 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
         >
           <div className="max-w-3xl">
             <h2 className={H2}>How it works</h2>
@@ -222,7 +222,7 @@ export default function Landing() {
 
         {/* The product itself, with sample data */}
         <section className="bg-bark text-birch-50">
-          <div className="mx-auto max-w-[90rem] px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+          <div className="mx-auto max-w-360 px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
               <div>
                 <h2 className={`${H2} max-w-3xl`}>Your whole search on one screen.</h2>
@@ -231,7 +231,7 @@ export default function Landing() {
                   and the applications going quiet.
                 </p>
               </div>
-              <Link to="/login" className="btn-honey btn-lg btn-lift group justify-self-start">
+              <Link to="/login" className="group btn-honey btn-lift btn-lg justify-self-start">
                 Open the app
                 <Icon
                   name="arrowRight"
@@ -242,9 +242,7 @@ export default function Landing() {
             </div>
             <div className="mt-12">
               <Suspense
-                fallback={
-                  <div className="h-[42rem] rounded-[1.5rem] border border-birch/15 bg-birch/5" />
-                }
+                fallback={<div className="h-168 rounded-3xl border border-birch/15 bg-birch/5" />}
               >
                 <ProductPreview />
               </Suspense>
@@ -255,7 +253,7 @@ export default function Landing() {
         {/* Why: each complaint we kept reading, and what JobBear does about it */}
         <section
           id="why"
-          className="mx-auto max-w-[90rem] scroll-mt-20 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
+          className="mx-auto max-w-360 scroll-mt-20 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
         >
           <div className="grid gap-14 lg:grid-cols-[minmax(0,30rem)_minmax(0,1fr)] lg:gap-20">
             <div className="lg:sticky lg:top-32 lg:self-start">
@@ -272,7 +270,7 @@ export default function Landing() {
                   style={delay(index * 110)}
                   className="reveal-item grid gap-5 border-t border-birch-300 py-8 first:border-t-0 first:pt-0 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-start md:gap-8"
                 >
-                  <p className="font-display text-2xl font-semibold leading-snug text-bark-500 lg:text-[1.75rem]">
+                  <p className="font-display text-2xl leading-snug font-semibold text-bark-500 lg:text-[1.75rem]">
                     <span aria-hidden className="text-honey-600">
                       “
                     </span>
@@ -299,7 +297,7 @@ export default function Landing() {
 
         {/* Bring your own AI */}
         <section id="your-ai" className="scroll-mt-20 overflow-hidden bg-bark text-birch-50">
-          <div className="mx-auto grid max-w-[90rem] items-center gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20 lg:px-12">
+          <div className="mx-auto grid max-w-360 items-center gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20 lg:px-12">
             <div>
               <h2 className={H2}>Use your own AI key, or none at all.</h2>
               <p className="mt-5 max-w-lg text-lg leading-relaxed text-birch-300">
@@ -325,7 +323,7 @@ export default function Landing() {
           The business model behind this lives in CLAUDE.md ("Business model"). */}
         <section
           id="pricing"
-          className="mx-auto max-w-[90rem] scroll-mt-20 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
+          className="mx-auto max-w-360 scroll-mt-20 px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
         >
           <div className="flex flex-wrap items-end justify-between gap-8">
             <div className="max-w-3xl">
@@ -338,7 +336,7 @@ export default function Landing() {
             </div>
             {/* TODO(me): once the route guard exists, point this at a public demo route that
               renders the sample data without a login. */}
-            <Link to="/dashboard" className="btn-outline-dark btn-lg group">
+            <Link to="/dashboard" className="group btn-outline-dark btn-lg">
               Try the demo, no sign-up
               <Icon
                 name="arrowRight"
@@ -371,7 +369,7 @@ export default function Landing() {
                 ))}
               </ul>
               <div className="mt-auto pt-10">
-                <a href={`${REPO_URL}#self-hosting`} className="btn-outline-dark btn-lg w-full">
+                <a href={`${REPO_URL}#self-hosting`} className="btn-outline-dark w-full btn-lg">
                   <Icon name="github" size={20} />
                   Self-hosting guide
                 </a>
@@ -436,7 +434,7 @@ export default function Landing() {
                   <div className="mt-auto pt-10">
                     <a
                       href="#reserve"
-                      className={`btn-lg btn-lift w-full ${dark ? 'btn-honey' : 'btn-primary'}`}
+                      className={`w-full btn-lift btn-lg ${dark ? 'btn-honey' : 'btn-primary'}`}
                     >
                       Reserve the {pass.name}
                     </a>
@@ -482,7 +480,7 @@ export default function Landing() {
                   aria-describedby="reserve-note"
                   className="field py-3"
                 />
-                <button type="submit" className="btn-primary btn-lg btn-lift shrink-0">
+                <button type="submit" className="btn-primary shrink-0 btn-lift btn-lg">
                   Reserve my pass
                 </button>
               </form>
@@ -495,19 +493,19 @@ export default function Landing() {
 
         {/* Final call to action: a honey band, and the bear wakes up when you get here */}
         <section className="bg-honey text-bark">
-          <div className="mx-auto grid max-w-[90rem] items-center gap-12 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-20 lg:px-12">
+          <div className="mx-auto grid max-w-360 items-center gap-12 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-20 lg:px-12">
             <div className="grid aspect-square w-48 place-items-center justify-self-center rounded-full bg-birch shadow-[0_30px_60px_-30px_rgba(42,31,25,0.6)] sm:w-60 lg:w-72">
               <WakeUpBear size={170} />
             </div>
             <div className="text-center lg:text-left">
-              <h2 className="text-4xl font-extrabold leading-[1.02] tracking-[-0.03em] [text-wrap:balance] sm:text-6xl lg:text-7xl">
+              <h2 className="text-4xl leading-[1.02] font-extrabold tracking-[-0.03em] text-balance sm:text-6xl lg:text-7xl">
                 Stop guessing where your applications went.
               </h2>
               <p className="mt-5 text-lg leading-relaxed text-bark-700 sm:text-xl">
                 Clone it, run it, and let the bear read the inbox.
               </p>
               <div className="mt-9 flex flex-wrap justify-center gap-3 lg:justify-start">
-                <a href={REPO_URL} className="btn-primary btn-lg btn-lift group">
+                <a href={REPO_URL} className="group btn-primary btn-lift btn-lg">
                   <Icon name="github" size={20} />
                   Get the code
                   <Icon

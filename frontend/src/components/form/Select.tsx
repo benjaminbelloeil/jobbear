@@ -165,7 +165,7 @@ export default function Select({
         onClick={() => (open ? setOpen(false) : openAt(selectedIndex >= 0 ? selectedIndex : 0))}
         onKeyDown={onKeyDown}
         onBlur={() => setOpen(false)}
-        className={`field relative flex items-center gap-2.5 pr-10 text-left ${
+        className={`relative field flex items-center gap-2.5 pr-10 text-left ${
           hideLabel ? '' : 'mt-1.5'
         } ${icon ? 'pl-10' : ''}`}
       >
@@ -189,7 +189,7 @@ export default function Select({
         <Icon
           name="chevronDown"
           size={16}
-          className={`ease-arrive absolute right-3.5 text-bark-500 transition-transform duration-200 ${
+          className={`absolute right-3.5 text-bark-500 transition-transform duration-200 ease-arrive ${
             open ? 'rotate-180' : ''
           }`}
         />

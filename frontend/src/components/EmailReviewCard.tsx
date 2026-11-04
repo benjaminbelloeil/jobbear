@@ -35,7 +35,7 @@ export default function EmailReviewCard({ email, actions }: EmailReviewCardProps
             {received.format(new Date(email.received_at))}
           </time>
         </p>
-        <h2 className="mt-1.5 text-lg font-semibold leading-snug tracking-tight">
+        <h2 className="mt-1.5 text-lg leading-snug font-semibold tracking-tight">
           {email.subject}
         </h2>
         {email.snippet && (
@@ -53,7 +53,7 @@ export default function EmailReviewCard({ email, actions }: EmailReviewCardProps
         <dd className="mt-1.5 flex items-center gap-2.5">
           <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-birch-300">
             <span
-              className="fill-in block h-full rounded-full bg-bark"
+              className="block h-full fill-in rounded-full bg-bark"
               style={{ width: `${confidence ?? 0}%` }}
             />
           </span>

@@ -78,7 +78,7 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
       {/* A framed card: the comparison sits on white inside a soft border, and JobBear's
           column is a raised bark panel inset from the frame. It arrives as one block; only
           the grey comparison text fades in row by row, so the bark column stays whole. */}
-      <div className="reveal-item hidden rounded-[2rem] border border-birch-300 bg-white p-3 shadow-[0_1px_2px_rgba(42,31,25,0.05),0_40px_70px_-45px_rgba(42,31,25,0.45)] md:block">
+      <div className="reveal-item hidden rounded-4xl border border-birch-300 bg-white p-3 shadow-[0_1px_2px_rgba(42,31,25,0.05),0_40px_70px_-45px_rgba(42,31,25,0.45)] md:block">
         <table className="w-full table-fixed border-separate border-spacing-0 text-left">
           <caption className="sr-only">
             Job boards, spreadsheet trackers and JobBear compared
@@ -110,7 +110,7 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
                   Spreadsheets
                 </span>
               </th>
-              <th scope="col" className="rounded-t-[1.25rem] bg-bark px-6 pb-5 pt-6 text-birch-50">
+              <th scope="col" className="rounded-t-[1.25rem] bg-bark px-6 pt-6 pb-5 text-birch-50">
                 <span className="flex items-center gap-3 font-display text-xl font-bold">
                   <span className="grid h-11 w-11 place-items-center rounded-full bg-birch">
                     <BearMark size={30} />
@@ -125,7 +125,7 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
               <tr key={moment} className="group">
                 <th
                   scope="row"
-                  className="reveal-fade rounded-l-2xl border-t border-birch-200 py-5 pl-5 pr-5 align-top transition-colors duration-200 group-hover:border-transparent group-hover:bg-birch-200/50"
+                  className="reveal-fade rounded-l-2xl border-t border-birch-200 py-5 pr-5 pl-5 align-top transition-colors duration-200 group-hover:border-transparent group-hover:bg-birch-200/50"
                   style={delay(index)}
                 >
                   <span className="flex items-center gap-3 font-display font-semibold">
@@ -163,8 +163,8 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
             ))}
             <tr>
               <td colSpan={3} />
-              <td className="rounded-b-[1.25rem] bg-bark px-6 pb-6 pt-3">
-                <a href={repoUrl} className="btn-honey btn-lift w-full py-3 font-semibold">
+              <td className="rounded-b-[1.25rem] bg-bark px-6 pt-3 pb-6">
+                <a href={repoUrl} className="btn-honey w-full btn-lift py-3 font-semibold">
                   <Icon name="github" size={18} />
                   Get the code
                 </a>
@@ -192,7 +192,7 @@ export default function Comparison({ repoUrl }: { repoUrl: string }) {
               <Yes />
               {bear}
             </p>
-            <dl className="space-y-2 px-5 pb-4 pt-3 text-sm text-bark-500">
+            <dl className="space-y-2 px-5 pt-3 pb-4 text-sm text-bark-500">
               <div className="flex items-start gap-2">
                 <Nope />
                 <dt className="sr-only">Job boards</dt>

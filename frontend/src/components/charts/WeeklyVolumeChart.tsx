@@ -9,7 +9,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  type TooltipProps,
+  type TooltipContentProps,
 } from 'recharts'
 
 import type { WeeklyStats } from '../../types'
@@ -40,7 +40,13 @@ export default function WeeklyVolumeChart({ weeks, goal, height = 260 }: WeeklyV
         aria-label={`Applications per week for the last ${weeks.length} weeks, against a weekly goal of ${goal}.`}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={weeks} margin={{ top: 20, right: 8, bottom: 0, left: 0 }}>
+          <BarChart
+            data={weeks}
+            margin={{ top: 20, right: 8, bottom: 0, left: 0 }}
+            // Recharts 3 turns this on by default; the wrapper is already one labelled image
+            // with a screen-reader list below, so a second focusable layer would duplicate it.
+            accessibilityLayer={false}
+          >
             <defs>
               <linearGradient id={`${id}-honey`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#F2BC4B" />
@@ -69,7 +75,7 @@ export default function WeeklyVolumeChart({ weeks, goal, height = 260 }: WeeklyV
             />
             <Tooltip
               cursor={{ fill: '#E4E5DD', opacity: 0.45 }}
-              content={<WeekTooltip goal={goal} />}
+              content={(props: TooltipContentProps) => <WeekTooltip {...props} goal={goal} />}
               animationDuration={150}
             />
             <ReferenceLine
@@ -126,7 +132,7 @@ export default function WeeklyVolumeChart({ weeks, goal, height = 260 }: WeeklyV
   )
 }
 
-type WeekTooltipProps = TooltipProps<number, string> & { goal: number }
+type WeekTooltipProps = TooltipContentProps & { goal: number }
 
 /** A dark bark card, so the hovered number reads at a glance over the light chart. */
 function WeekTooltip({ active, payload, label, goal }: WeekTooltipProps) {
@@ -136,7 +142,7 @@ function WeekTooltip({ active, payload, label, goal }: WeekTooltipProps) {
   return (
     <div className="rounded-xl bg-bark px-3.5 py-2.5 text-birch-50 shadow-[0_12px_28px_-12px_rgb(42_31_25/0.7)]">
       <p className="text-xs text-birch-300">Week of {shortDate.format(new Date(String(label)))}</p>
-      <p className="mt-0.5 font-display text-2xl font-bold tabular-nums leading-tight">
+      <p className="mt-0.5 font-display text-2xl leading-tight font-bold tabular-nums">
         {count}
         <span className="ml-1.5 font-sans text-sm font-medium text-birch-300">
           application{count === 1 ? '' : 's'}

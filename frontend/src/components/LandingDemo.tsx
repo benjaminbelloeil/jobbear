@@ -37,7 +37,7 @@ const OTHER_APPS: [company: string, role: string, status: string, tone: string][
 function Badge({ tone, children }: { tone: string; children: ReactNode }) {
   return (
     <span
-      className={`whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${tone}`}
+      className={`rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap ring-1 ring-inset ${tone}`}
     >
       {children}
     </span>
@@ -91,7 +91,7 @@ export default function LandingDemo() {
       {/* A faint dot texture behind the card, fading out at the edges */}
       <div
         aria-hidden
-        className="demo-dots pointer-events-none absolute -inset-x-5 -bottom-10 top-12 sm:-inset-x-10"
+        className="demo-dots pointer-events-none absolute -inset-x-5 top-12 -bottom-10 sm:-inset-x-10"
       />
 
       <button
@@ -100,7 +100,7 @@ export default function LandingDemo() {
           setPlayedBeat(0)
           setRun((count) => count + 1)
         }}
-        className="absolute left-1 top-16 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-birch-300 ring-1 ring-birch/20 hover:bg-birch/10 hover:text-birch-50 sm:top-20"
+        className="absolute top-16 left-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-birch-300 ring-1 ring-birch/20 hover:bg-birch/10 hover:text-birch-50 sm:top-20"
       >
         <Icon name="refresh" size={14} />
         Replay
@@ -117,7 +117,7 @@ export default function LandingDemo() {
           <BearCharacter mood={MOOD[beat]} paused={!inView} outlined className="h-auto w-full" />
           <span
             key={beat}
-            className={`bubble-in absolute bottom-[58%] left-[88%] w-max max-w-[8.5rem] rounded-2xl rounded-bl-md bg-birch-50 px-3.5 py-2 font-display text-sm font-bold leading-snug text-bark shadow-[0_12px_24px_-12px_rgba(0,0,0,0.7)] sm:max-w-none sm:px-4 sm:py-2.5 sm:text-base ${
+            className={`bubble-in absolute bottom-[58%] left-[88%] w-max max-w-34 rounded-2xl rounded-bl-md bg-birch-50 px-3.5 py-2 font-display text-sm leading-snug font-bold text-bark shadow-[0_12px_24px_-12px_rgba(0,0,0,0.7)] sm:max-w-none sm:px-4 sm:py-2.5 sm:text-base ${
               SAYS[beat] ? '' : 'invisible'
             }`}
           >
@@ -130,7 +130,7 @@ export default function LandingDemo() {
         <svg
           aria-hidden
           viewBox="0 0 200 40"
-          className="pointer-events-none absolute left-1/2 top-0 z-20 h-auto w-36 -translate-x-1/2 -translate-y-1/2 overflow-visible sm:w-44"
+          className="pointer-events-none absolute top-0 left-1/2 z-20 h-auto w-36 -translate-x-1/2 -translate-y-1/2 overflow-visible sm:w-44"
         >
           {[46, 154].map((x) => (
             <g key={x} className={x > 100 && MOOD[beat] === 'waving' ? 'paw paw-let-go' : 'paw'}>
@@ -163,11 +163,11 @@ export default function LandingDemo() {
           {/* The screen: the inbox, then it slides over to the tracker */}
           <div
             aria-hidden
-            className="relative h-[19.5rem] overflow-hidden rounded-panel bg-birch-50 text-bark shadow-[0_14px_30px_-20px_rgba(0,0,0,0.8)]"
+            className="relative h-78 overflow-hidden rounded-panel bg-birch-50 text-bark shadow-[0_14px_30px_-20px_rgba(0,0,0,0.8)]"
           >
             {/* Screen 1: the inbox */}
             <div
-              className={`ease-arrive absolute inset-0 transition duration-700 ${
+              className={`absolute inset-0 transition duration-700 ease-arrive ${
                 onTracker ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'
               }`}
             >
@@ -184,7 +184,7 @@ export default function LandingDemo() {
 
               {/* The new email grows in at the top and pushes the rest down */}
               <div
-                className={`ease-arrive grid transition-[grid-template-rows] duration-700 ${
+                className={`grid transition-[grid-template-rows] duration-700 ease-arrive ${
                   beat >= 1 ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
                 }`}
               >
@@ -199,10 +199,10 @@ export default function LandingDemo() {
                       <span className="text-sm font-bold">Meridian Maps</span>
                       <span className="ml-auto text-xs font-semibold text-bark">now</span>
                     </div>
-                    <p className="mt-1 pl-[1.125rem] font-display text-[0.9375rem] font-bold leading-snug">
+                    <p className="mt-1 pl-4.5 font-display text-[0.9375rem] leading-snug font-bold">
                       Can we{' '}
                       <mark
-                        className={`demo-mark ease-arrive text-bark transition-[background-size] duration-1000 ${
+                        className={`demo-mark text-bark transition-[background-size] duration-1000 ease-arrive ${
                           beat >= 2 ? 'demo-mark-on' : ''
                         }`}
                       >
@@ -212,16 +212,16 @@ export default function LandingDemo() {
                     </p>
                     {/* Opening it shows the preview, then the bear's verdict */}
                     <div
-                      className={`ease-arrive grid transition-[grid-template-rows] duration-700 ${
+                      className={`grid transition-[grid-template-rows] duration-700 ease-arrive ${
                         beat >= 2 ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
                       }`}
                     >
-                      <div className="overflow-hidden pl-[1.125rem]">
+                      <div className="overflow-hidden pl-4.5">
                         <p className="pt-1 text-sm text-bark-700">
                           The team loved your application. Are you free next week?
                         </p>
                         <p
-                          className={`ease-arrive mt-2.5 flex items-center gap-2 transition duration-500 ${
+                          className={`mt-2.5 flex items-center gap-2 transition duration-500 ease-arrive ${
                             beat >= 3 ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
                           }`}
                         >
@@ -229,7 +229,7 @@ export default function LandingDemo() {
                             <BearMark size={14} />
                             Interview invite
                           </span>
-                          <span className="text-xs font-semibold tabular-nums text-bark-500">
+                          <span className="text-xs font-semibold text-bark-500 tabular-nums">
                             94% sure
                           </span>
                         </p>
@@ -244,7 +244,7 @@ export default function LandingDemo() {
                   key={from}
                   className="flex items-center gap-3 border-b border-birch-200 px-4 py-3 text-sm text-bark-500"
                 >
-                  <span className="w-28 shrink-0 truncate pl-[1.125rem]">{from}</span>
+                  <span className="w-28 shrink-0 truncate pl-4.5">{from}</span>
                   <span className="min-w-0 flex-1 truncate">{subject}</span>
                   <span className="text-xs">{when}</span>
                 </div>
@@ -253,7 +253,7 @@ export default function LandingDemo() {
 
             {/* Screen 2: the JobBear tracker */}
             <div
-              className={`ease-arrive absolute inset-0 transition duration-700 ${
+              className={`absolute inset-0 transition duration-700 ease-arrive ${
                 onTracker ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
               }`}
             >
@@ -296,7 +296,7 @@ export default function LandingDemo() {
 
               {/* The toast confirming what changed and why */}
               <div
-                className={`ease-arrive absolute inset-x-4 bottom-4 flex items-center gap-2.5 rounded-control bg-bark px-4 py-3 text-sm text-birch-50 shadow-[0_14px_30px_-12px_rgba(0,0,0,0.6)] transition duration-500 ${
+                className={`absolute inset-x-4 bottom-4 flex items-center gap-2.5 rounded-control bg-bark px-4 py-3 text-sm text-birch-50 shadow-[0_14px_30px_-12px_rgba(0,0,0,0.6)] transition duration-500 ease-arrive ${
                   beat >= LAST ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
                 }`}
               >
@@ -321,14 +321,14 @@ export default function LandingDemo() {
                 <Fragment key={station.label}>
                   {index > 0 && (
                     <span
-                      className={`mt-[1.375rem] h-0.5 rounded-full transition-colors duration-500 ${
+                      className={`mt-5.5 h-0.5 rounded-full transition-colors duration-500 ${
                         done || active ? 'bg-honey' : 'bg-birch/15'
                       }`}
                     />
                   )}
                   <li className="flex w-20 flex-col items-center gap-2 text-center sm:w-24">
                     <span
-                      className={`ease-arrive grid h-11 w-11 place-items-center rounded-full transition duration-500 ${
+                      className={`grid h-11 w-11 place-items-center rounded-full transition duration-500 ease-arrive ${
                         active
                           ? 'scale-110 bg-honey text-bark ring-4 ring-honey/25'
                           : done
@@ -343,7 +343,7 @@ export default function LandingDemo() {
                       )}
                     </span>
                     <span
-                      className={`text-xs font-semibold leading-tight transition-colors duration-500 sm:text-sm ${
+                      className={`text-xs leading-tight font-semibold transition-colors duration-500 sm:text-sm ${
                         active || done ? 'text-birch-50' : 'text-birch-300'
                       }`}
                     >

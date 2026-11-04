@@ -14,7 +14,7 @@ export default function SiteFooter({ links, repoUrl }: { links: NavLink[]; repoU
 
   return (
     <footer className="bg-bark text-birch-300">
-      <div className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)] lg:px-12">
+      <div className="mx-auto grid max-w-360 gap-12 px-5 py-16 sm:px-8 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)] lg:px-12">
         <div>
           <Link
             to="/"
@@ -64,7 +64,7 @@ export default function SiteFooter({ links, repoUrl }: { links: NavLink[]; repoU
       </div>
 
       <div className="border-t border-birch/10">
-        <div className="mx-auto flex max-w-[90rem] items-center gap-3 px-5 py-6 text-sm sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-360 items-center gap-3 px-5 py-6 text-sm sm:px-8 lg:px-12">
           <BearMark size={24} mood="asleep" />
           <p>Free to self-host, licensed under AGPL-3.0.</p>
         </div>

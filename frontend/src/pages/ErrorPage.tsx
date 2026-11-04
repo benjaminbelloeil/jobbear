@@ -21,7 +21,7 @@ export default function ErrorPage({ error }: { error?: unknown }) {
         <div className="grid aspect-square w-44 place-items-center rounded-full bg-birch sm:w-52">
           <BearCharacter mood="idle" size={130} title="The JobBear bear" />
         </div>
-        <h1 className="mt-8 text-4xl font-extrabold leading-[1.04] tracking-[-0.03em] [text-wrap:balance] sm:text-6xl">
+        <h1 className="mt-8 text-4xl leading-[1.04] font-extrabold tracking-[-0.03em] text-balance sm:text-6xl">
           This page tripped over.
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-birch-300">
@@ -32,7 +32,7 @@ export default function ErrorPage({ error }: { error?: unknown }) {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="btn-honey btn-lg btn-lift"
+            className="btn-honey btn-lift btn-lg"
           >
             <Icon name="refresh" size={18} />
             Reload the page
@@ -44,7 +44,9 @@ export default function ErrorPage({ error }: { error?: unknown }) {
         {message && (
           <details className="mt-8 w-full rounded-control border border-birch/15 bg-black/20 p-4 text-left text-sm text-birch-300">
             <summary className="cursor-pointer font-medium text-birch-50">Error details</summary>
-            <pre className="mt-3 whitespace-pre-wrap break-words font-mono text-xs">{message}</pre>
+            <pre className="mt-3 font-mono text-xs wrap-break-word whitespace-pre-wrap">
+              {message}
+            </pre>
           </details>
         )}
       </div>

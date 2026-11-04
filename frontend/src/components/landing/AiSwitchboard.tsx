@@ -116,7 +116,7 @@ export default function AiSwitchboard() {
         if (!event.currentTarget.contains(event.relatedTarget)) setHeld(false)
       }}
     >
-      <div className="relative mx-auto aspect-square w-full max-w-[26rem] lg:max-w-[32rem]">
+      <div className="relative mx-auto aspect-square w-full max-w-104 lg:max-w-lg">
         {/* Wires and the slow outer ring. The ring runs just past the square's edge so the
             tiles and their labels sit well inside it. */}
         <svg
@@ -152,7 +152,7 @@ export default function AiSwitchboard() {
         </svg>
 
         {/* The bear in the middle; it pulses each time a signal arrives */}
-        <div className="absolute left-1/2 top-1/2 grid h-[32%] w-[32%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-birch shadow-[0_20px_40px_-20px_rgba(0,0,0,0.8)]">
+        <div className="absolute top-1/2 left-1/2 grid h-[32%] w-[32%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-birch shadow-[0_20px_40px_-20px_rgba(0,0,0,0.8)]">
           <span key={active} aria-hidden className="ai-pulse absolute inset-0 rounded-full" />
           <BearMark size={64} className="h-[58%] w-[58%]" />
         </div>
@@ -175,10 +175,10 @@ export default function AiSwitchboard() {
                     setActive(index)
                     setPicked(true)
                   }}
-                  className="group flex flex-col items-center gap-1.5 rounded-control focus-visible:outline-none"
+                  className="group flex flex-col items-center gap-1.5 rounded-control focus-visible:outline-hidden"
                 >
                   <span
-                    className={`ease-arrive grid h-12 w-12 place-items-center rounded-2xl transition duration-300 group-focus-visible:ring-2 group-focus-visible:ring-honey motion-reduce:transition-none sm:h-16 sm:w-16 ${
+                    className={`grid h-12 w-12 place-items-center rounded-2xl transition duration-300 ease-arrive group-focus-visible:ring-2 group-focus-visible:ring-honey motion-reduce:transition-none sm:h-16 sm:w-16 ${
                       on
                         ? 'scale-110 bg-birch text-bark shadow-[0_14px_30px_-12px_rgba(0,0,0,0.7)] ring-2 ring-honey'
                         : 'bg-bark text-birch-300 ring-1 ring-birch/20 group-hover:text-birch-50 group-hover:ring-birch/40'
@@ -208,7 +208,7 @@ export default function AiSwitchboard() {
       <div
         key={active}
         aria-hidden
-        className="scene play mt-10 rounded-[1.5rem] bg-black/25 p-5 ring-1 ring-birch/15 sm:p-6"
+        className="scene play mt-10 rounded-3xl bg-black/25 p-5 ring-1 ring-birch/15 sm:p-6"
       >
         {/* Who's reading, and with whose key */}
         <div data-a="in" className="flex flex-wrap items-center justify-between gap-3">
@@ -217,7 +217,7 @@ export default function AiSwitchboard() {
               <ProviderGlyph provider={provider} size={20} />
             </span>
             <span>
-              <span className="block font-display font-bold leading-tight text-birch-50">
+              <span className="block font-display leading-tight font-bold text-birch-50">
                 {provider.name}
               </span>
               <span className="block text-xs text-birch-300">{provider.vendor}</span>
@@ -234,7 +234,7 @@ export default function AiSwitchboard() {
         </div>
 
         {/* The hand-off: the email and the tracker row share one slot */}
-        <div className="handoff relative mt-6 h-[5.75rem]">
+        <div className="handoff relative mt-6 h-23">
           {/* 1 · The email, with the model's logo pinned to its corner */}
           <div className="handoff-email absolute inset-0">
             <div className="relative h-full overflow-hidden rounded-xl bg-birch-50 px-4 py-3 text-bark shadow-[0_14px_28px_-16px_rgba(0,0,0,0.9)]">
@@ -243,7 +243,7 @@ export default function AiSwitchboard() {
                 Meridian Maps
                 <span className="ml-auto pr-6">now</span>
               </span>
-              <p className="mt-1 truncate font-display text-[0.9375rem] font-bold leading-snug">
+              <p className="mt-1 truncate font-display text-[0.9375rem] leading-snug font-bold">
                 Can we <mark className="handoff-mark text-bark">schedule an interview</mark>?
               </p>
               <p className="mt-0.5 truncate text-xs text-bark-500">
@@ -251,10 +251,10 @@ export default function AiSwitchboard() {
               </p>
               {/* The read: a soft honey band sweeps across the email */}
               <span className="handoff-scan pointer-events-none absolute inset-y-0 left-0 w-full">
-                <span className="absolute inset-y-0 left-0 w-20 -translate-x-full bg-gradient-to-r from-transparent via-honey/30 to-transparent" />
+                <span className="absolute inset-y-0 left-0 w-20 -translate-x-full bg-linear-to-r from-transparent via-honey/30 to-transparent" />
               </span>
             </div>
-            <span className="handoff-logo absolute -right-2.5 -top-2.5 grid h-9 w-9 place-items-center rounded-full bg-white text-bark shadow-[0_8px_18px_-8px_rgba(0,0,0,0.8)] ring-2 ring-honey">
+            <span className="handoff-logo absolute -top-2.5 -right-2.5 grid h-9 w-9 place-items-center rounded-full bg-white text-bark shadow-[0_8px_18px_-8px_rgba(0,0,0,0.8)] ring-2 ring-honey">
               <ProviderGlyph provider={provider} size={18} />
             </span>
           </div>
@@ -273,7 +273,7 @@ export default function AiSwitchboard() {
               </p>
             </div>
             <span className="grid shrink-0 justify-items-end">
-              <span className="handoff-applied rounded-full bg-lake-50 px-2.5 py-1 text-xs font-semibold text-lake ring-1 ring-inset ring-lake/25 [grid-area:1/1]">
+              <span className="handoff-applied rounded-full bg-lake-50 px-2.5 py-1 text-xs font-semibold text-lake ring-1 ring-lake/25 [grid-area:1/1] ring-inset">
                 Applied
               </span>
               <span className="handoff-interviewing inline-flex items-center gap-1 rounded-full bg-honey px-3 py-1 text-xs font-bold text-bark shadow-[0_8px_18px_-8px_rgba(233,168,37,0.9)] [grid-area:1/1]">
@@ -288,7 +288,7 @@ export default function AiSwitchboard() {
         <div data-a="in" style={delay(2500)} className="mt-6">
           <div className="flex items-baseline justify-between text-xs text-birch-300">
             <span>Confidence</span>
-            <span className="font-display text-base font-bold tabular-nums text-birch-50">
+            <span className="font-display text-base font-bold text-birch-50 tabular-nums">
               {provider.sure}% sure
             </span>
           </div>
@@ -301,7 +301,7 @@ export default function AiSwitchboard() {
               />
             </span>
             {/* Your threshold: above it, JobBear acts on its own */}
-            <span className="absolute -bottom-1 -top-1 left-[80%] w-0.5 rounded-full bg-birch-50/70" />
+            <span className="absolute -top-1 -bottom-1 left-[80%] w-0.5 rounded-full bg-birch-50/70" />
           </div>
           <p className="mt-2.5 flex items-center gap-1.5 text-xs text-birch-300">
             <Icon name="check" size={13} className="text-honey" />

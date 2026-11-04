@@ -76,7 +76,7 @@ export default function NewApplication() {
                   options={[]}
                   className="flex-1"
                 />
-                <button type="button" className="btn-soft min-h-[2.75rem] shrink-0">
+                <button type="button" className="btn-soft min-h-11 shrink-0">
                   <Icon name="plus" size={16} />
                   Add a company
                 </button>
@@ -101,7 +101,7 @@ export default function NewApplication() {
                   <input name="location" placeholder="Zürich" className="field" />
                 </span>
               </label>
-              <label className="flex min-h-[2.75rem] cursor-pointer items-center justify-between gap-3 self-end rounded-control border border-birch-300 bg-birch px-3.5 transition-colors hover:border-bark-400 has-[:checked]:border-honey-600 has-[:checked]:bg-honey-50/60">
+              <label className="flex min-h-11 cursor-pointer items-center justify-between gap-3 self-end rounded-control border border-birch-300 bg-birch px-3.5 transition-colors hover:border-bark-400 has-checked:border-honey-600 has-checked:bg-honey-50/60">
                 <span className="text-sm font-semibold text-bark-700">Remote</span>
                 <input type="checkbox" name="remote" className="switch" />
               </label>
@@ -121,7 +121,7 @@ export default function NewApplication() {
                 name="job_description"
                 minRows={6}
                 placeholder="Paste the full posting: what you'd do and what they're looking for."
-                className="field mt-1.5 leading-relaxed"
+                className="mt-1.5 field leading-relaxed"
               />
               <span className="hint mt-1.5 block">
                 JobBear checks it against the resume you sent and shows what matches.
@@ -187,10 +187,10 @@ export default function NewApplication() {
                   {index < NEXT_STEPS.length - 1 && (
                     <span
                       aria-hidden
-                      className="absolute bottom-0 left-3.5 top-8 w-px -translate-x-1/2 bg-birch/15"
+                      className="absolute top-8 bottom-0 left-3.5 w-px -translate-x-1/2 bg-birch/15"
                     />
                   )}
-                  <span className="relative grid h-7 w-7 shrink-0 place-items-center rounded-full bg-honey/15 text-honey ring-1 ring-inset ring-honey/30">
+                  <span className="relative grid h-7 w-7 shrink-0 place-items-center rounded-full bg-honey/15 text-honey ring-1 ring-honey/30 ring-inset">
                     <Icon name={step.icon} size={15} />
                   </span>
                   <span>
