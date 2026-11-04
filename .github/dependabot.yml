@@ -7,6 +7,10 @@ updates:
     groups:
       frontend-minor:
         update-types: [minor, patch]
+    ignore:
+      # typescript-eslint supports TypeScript below 6.1 only. Drop this once it supports 7.
+      - dependency-name: typescript
+        versions: [">=7.0.0"]
     commit-message:
       prefix: "chore(deps)"
     labels: ["dependencies", "frontend"]
