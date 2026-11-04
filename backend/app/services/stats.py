@@ -10,6 +10,17 @@ Definitions (write them down precisely before coding; they are interview questio
       non-SYSTEM status event after APPLIED. None when there is no data.
     - weekly: applications per ISO week (Monday start) vs. settings.weekly_goal,
       including weeks with zero applications.
+
+Edge cases (decided in 3.1):
+    - Zero applications: every rate is 0.0 (never divide by zero) and the average is
+      None, not 0. An average of 0 days would claim everyone replied instantly.
+    - Applications but no replies yet: the average is None as well ("no data yet").
+    - APPLIED -> OA -> REJECTED counts toward oa_rate and response_rate: the company
+      did answer, even though the current status is REJECTED.
+    - GHOSTED is not a response: it is a SYSTEM event (our daily job), not a reply
+      from the company. SYSTEM events never count as a reply.
+    - APPLIED -> GHOSTED -> INTERVIEWING is a response (a late reply). Its first
+      response is the INTERVIEWING event, because the GHOSTED one is SYSTEM.
 """
 
 from sqlalchemy.orm import Session
