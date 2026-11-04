@@ -136,7 +136,7 @@ function WeekTooltip({ active, payload, label, goal }: WeekTooltipProps) {
   return (
     <div className="rounded-xl bg-bark px-3.5 py-2.5 text-birch-50 shadow-[0_12px_28px_-12px_rgb(42_31_25/0.7)]">
       <p className="text-xs text-birch-300">Week of {shortDate.format(new Date(String(label)))}</p>
-      <p className="mt-0.5 font-display text-2xl font-bold tabular-nums leading-tight">
+      <p className="mt-0.5 font-display text-2xl leading-tight font-bold tabular-nums">
         {count}
         <span className="ml-1.5 font-sans text-sm font-medium text-birch-300">
           application{count === 1 ? '' : 's'}

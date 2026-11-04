@@ -40,7 +40,7 @@ export default function Slider({
         </label>
         <output
           htmlFor={id}
-          className="rounded-full bg-honey-50 px-2 py-0.5 text-sm font-semibold tabular-nums text-honey-800 ring-1 ring-inset ring-honey/40"
+          className="rounded-full bg-honey-50 px-2 py-0.5 text-sm font-semibold text-honey-800 tabular-nums ring-1 ring-honey/40 ring-inset"
         >
           {format(shown)}
         </output>
@@ -56,7 +56,7 @@ export default function Slider({
           setShown(Number(event.target.value))
           onChange?.(event)
         }}
-        className="range mt-3.5"
+        className="mt-3.5 range"
         style={{ '--fill': `${fill}%` } as React.CSSProperties}
       />
       {hint && <span className="hint">{hint}</span>}

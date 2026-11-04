@@ -37,21 +37,21 @@ export default function HistoryBand({ events, upNext }: HistoryBandProps) {
           {events.map((event, index) => {
             const current = index === events.length - 1
             return (
-              <li key={event.id} className="relative pl-8 md:pl-0 md:pr-6 md:pt-9">
+              <li key={event.id} className="relative pl-8 md:pt-9 md:pr-6 md:pl-0">
                 {/* The rail: down to the next step on phones, across to it on wide screens. */}
                 {(!current || upNext) && (
                   <span
                     aria-hidden
-                    className={`absolute -bottom-7 left-[5px] top-4 w-px md:bottom-auto md:left-5 md:right-0 md:top-[5px] md:h-px md:w-auto ${
+                    className={`absolute top-4 -bottom-7 left-[5px] w-px md:top-[5px] md:right-0 md:bottom-auto md:left-5 md:h-px md:w-auto ${
                       current
-                        ? 'border-l border-dashed border-honey/60 md:border-l-0 md:border-t'
+                        ? 'border-l border-dashed border-honey/60 md:border-t md:border-l-0'
                         : 'bg-birch/25'
                     }`}
                   />
                 )}
                 <span
                   aria-hidden
-                  className={`absolute left-0 top-1 h-3 w-3 rounded-full md:top-0 ${
+                  className={`absolute top-1 left-0 h-3 w-3 rounded-full md:top-0 ${
                     current
                       ? 'bg-honey shadow-[0_0_0_5px_rgb(233_168_37/0.25)]'
                       : 'bg-birch-300 ring-4 ring-bark'
@@ -79,10 +79,10 @@ export default function HistoryBand({ events, upNext }: HistoryBandProps) {
             )
           })}
           {upNext && (
-            <li className="relative pl-8 md:pl-0 md:pt-9">
+            <li className="relative pl-8 md:pt-9 md:pl-0">
               <span
                 aria-hidden
-                className="absolute left-0 top-1 h-3 w-3 rounded-full border border-dashed border-honey md:top-0"
+                className="absolute top-1 left-0 h-3 w-3 rounded-full border border-dashed border-honey md:top-0"
               />
               <p className="font-display text-xl font-bold tracking-tight">{upNext}</p>
               <p className="mt-1 text-xs text-birch-300">Up next</p>

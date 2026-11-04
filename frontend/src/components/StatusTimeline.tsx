@@ -19,11 +19,11 @@ const dateTime = new Intl.DateTimeFormat(undefined, {
 /** Vertical history of status changes, each with who or what caused it. */
 export default function StatusTimeline({ events }: StatusTimelineProps) {
   return (
-    <ol className="relative space-y-6 before:absolute before:bottom-2 before:left-[5px] before:top-2 before:w-px before:bg-birch-300">
+    <ol className="relative space-y-6 before:absolute before:top-2 before:bottom-2 before:left-[5px] before:w-px before:bg-birch-300">
       {events.map((event) => (
         <li key={event.id} className="relative pl-7">
           <span
-            className={`absolute left-0 top-1.5 h-[11px] w-[11px] rounded-full ring-4 ring-birch-50 ${
+            className={`absolute top-1.5 left-0 h-[11px] w-[11px] rounded-full ring-4 ring-birch-50 ${
               STATUS_META[event.to_status].dot
             }`}
           />

@@ -40,7 +40,7 @@ export default function Applications() {
                   type="button"
                   aria-pressed={view === option}
                   onClick={() => setView(option)}
-                  className={`flex items-center gap-1.5 rounded-[0.5rem] px-3 py-1.5 text-sm transition-colors duration-150 ${
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors duration-150 ${
                     view === option ? 'bg-bark text-birch-50' : 'text-bark-700 hover:text-bark'
                   }`}
                 >
@@ -74,7 +74,7 @@ export default function Applications() {
             />
           </div>
 
-          <div className="panel overflow-hidden">
+          <div className="overflow-hidden panel">
             <div className="overflow-x-auto">
               <table aria-label="Applications" className="min-w-full text-sm">
                 <thead className="border-b border-birch-200 bg-birch">
@@ -83,7 +83,7 @@ export default function Applications() {
                       <th
                         key={column}
                         scope="col"
-                        className="whitespace-nowrap px-4 py-3 text-left font-medium text-bark-500"
+                        className="px-4 py-3 text-left font-medium whitespace-nowrap text-bark-500"
                       >
                         {column}
                       </th>

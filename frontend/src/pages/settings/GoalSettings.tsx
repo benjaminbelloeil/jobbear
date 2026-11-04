@@ -44,7 +44,7 @@ export default function GoalSettings() {
                 <input
                   name={`goal-${goal.id}-label`}
                   defaultValue={goal.label}
-                  className="field mt-1.5"
+                  className="mt-1.5 field"
                 />
               </label>
               <Slider
@@ -90,7 +90,7 @@ export default function GoalSettings() {
           description="Which goals you met, week by week."
         >
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[22rem] text-sm">
+            <table className="w-full min-w-88 text-sm">
               <thead>
                 <tr className="text-left text-xs text-bark-500">
                   <th scope="col" className="pb-3 font-medium">

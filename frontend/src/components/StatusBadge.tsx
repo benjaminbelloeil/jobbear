@@ -10,7 +10,7 @@ export default function StatusBadge({ status, className = '' }: StatusBadgeProps
   const { label, badge } = STATUS_META[status]
   return (
     <span
-      className={`inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${badge} ${className}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset ${badge} ${className}`}
     >
       {label}
     </span>

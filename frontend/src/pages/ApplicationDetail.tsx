@@ -138,7 +138,7 @@ export default function ApplicationDetail() {
                       <input name="location" defaultValue={app.location ?? ''} className="field" />
                     </span>
                   </label>
-                  <label className="flex min-h-[2.75rem] cursor-pointer items-center justify-between gap-3 self-end rounded-control border border-birch-300 bg-birch px-3.5 transition-colors hover:border-bark-400 has-[:checked]:border-honey-600 has-[:checked]:bg-honey-50/60">
+                  <label className="flex min-h-11 cursor-pointer items-center justify-between gap-3 self-end rounded-control border border-birch-300 bg-birch px-3.5 transition-colors hover:border-bark-400 has-checked:border-honey-600 has-checked:bg-honey-50/60">
                     <span className="text-sm font-semibold text-bark-700">Remote</span>
                     <input
                       type="checkbox"
@@ -240,7 +240,7 @@ export default function ApplicationDetail() {
               <div
                 tabIndex={0}
                 aria-label="Saved job posting"
-                className="max-h-80 overflow-y-auto whitespace-pre-line rounded-control border border-birch-200 bg-birch px-4 py-3.5 text-sm leading-relaxed text-bark-700"
+                className="max-h-80 overflow-y-auto rounded-control border border-birch-200 bg-birch px-4 py-3.5 text-sm leading-relaxed whitespace-pre-line text-bark-700"
               >
                 {posting.text}
               </div>

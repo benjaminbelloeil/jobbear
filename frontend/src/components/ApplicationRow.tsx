@@ -20,11 +20,11 @@ const localDate = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'num
 /** One <tr> in the applications table. The company cell links to the detail page. */
 export default function ApplicationRow({ application }: ApplicationRowProps) {
   return (
-    <tr className="relative transition-colors hover:bg-birch has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-bark">
+    <tr className="relative transition-colors hover:bg-birch has-focus-visible:outline-2 has-focus-visible:-outline-offset-2 has-focus-visible:outline-bark has-focus-visible:outline-solid">
       <td className="px-4 py-3.5">
         <Link
           to={`/applications/${application.id}`}
-          className="font-medium after:absolute after:inset-0 focus-visible:outline-none"
+          className="font-medium after:absolute after:inset-0 focus-visible:outline-hidden"
         >
           {application.company?.name ?? 'Unknown company'}
         </Link>
@@ -41,10 +41,10 @@ export default function ApplicationRow({ application }: ApplicationRowProps) {
         <StatusBadge status={application.status} />
       </td>
       <td className="px-4 py-3.5 text-bark-500">{NEXT_ACTION_LABELS[application.next_action]}</td>
-      <td className="px-4 py-3.5 tabular-nums text-bark-500">
+      <td className="px-4 py-3.5 text-bark-500 tabular-nums">
         {plainDate.format(new Date(application.applied_at))}
       </td>
-      <td className="px-4 py-3.5 tabular-nums text-bark-500">
+      <td className="px-4 py-3.5 text-bark-500 tabular-nums">
         {application.last_activity_at
           ? localDate.format(new Date(application.last_activity_at))
           : '—'}

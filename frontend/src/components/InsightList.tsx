@@ -18,12 +18,12 @@ export default function InsightList({ insights }: { insights: Insight[] }) {
         >
           <span
             aria-hidden
-            className="ease-arrive mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-honey/15 text-honey ring-1 ring-inset ring-honey/30 transition-transform duration-300 group-hover:rotate-45 group-hover:scale-110"
+            className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-honey/15 text-honey ring-1 ring-honey/30 transition-transform duration-300 ease-arrive ring-inset group-hover:scale-110 group-hover:rotate-45"
           >
             <Icon name="sparkle" size={14} />
           </span>
           <div className="min-w-0">
-            <p className="text-balance font-display text-xl font-semibold leading-snug tracking-tight text-birch-50">
+            <p className="font-display text-xl leading-snug font-semibold tracking-tight text-balance text-birch-50">
               {insight.headline}
             </p>
             <p className="mt-1.5 text-sm text-birch-300">{insight.detail}</p>

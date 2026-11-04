@@ -62,7 +62,7 @@ export default function EmailSettings() {
           ].map((stat) => (
             <div key={stat.label} className="bg-bark px-4 py-3">
               <dt className="text-xs text-birch-300">{stat.label}</dt>
-              <dd className="mt-1 font-display text-xl font-bold tabular-nums text-honey">
+              <dd className="mt-1 font-display text-xl font-bold text-honey tabular-nums">
                 {stat.value}
               </dd>
             </div>
@@ -149,7 +149,7 @@ export default function EmailSettings() {
             {sampleIgnoredSenders.map((sender) => (
               <li
                 key={sender}
-                className="flex items-center justify-between gap-3 rounded-control border border-birch-200 bg-white py-1.5 pl-3.5 pr-1.5 text-sm"
+                className="flex items-center justify-between gap-3 rounded-control border border-birch-200 bg-white py-1.5 pr-1.5 pl-3.5 text-sm"
               >
                 <span className="truncate">{sender}</span>
                 <button

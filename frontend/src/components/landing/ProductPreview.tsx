@@ -21,7 +21,7 @@ export default function ProductPreview() {
   return (
     <div
       ref={ref}
-      className={`overflow-hidden rounded-[1.5rem] border border-birch/15 bg-birch shadow-[0_50px_100px_-50px_rgba(0,0,0,0.8)] ${
+      className={`overflow-hidden rounded-3xl border border-birch/15 bg-birch shadow-[0_50px_100px_-50px_rgba(0,0,0,0.8)] ${
         inView ? '' : 'await-view'
       }`}
     >
@@ -35,11 +35,11 @@ export default function ProductPreview() {
       <div className="space-y-5 p-4 text-bark sm:p-6" inert>
         <MetricStrip metrics={sampleMetrics} />
         <div className="grid gap-5 xl:grid-cols-12">
-          <section className="panel min-w-0 p-5 xl:col-span-7">
+          <section className="min-w-0 panel p-5 xl:col-span-7">
             <h3 className="mb-4 text-lg font-bold tracking-tight">Response rate by source</h3>
             <SourceFunnel rows={sampleFunnel} />
           </section>
-          <section className="panel min-w-0 p-5 xl:col-span-5">
+          <section className="min-w-0 panel p-5 xl:col-span-5">
             <h3 className="mb-4 text-lg font-bold tracking-tight">Going quiet</h3>
             <GoingQuietList
               items={sampleGoingQuiet.slice(0, 3)}
@@ -47,7 +47,7 @@ export default function ProductPreview() {
             />
           </section>
         </div>
-        <section className="panel hidden min-w-0 p-5 md:block">
+        <section className="hidden min-w-0 panel p-5 md:block">
           <h3 className="mb-2 text-lg font-bold tracking-tight">Applications per week</h3>
           <WeeklyVolumeChart weeks={sampleWeekly.weeks} goal={sampleWeekly.goal} height={200} />
         </section>

@@ -18,7 +18,7 @@ export default function Pagination({ page, pageSize, total, onPageChange }: Pagi
       aria-label="Pagination"
       className="flex items-center justify-between gap-4 border-t border-birch-200 px-4 py-3 text-sm"
     >
-      <p className="tabular-nums text-bark-500">
+      <p className="text-bark-500 tabular-nums">
         Showing {first}–{last} of {total}
       </p>
       <div className="flex items-center gap-1">

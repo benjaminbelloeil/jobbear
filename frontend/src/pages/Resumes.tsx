@@ -56,7 +56,7 @@ function VersionCard({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`ease-arrive group relative flex h-full w-full flex-col rounded-panel p-5 text-left transition duration-200 hover:-translate-y-0.5 motion-reduce:transform-none ${
+      className={`group relative flex h-full w-full flex-col rounded-panel p-5 text-left transition duration-200 ease-arrive hover:-translate-y-0.5 motion-reduce:transform-none ${
         best
           ? 'bg-bark text-birch-50 shadow-[0_24px_48px_-30px_rgba(42,31,25,0.9)]'
           : 'border border-birch-200 bg-birch-50 hover:border-birch-300'
@@ -78,7 +78,7 @@ function VersionCard({
       </span>
       <span className="mt-4 flex items-baseline gap-2">
         <span
-          className={`font-display text-3xl font-extrabold tabular-nums tracking-tight ${best ? 'text-honey' : ''}`}
+          className={`font-display text-3xl font-extrabold tracking-tight tabular-nums ${best ? 'text-honey' : ''}`}
         >
           {percent(resume.response_rate)}
         </span>
@@ -132,7 +132,7 @@ function Funnel({ resume, average }: { resume: SampleResume; average: number }) 
             className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-x-4"
           >
             <span>
-              <span className="block font-display text-2xl font-bold tabular-nums leading-none">
+              <span className="block font-display text-2xl leading-none font-bold tabular-nums">
                 {step.count}
               </span>
               <span className="mt-1 block text-xs font-medium text-bark-500">{step.label}</span>
@@ -140,7 +140,7 @@ function Funnel({ resume, average }: { resume: SampleResume; average: number }) 
             <span className="block">
               <span className="relative block h-3 rounded-full bg-birch-200">
                 <span
-                  className={`fill-in absolute inset-y-0 left-0 rounded-full ${step.bar}`}
+                  className={`absolute inset-y-0 left-0 fill-in rounded-full ${step.bar}`}
                   style={{ width: `${Math.max(step.share * 100, step.count > 0 ? 2 : 0)}%` }}
                 />
                 {step.label === 'Replies' && (
@@ -187,7 +187,7 @@ function VersionDetail({
   const tooFew = resume.applications < SAMPLE_MIN_SENDS_TO_COMPARE
 
   return (
-    <section aria-labelledby="version-title" className="panel mt-6 min-w-0 overflow-hidden">
+    <section aria-labelledby="version-title" className="mt-6 min-w-0 overflow-hidden panel">
       <header className="flex flex-wrap items-start justify-between gap-4 p-5 sm:p-6">
         <div className="flex min-w-0 items-start gap-4">
           <PageThumb dark={false} />
@@ -255,7 +255,7 @@ function VersionDetail({
               <span className="label" id="replace-label">
                 The PDF
               </span>
-              <label className="mt-1.5 flex min-h-[2.75rem] cursor-pointer items-center gap-3 rounded-control border border-dashed border-bark-400 bg-birch-50 px-3.5 py-2.5 transition-colors hover:border-bark hover:bg-white has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-bark">
+              <label className="mt-1.5 flex min-h-11 cursor-pointer items-center gap-3 rounded-control border border-dashed border-bark-400 bg-birch-50 px-3.5 py-2.5 transition-colors hover:border-bark hover:bg-white has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-bark has-focus-visible:outline-solid">
                 <Icon name="upload" size={17} className="text-bark-500" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-medium">
@@ -311,7 +311,7 @@ function VersionDetail({
         <div className="flex flex-col bg-birch-50 p-5 sm:p-6">
           <h3 className="flex items-baseline justify-between gap-2 font-semibold">
             Jobs you used it for
-            <span className="text-sm font-normal tabular-nums text-bark-500">
+            <span className="text-sm font-normal text-bark-500 tabular-nums">
               {sentWith.length} {sentWith.length === 1 ? 'job' : 'jobs'}
             </span>
           </h3>
@@ -319,11 +319,11 @@ function VersionDetail({
             Every application where you sent this version. Open one to see where it stands.
           </p>
           {sentWith.length > 0 ? (
-            <div className="relative mt-3 flex-1 lg:min-h-[14rem]">
+            <div className="relative mt-3 flex-1 lg:min-h-56">
               <ul
                 tabIndex={0}
                 aria-label={`Applications sent with ${resume.name}`}
-                className="scroll-fade -mx-2 divide-y divide-birch-200 overflow-y-auto rounded-control pb-6 max-lg:max-h-80 lg:absolute lg:inset-0 lg:mx-0"
+                className="-mx-2 scroll-fade divide-y divide-birch-200 overflow-y-auto rounded-control pb-6 max-lg:max-h-80 lg:absolute lg:inset-0 lg:mx-0"
               >
                 {sentWith.map((app) => (
                   <li key={app.id}>
@@ -347,7 +347,7 @@ function VersionDetail({
                       <Icon
                         name="chevronRight"
                         size={16}
-                        className="ease-arrive text-bark-400 transition-transform duration-200 group-hover:translate-x-0.5"
+                        className="text-bark-400 transition-transform duration-200 ease-arrive group-hover:translate-x-0.5"
                       />
                     </Link>
                   </li>
@@ -402,7 +402,7 @@ export default function Resumes() {
       />
 
       {best && runnerUp && (
-        <p className="mb-6 max-w-3xl font-display text-2xl font-bold leading-snug tracking-tight [text-wrap:balance] sm:text-3xl">
+        <p className="mb-6 max-w-3xl font-display text-2xl leading-snug font-bold tracking-tight text-balance sm:text-3xl">
           {best.name} gets a reply{' '}
           <span className="rounded-md bg-honey/25 px-1.5">{percent(best.response_rate)}</span> of
           the time, against {percent(runnerUp.response_rate)} for {runnerUp.name}.

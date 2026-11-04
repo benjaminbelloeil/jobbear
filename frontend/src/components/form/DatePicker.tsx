@@ -166,7 +166,7 @@ export default function DatePicker({
           setFocusDay(selected ?? today)
           setOpen(true)
         }}
-        className="field relative mt-1.5 flex items-center gap-2.5 pl-10 text-left"
+        className="relative mt-1.5 field flex items-center gap-2.5 pl-10 text-left"
       >
         <Icon
           name="calendar"
@@ -183,7 +183,7 @@ export default function DatePicker({
           id={dialogId}
           role="dialog"
           aria-label={`Choose ${label.toLowerCase()}`}
-          className="popover left-0 w-[19.5rem] max-w-[calc(100vw-2rem)] p-3"
+          className="popover left-0 w-78 max-w-[calc(100vw-2rem)] p-3"
         >
           <div className="mb-2 flex items-center justify-between">
             <button
@@ -245,7 +245,7 @@ export default function DatePicker({
                         aria-current={isToday ? 'date' : undefined}
                         onClick={() => pick(day)}
                         className={`relative mx-auto grid h-9 w-9 place-items-center rounded-lg text-sm tabular-nums transition-colors duration-100 focus-visible:outline-offset-0 ${tone} ${
-                          isToday && !isSelected ? 'font-semibold ring-1 ring-inset ring-honey' : ''
+                          isToday && !isSelected ? 'font-semibold ring-1 ring-honey ring-inset' : ''
                         }`}
                       >
                         {day.getDate()}

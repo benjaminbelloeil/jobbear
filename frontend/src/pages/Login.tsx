@@ -19,7 +19,7 @@ export default function Login() {
         </Link>
 
         <div className="relative z-10 max-w-md">
-          <p className="font-display text-5xl font-extrabold leading-[1.02] tracking-tight">
+          <p className="font-display text-5xl leading-[1.02] font-extrabold tracking-tight">
             Find out which applications actually work.
           </p>
           <p className="mt-5 text-lg leading-relaxed text-birch-300">
@@ -30,7 +30,7 @@ export default function Login() {
 
         <BearMark
           size={520}
-          className="pointer-events-none absolute -bottom-40 -right-36 opacity-[0.08] [&_.fill-bark]:fill-birch [&_.fill-honey]:fill-honey"
+          className="pointer-events-none absolute -right-36 -bottom-40 opacity-[0.08] [&_.fill-bark]:fill-birch [&_.fill-honey]:fill-honey"
         />
       </div>
 
@@ -45,7 +45,7 @@ export default function Login() {
           <form className="mt-8 space-y-5">
             <label className="block">
               <span className="label">Email</span>
-              <input type="email" name="email" autoComplete="email" className="field mt-1.5" />
+              <input type="email" name="email" autoComplete="email" className="mt-1.5 field" />
             </label>
             <label className="block">
               <span className="label">Password</span>
@@ -53,7 +53,7 @@ export default function Login() {
                 type="password"
                 name="password"
                 autoComplete="current-password"
-                className="field mt-1.5"
+                className="mt-1.5 field"
               />
             </label>
             {/* TODO(me): error message here: <p role="alert" className="text-sm text-berry">…</p> */}

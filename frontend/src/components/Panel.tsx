@@ -26,7 +26,7 @@ export default function Panel({
   children,
 }: PanelProps) {
   return (
-    <section id={id} className={`panel min-w-0 scroll-mt-24 p-5 sm:p-6 ${className}`} style={style}>
+    <section id={id} className={`min-w-0 scroll-mt-24 panel p-5 sm:p-6 ${className}`} style={style}>
       {(title || actions) && (
         <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
           <div className="flex min-w-0 items-start gap-3">
