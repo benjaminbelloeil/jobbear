@@ -12,13 +12,13 @@ export interface BoardColumn {
 export default function PipelineBoard({ columns }: { columns: BoardColumn[] }) {
   return (
     <div className="-mx-4 overflow-x-auto px-4 pb-2 sm:-mx-8 sm:px-8 lg:-mx-10 lg:px-10">
-      <div className="grid min-w-[72rem] grid-cols-6 gap-4">
+      <div className="grid min-w-6xl grid-cols-6 gap-4">
         {columns.map((column) => (
           <section key={column.status} aria-label={STATUS_META[column.status].label}>
             <h2 className="mb-3 flex items-center gap-2 font-sans text-sm font-medium text-bark-700">
               <span className={`h-2 w-2 rounded-full ${STATUS_META[column.status].dot}`} />
               {STATUS_META[column.status].label}
-              <span className="ml-auto tabular-nums text-bark-500">
+              <span className="ml-auto text-bark-500 tabular-nums">
                 {column.applications.length}
               </span>
             </h2>

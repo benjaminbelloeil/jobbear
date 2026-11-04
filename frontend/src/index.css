@@ -1,13 +1,332 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+/* The birch/bark/honey tokens stay in tailwind.config.ts (one source of truth). */
+@config '../tailwind.config.ts';
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+/* Tailwind 4's preflight dropped the pointer cursor on buttons; keep v3's behaviour. */
+@layer base {
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility panel {
+  @apply rounded-panel border border-birch-200 bg-birch-50;
+}
+
+@utility btn {
+  /* Every button presses in a touch when clicked: the one bit of physical feedback the
+     app shares with the landing page. */
+  @apply inline-flex items-center justify-center gap-2 rounded-control px-4 py-2 text-sm font-medium transition duration-150 select-none active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transform-none;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility btn-primary {
+  /* Buttons are flat: no outer shadow or glow. A faint top edge is all the depth they get. */
+  @apply btn bg-bark text-birch-50 hover:bg-bark-700;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+  &.btn-lift {
+    box-shadow: 0 12px 28px -14px rgb(42 31 25 / 0.7);
+  }
+}
+
+@utility btn-honey {
+  /* Honey reads as a little slab: a lighter top edge and a darker lip underneath. */
+  @apply btn bg-honey font-semibold text-bark hover:bg-[#F0B43A];
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    inset 0 -2px 0 rgb(122 82 8 / 0.25);
+}
+
+@utility btn-ghost {
+  @apply btn text-bark-500 hover:bg-birch-200/60 hover:text-bark;
+}
+
+@utility btn-soft {
+  /* Secondary action on a light surface: a quiet outlined button. */
+  @apply btn border border-birch-300 bg-birch-50 text-bark hover:border-bark-400 hover:bg-white;
+}
+
+@utility btn-outline-light {
+  /* Outlined variants come before .btn-lg so the size class wins over their base .btn size. */
+  @apply btn border border-birch/25 text-birch-50 hover:border-birch/50 hover:bg-birch/10;
+  /* Borders add height, so outlined large buttons trim their padding to match the solid ones. */
+  &.btn-lg {
+    @apply py-[13px];
+  }
+}
+
+@utility btn-outline-dark {
+  @apply btn border-2 border-bark/80 text-bark hover:bg-bark hover:text-honey;
+  &.btn-lg {
+    @apply py-3;
+  }
+}
+
+@utility btn-lg {
+  /* Marketing sizes: bigger, heavier, and they lift a little on hover. App screens keep
+     the compact .btn sizes above. */
+  @apply gap-2.5 px-6 py-3.5 text-base font-semibold;
+  /* Borders add height, so outlined large buttons trim their padding to match the solid ones. */
+  &.btn-outline-light {
+    @apply py-[13px];
+  }
+  &.btn-outline-dark {
+    @apply py-3;
+  }
+}
+
+@utility btn-lift {
+  @apply transition duration-200 ease-arrive hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none;
+  &.btn-primary {
+    box-shadow: 0 12px 28px -14px rgb(42 31 25 / 0.7);
+  }
+}
+
+@utility field {
+  /* Fields are birch paper pressed into the panel: warm fill and a soft inner shadow at
+     rest, lifting to white with a honey halo when they have focus. */
+  @apply block min-h-11 w-full rounded-control border border-birch-300 bg-birch px-3.5 py-2.5 text-sm text-bark transition duration-200 placeholder:text-bark-500 hover:border-bark-400 hover:bg-birch-50 focus:outline-hidden;
+  box-shadow: inset 0 1.5px 2px rgb(42 31 25 / 0.06);
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  &:focus {
+    @apply border-bark bg-white;
+    box-shadow:
+      0 0 0 4px rgb(233 168 37 / 0.28),
+      0 8px 20px -14px rgb(42 31 25 / 0.45);
+  }
+  &[aria-expanded='true'] {
+    @apply border-bark bg-white;
+    box-shadow:
+      0 0 0 4px rgb(233 168 37 / 0.28),
+      0 8px 20px -14px rgb(42 31 25 / 0.45);
+  }
+  &[aria-invalid='true'] {
+    @apply border-berry;
+  }
+  &textarea {
+    @apply leading-relaxed;
+  }
+  /* Autofill keeps our paper colour instead of the browser's blue/yellow wash. */
+  &:-webkit-autofill {
+    -webkit-text-fill-color: theme(--color-bark);
+    box-shadow: inset 0 0 0 100px theme(--color-honey-50);
+  }
+  .field-group > & {
+    @apply pl-10;
+  }
+}
+
+@utility field-group {
+  /* A field with an icon inside on the left. The icon warms up while the field has focus. */
+  @apply relative block;
+  & > .field {
+    @apply pl-10;
+  }
+  &:focus-within .field-icon {
+    @apply text-honey-800;
+  }
+}
+
+@utility field-icon {
+  @apply pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-bark-400 transition-colors duration-200;
+  .field-group:focus-within & {
+    @apply text-honey-800;
+  }
+}
+
+@utility label {
+  @apply text-sm font-semibold text-bark-700;
+}
+
+@utility hint {
+  @apply mt-1.5 block text-xs leading-relaxed text-bark-500;
+}
+
+@utility switch {
+  /* On/off switch drawn over a real checkbox, so forms and keyboards treat it as one. */
+  @apply relative h-6 w-11 shrink-0 cursor-pointer appearance-none rounded-full bg-birch-300 transition-colors duration-200;
+  box-shadow: inset 0 1.5px 3px rgb(42 31 25 / 0.15);
+  &::before {
+    @apply absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform duration-300;
+    content: '';
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 4px rgb(42 31 25 / 0.25);
+  }
+  &:checked {
+    @apply bg-honey;
+  }
+  &:checked::before {
+    transform: translateX(1.25rem);
+  }
+}
+
+@utility radio {
+  /* Radio: a ring that fills with a bark dot. */
+  @apply relative mt-0.5 grid h-5 w-5 shrink-0 cursor-pointer appearance-none place-items-center rounded-full border-[1.5px] border-bark-400 bg-white transition-colors duration-150;
+  &::before {
+    @apply h-2.5 w-2.5 scale-0 rounded-full bg-bark transition-transform duration-200;
+    content: '';
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  &:checked {
+    @apply border-bark;
+  }
+  &:checked::before {
+    @apply scale-100;
+  }
+}
+
+@utility checkbox {
+  /* Checkbox: the radio's square sibling, filling bark with a birch check when ticked. */
+  @apply relative mt-0.5 grid h-5 w-5 shrink-0 cursor-pointer appearance-none place-items-center rounded-[5px] border-[1.5px] border-bark-400 bg-white transition-colors duration-150;
+  &::before {
+    @apply h-3 w-3 scale-0 transition-transform duration-200;
+    content: '';
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23FBF8F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.5 5 9l4.5-6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  &:checked {
+    @apply border-bark bg-bark;
+  }
+  &:checked::before {
+    @apply scale-100;
+  }
+}
+
+@utility range {
+  /* Range slider: a recessed track that fills honey up to the thumb (--fill, set by
+     <Slider />), with a white knob ringed in bark. */
+  @apply h-2 w-full cursor-pointer appearance-none rounded-full bg-transparent;
+  background-image: linear-gradient(
+    to right,
+    theme(--color-honey) var(--fill, 50%),
+    theme(--color-birch-200) var(--fill, 50%)
+  );
+  box-shadow: inset 0 1px 2px rgb(42 31 25 / 0.12);
+  &::-webkit-slider-thumb {
+    @apply h-5 w-5 appearance-none rounded-full border-[3px] border-bark bg-white transition-transform duration-150;
+    box-shadow: 0 2px 6px rgb(42 31 25 / 0.3);
+  }
+  &::-moz-range-thumb {
+    @apply h-4 w-4 rounded-full border-[3px] border-bark bg-white;
+  }
+  &:hover::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+  &:focus-visible::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+}
+
+@utility popover {
+  /* Floating surface for dropdowns and the date picker. */
+  @apply absolute z-40 mt-2 overflow-hidden rounded-xl border border-birch-300 bg-white p-1.5;
+  box-shadow:
+    0 24px 48px -20px rgb(42 31 25 / 0.45),
+    0 2px 6px rgb(42 31 25 / 0.06);
+  transform-origin: top;
+  animation: popover-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility option {
+  @apply flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm text-bark-700 transition-colors duration-100 select-none;
+  &[data-active='true'] {
+    @apply bg-birch text-bark;
+  }
+  &[aria-selected='true'] {
+    @apply font-semibold text-bark;
+  }
+}
+
+@utility choice {
+  /* A choice card (radio or checkbox inside a label) that lights up when picked. */
+  @apply flex cursor-pointer gap-3 rounded-control border border-birch-300 bg-white p-4 transition duration-150 hover:border-bark-400;
+  &:has(:checked) {
+    @apply border-honey-600 bg-honey-50/60 ring-4 ring-honey/20;
+  }
+  &:has(:focus-visible) {
+    @apply outline-2 outline-offset-2 outline-bark outline-solid;
+  }
+}
+
+@utility icon-tile {
+  /* An icon on a tinted square, used beside panel titles and list rows. */
+  /* One neutral tile for every icon. Colour is reserved for status and honey for what's urgent,
+     so tiles never compete with them. */
+  @apply grid h-9 w-9 shrink-0 place-items-center rounded-[0.7rem] bg-birch-200/70 text-bark-700 ring-1 ring-birch-300 ring-inset;
+}
+
+/* Motion. App screens: motion explains state (data arriving, a view changing).
+   Landing: one authored sequence (.demo-*). Easing = confident deceleration. */
+
+@utility ease-arrive {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility scroll-fade {
+  /* A list that scrolls inside a fixed height: its last row fades out, hinting at more. */
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 2rem), transparent);
+  scrollbar-width: thin;
+  &:focus-visible {
+    @apply outline-2 outline-offset-2 outline-bark outline-solid;
+  }
+}
+
+@utility no-scrollbar {
+  /* A row that scrolls sideways on phones (tab bars) without showing a scrollbar. */
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility fill-in {
+  /* A bar or meter filling to its value when its data arrives. */
+  transform-origin: left center;
+  animation: fill-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@utility view-in {
+  /* A route's content arriving (continuity between views). */
+  animation: view-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility list-in {
+  /* Items of a list arriving as a list. Cap the stagger via --i (max ~6). */
+  & > * {
+    animation: view-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(min(var(--i, 0), 6) * 40ms);
+  }
+}
 
 @layer base {
   html {
     @apply bg-birch font-sans text-bark antialiased;
     font-feature-settings: 'ss01', 'cv11';
-    caret-color: theme('colors.honey.600');
-    scrollbar-color: theme('colors.birch.300') transparent;
+    caret-color: theme(--color-honey-600);
+    scrollbar-color: theme(--color-birch-300) transparent;
     text-underline-offset: 0.2em;
     /* Nav links glide to their section; the reduced-motion block below turns this off. */
     scroll-behavior: smooth;
@@ -16,7 +335,7 @@
   input,
   textarea,
   select {
-    caret-color: theme('colors.bark.DEFAULT');
+    caret-color: theme(--color-bark);
   }
 
   h1,
@@ -27,7 +346,7 @@
   }
 
   :focus-visible {
-    @apply outline outline-2 outline-offset-2 outline-bark;
+    @apply outline-2 outline-offset-2 outline-bark outline-solid;
   }
   /* A bark ring vanishes on bark surfaces (sidebar, insight card): use honey there. */
   .bg-bark :focus-visible {
@@ -36,271 +355,6 @@
 
   ::selection {
     @apply bg-honey/40;
-  }
-}
-
-@layer components {
-  .panel {
-    @apply rounded-panel border border-birch-200 bg-birch-50;
-  }
-
-  /* Every button presses in a touch when clicked: the one bit of physical feedback the
-     app shares with the landing page. */
-  .btn {
-    @apply inline-flex select-none items-center justify-center gap-2 rounded-control px-4 py-2 text-sm font-medium transition duration-150 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transform-none;
-    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* Buttons are flat: no outer shadow or glow. A faint top edge is all the depth they get. */
-  .btn-primary {
-    @apply btn bg-bark text-birch-50 hover:bg-bark-700;
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
-  }
-
-  /* Honey reads as a little slab: a lighter top edge and a darker lip underneath. */
-  .btn-honey {
-    @apply btn bg-honey font-semibold text-bark hover:bg-[#F0B43A];
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.35),
-      inset 0 -2px 0 rgb(122 82 8 / 0.25);
-  }
-
-  .btn-ghost {
-    @apply btn text-bark-500 hover:bg-birch-200/60 hover:text-bark;
-  }
-
-  /* Secondary action on a light surface: a quiet outlined button. */
-  .btn-soft {
-    @apply btn border border-birch-300 bg-birch-50 text-bark hover:border-bark-400 hover:bg-white;
-  }
-
-  /* Outlined variants come before .btn-lg so the size class wins over their base .btn size. */
-  .btn-outline-light {
-    @apply btn border border-birch/25 text-birch-50 hover:border-birch/50 hover:bg-birch/10;
-  }
-  .btn-outline-dark {
-    @apply btn border-2 border-bark/80 text-bark hover:bg-bark hover:text-honey;
-  }
-
-  /* Marketing sizes: bigger, heavier, and they lift a little on hover. App screens keep
-     the compact .btn sizes above. */
-  .btn-lg {
-    @apply gap-2.5 px-6 py-3.5 text-base font-semibold;
-  }
-  /* Borders add height, so outlined large buttons trim their padding to match the solid ones. */
-  .btn-lg.btn-outline-light {
-    @apply py-[13px];
-  }
-  .btn-lg.btn-outline-dark {
-    @apply py-3;
-  }
-  .btn-lift {
-    @apply ease-arrive transition duration-200 hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none;
-  }
-  .btn-primary.btn-lift {
-    box-shadow: 0 12px 28px -14px rgb(42 31 25 / 0.7);
-  }
-
-  /* Fields are birch paper pressed into the panel: warm fill and a soft inner shadow at
-     rest, lifting to white with a honey halo when they have focus. */
-  .field {
-    @apply block min-h-[2.75rem] w-full rounded-control border border-birch-300 bg-birch px-3.5 py-2.5 text-sm text-bark transition duration-200 placeholder:text-bark-500 hover:border-bark-400 hover:bg-birch-50 focus:outline-none;
-    box-shadow: inset 0 1.5px 2px rgb(42 31 25 / 0.06);
-    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .field:focus,
-  .field[aria-expanded='true'] {
-    @apply border-bark bg-white;
-    box-shadow:
-      0 0 0 4px rgb(233 168 37 / 0.28),
-      0 8px 20px -14px rgb(42 31 25 / 0.45);
-  }
-  .field[aria-invalid='true'] {
-    @apply border-berry;
-  }
-  textarea.field {
-    @apply leading-relaxed;
-  }
-  /* Autofill keeps our paper colour instead of the browser's blue/yellow wash. */
-  .field:-webkit-autofill {
-    -webkit-text-fill-color: theme('colors.bark.DEFAULT');
-    box-shadow: inset 0 0 0 100px theme('colors.honey.50');
-  }
-
-  /* A field with an icon inside on the left. The icon warms up while the field has focus. */
-  .field-group {
-    @apply relative block;
-  }
-  .field-group > .field {
-    @apply pl-10;
-  }
-  .field-icon {
-    @apply pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-bark-400 transition-colors duration-200;
-  }
-  .field-group:focus-within .field-icon {
-    @apply text-honey-800;
-  }
-
-  .label {
-    @apply text-sm font-semibold text-bark-700;
-  }
-  .hint {
-    @apply mt-1.5 block text-xs leading-relaxed text-bark-500;
-  }
-
-  /* On/off switch drawn over a real checkbox, so forms and keyboards treat it as one. */
-  .switch {
-    @apply relative h-6 w-11 shrink-0 cursor-pointer appearance-none rounded-full bg-birch-300 transition-colors duration-200;
-    box-shadow: inset 0 1.5px 3px rgb(42 31 25 / 0.15);
-  }
-  .switch::before {
-    @apply absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform duration-300;
-    content: '';
-    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 2px 4px rgb(42 31 25 / 0.25);
-  }
-  .switch:checked {
-    @apply bg-honey;
-  }
-  .switch:checked::before {
-    transform: translateX(1.25rem);
-  }
-
-  /* Radio: a ring that fills with a bark dot. */
-  .radio {
-    @apply relative mt-0.5 grid h-5 w-5 shrink-0 cursor-pointer appearance-none place-items-center rounded-full border-[1.5px] border-bark-400 bg-white transition-colors duration-150;
-  }
-  .radio::before {
-    @apply h-2.5 w-2.5 scale-0 rounded-full bg-bark transition-transform duration-200;
-    content: '';
-    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .radio:checked {
-    @apply border-bark;
-  }
-  .radio:checked::before {
-    @apply scale-100;
-  }
-
-  /* Checkbox: the radio's square sibling, filling bark with a birch check when ticked. */
-  .checkbox {
-    @apply relative mt-0.5 grid h-5 w-5 shrink-0 cursor-pointer appearance-none place-items-center rounded-[5px] border-[1.5px] border-bark-400 bg-white transition-colors duration-150;
-  }
-  .checkbox::before {
-    @apply h-3 w-3 scale-0 transition-transform duration-200;
-    content: '';
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23FBF8F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.5 5 9l4.5-6'/%3E%3C/svg%3E")
-      center / contain no-repeat;
-    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .checkbox:checked {
-    @apply border-bark bg-bark;
-  }
-  .checkbox:checked::before {
-    @apply scale-100;
-  }
-
-  /* Range slider: a recessed track that fills honey up to the thumb (--fill, set by
-     <Slider />), with a white knob ringed in bark. */
-  .range {
-    @apply h-2 w-full cursor-pointer appearance-none rounded-full bg-transparent;
-    background-image: linear-gradient(
-      to right,
-      theme('colors.honey.DEFAULT') var(--fill, 50%),
-      theme('colors.birch.200') var(--fill, 50%)
-    );
-    box-shadow: inset 0 1px 2px rgb(42 31 25 / 0.12);
-  }
-  .range::-webkit-slider-thumb {
-    @apply h-5 w-5 appearance-none rounded-full border-[3px] border-bark bg-white transition-transform duration-150;
-    box-shadow: 0 2px 6px rgb(42 31 25 / 0.3);
-  }
-  .range::-moz-range-thumb {
-    @apply h-4 w-4 rounded-full border-[3px] border-bark bg-white;
-  }
-  .range:hover::-webkit-slider-thumb,
-  .range:focus-visible::-webkit-slider-thumb {
-    transform: scale(1.15);
-  }
-
-  /* Floating surface for dropdowns and the date picker. */
-  .popover {
-    @apply absolute z-40 mt-2 overflow-hidden rounded-xl border border-birch-300 bg-white p-1.5;
-    box-shadow:
-      0 24px 48px -20px rgb(42 31 25 / 0.45),
-      0 2px 6px rgb(42 31 25 / 0.06);
-    transform-origin: top;
-    animation: popover-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-  .option {
-    @apply flex w-full cursor-pointer select-none items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm text-bark-700 transition-colors duration-100;
-  }
-  .option[data-active='true'] {
-    @apply bg-birch text-bark;
-  }
-  .option[aria-selected='true'] {
-    @apply font-semibold text-bark;
-  }
-
-  /* A choice card (radio or checkbox inside a label) that lights up when picked. */
-  .choice {
-    @apply flex cursor-pointer gap-3 rounded-control border border-birch-300 bg-white p-4 transition duration-150 hover:border-bark-400;
-  }
-  .choice:has(:checked) {
-    @apply border-honey-600 bg-honey-50/60 ring-4 ring-honey/20;
-  }
-  .choice:has(:focus-visible) {
-    @apply outline outline-2 outline-offset-2 outline-bark;
-  }
-
-  /* An icon on a tinted square, used beside panel titles and list rows. */
-  /* One neutral tile for every icon. Colour is reserved for status and honey for what's urgent,
-     so tiles never compete with them. */
-  .icon-tile {
-    @apply grid h-9 w-9 shrink-0 place-items-center rounded-[0.7rem] bg-birch-200/70 text-bark-700 ring-1 ring-inset ring-birch-300;
-  }
-}
-
-/* Motion. App screens: motion explains state (data arriving, a view changing).
-   Landing: one authored sequence (.demo-*). Easing = confident deceleration. */
-@layer utilities {
-  .ease-arrive {
-    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* A list that scrolls inside a fixed height: its last row fades out, hinting at more. */
-  .scroll-fade {
-    mask-image: linear-gradient(to bottom, #000 calc(100% - 2rem), transparent);
-    scrollbar-width: thin;
-  }
-  .scroll-fade:focus-visible {
-    @apply outline outline-2 outline-offset-2 outline-bark;
-  }
-
-  /* A row that scrolls sideways on phones (tab bars) without showing a scrollbar. */
-  .no-scrollbar {
-    scrollbar-width: none;
-  }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* A bar or meter filling to its value when its data arrives. */
-  .fill-in {
-    transform-origin: left center;
-    animation: fill-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: var(--delay, 0ms);
-  }
-
-  /* A route's content arriving (continuity between views). */
-  .view-in {
-    animation: view-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  /* Items of a list arriving as a list. Cap the stagger via --i (max ~6). */
-  .list-in > * {
-    animation: view-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(min(var(--i, 0), 6) * 40ms);
   }
 }
 
@@ -722,7 +776,7 @@
 
 /* The birch rim that lets a bark bear read on a bark background. */
 .bear-rim {
-  flood-color: theme('colors.birch.50');
+  flood-color: theme(--color-birch-50);
 }
 
 /* Paws gripping the hero card. The right one lets go for exactly as long as bear-wave

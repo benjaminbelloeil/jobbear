@@ -39,7 +39,7 @@ function Brand({ compact = false }: { compact?: boolean }) {
       className="group flex items-center gap-2.5 rounded-control font-display font-bold tracking-tight text-birch-50"
     >
       <span
-        className={`ease-arrive grid place-items-center rounded-full bg-birch transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105 ${
+        className={`grid place-items-center rounded-full bg-birch transition-transform duration-300 ease-arrive group-hover:scale-105 group-hover:-rotate-6 ${
           compact ? 'h-9 w-9' : 'h-10 w-10'
         }`}
       >
@@ -55,7 +55,7 @@ function Brand({ compact = false }: { compact?: boolean }) {
 function CountBadge({ count, className = '' }: { count: number; className?: string }) {
   return (
     <span
-      className={`rounded-full bg-honey px-1.5 text-[0.6875rem] font-bold tabular-nums leading-[1.125rem] text-bark ${className}`}
+      className={`rounded-full bg-honey px-1.5 text-[0.6875rem] leading-4.5 font-bold text-bark tabular-nums ${className}`}
     >
       {count}
       <span className="sr-only"> waiting</span>
@@ -129,11 +129,11 @@ export default function Sidebar({ items, onLogout, goals = [] }: SidebarProps) {
               <div
                 aria-hidden
                 className={`pointer-events-none absolute inset-x-0 top-0 rounded-control bg-birch/10 ${
-                  glide ? 'ease-arrive transition-[transform,height] duration-300' : ''
+                  glide ? 'transition-[transform,height] duration-300 ease-arrive' : ''
                 }`}
                 style={{ transform: `translateY(${pill.top}px)`, height: pill.height }}
               >
-                <span className="absolute -left-3 bottom-2 top-2 w-1 rounded-r-full bg-honey" />
+                <span className="absolute top-2 bottom-2 -left-3 w-1 rounded-r-full bg-honey" />
               </div>
             )}
             <ul ref={listRef} className="relative space-y-0.5">
@@ -175,7 +175,9 @@ export default function Sidebar({ items, onLogout, goals = [] }: SidebarProps) {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `${footerLink} ${isActive ? 'bg-birch/10 font-semibold text-birch-50' : ''}`
+                isActive
+                  ? `${footerLink.replace('text-birch-300', 'text-birch-50')} bg-birch/10 font-semibold`
+                  : footerLink
               }
             >
               {({ isActive }) => (
@@ -237,7 +239,7 @@ export default function Sidebar({ items, onLogout, goals = [] }: SidebarProps) {
             <Link
               to="/applications/new"
               aria-label="New application"
-              className="ease-arrive -mt-5 mb-2 grid h-14 w-14 place-items-center rounded-full bg-honey text-bark ring-4 ring-bark transition-transform duration-200 active:scale-95"
+              className="-mt-5 mb-2 grid h-14 w-14 place-items-center rounded-full bg-honey text-bark ring-4 ring-bark transition-transform duration-200 ease-arrive active:scale-95"
             >
               <Icon name="plus" size={24} />
             </Link>
@@ -281,14 +283,14 @@ function GoalsCard({ goals, goalsMet }: { goals: WeeklyGoal[]; goalsMet: number 
   // animate the real height instead of snapping. The folded strip and the full list
   // cross-fade over the same 450 ms.
   const fold =
-    'grid transition-[grid-template-rows] duration-[450ms] ease-arrive motion-reduce:transition-none'
+    'grid transition-[grid-template-rows] duration-450 ease-arrive motion-reduce:transition-none'
   const fade =
-    'ease-arrive transition-[opacity,transform] duration-[450ms] motion-reduce:transition-none'
+    'ease-arrive transition-[opacity,transform] duration-450 motion-reduce:transition-none'
 
   return (
     <section
       aria-labelledby="goals-title"
-      className="relative mt-6 overflow-hidden rounded-panel bg-birch/[0.06] ring-1 ring-inset ring-birch/10 transition-colors duration-200 hover:ring-birch/20"
+      className="relative mt-6 overflow-hidden rounded-panel bg-birch/6 ring-1 ring-birch/10 transition-colors duration-200 ring-inset hover:ring-birch/20"
     >
       <h2 id="goals-title">
         <button
@@ -298,12 +300,12 @@ function GoalsCard({ goals, goalsMet }: { goals: WeeklyGoal[]; goalsMet: number 
           aria-controls="goals-body"
           className="group flex w-full items-center gap-3 rounded-panel p-3 text-left"
         >
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[0.7rem] bg-honey/15 text-honey ring-1 ring-inset ring-honey/25">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[0.7rem] bg-honey/15 text-honey ring-1 ring-honey/25 ring-inset">
             <Icon name="target" size={17} />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-semibold text-birch-50">This week</span>
-            <span className="block text-xs tabular-nums text-birch-300">
+            <span className="block text-xs text-birch-300 tabular-nums">
               <span className="font-semibold text-honey">{goalsMet}</span> of {goals.length} goals
               met
             </span>
@@ -312,7 +314,7 @@ function GoalsCard({ goals, goalsMet }: { goals: WeeklyGoal[]; goalsMet: number 
             <Icon
               name="chevronDown"
               size={14}
-              className={`ease-arrive transition-transform duration-[450ms] motion-reduce:transition-none ${
+              className={`transition-transform duration-450 ease-arrive motion-reduce:transition-none ${
                 open ? 'rotate-180' : ''
               }`}
             />
@@ -349,7 +351,7 @@ function GoalsCard({ goals, goalsMet }: { goals: WeeklyGoal[]; goalsMet: number 
         className={`${fold} ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
       >
         <div className="min-h-0 overflow-hidden">
-          <div className="mx-3 border-t border-birch/10 pb-3.5 pt-3">
+          <div className="mx-3 border-t border-birch/10 pt-3 pb-3.5">
             <ul className="space-y-3">
               {goals.map((goal, i) => (
                 <li
@@ -373,7 +375,7 @@ function GoalsCard({ goals, goalsMet }: { goals: WeeklyGoal[]; goalsMet: number 
               <Icon
                 name="arrowRight"
                 size={12}
-                className="ease-arrive transition-transform duration-200 group-hover:translate-x-0.5"
+                className="transition-transform duration-200 ease-arrive group-hover:translate-x-0.5"
               />
             </Link>
           </div>
@@ -398,7 +400,7 @@ function GoalRow({ goal }: { goal: WeeklyGoal }) {
           {met && <Icon name="check" size={13} className="text-honey" />}
           {goal.label}
         </span>
-        <span className="font-semibold tabular-nums text-birch-50">
+        <span className="font-semibold text-birch-50 tabular-nums">
           {goal.done}
           <span className="font-normal text-birch-300">/{goal.target}</span>
         </span>
@@ -426,7 +428,7 @@ function GoalRow({ goal }: { goal: WeeklyGoal }) {
         ) : (
           <span className="h-full flex-1 overflow-hidden rounded-full bg-birch/10">
             <span
-              className="fill-in block h-full rounded-full bg-honey"
+              className="block h-full fill-in rounded-full bg-honey"
               style={{ width: `${Math.min(1, goal.done / goal.target) * 100}%` }}
             />
           </span>
@@ -442,7 +444,7 @@ function TabItem({ item }: { item: NavItem }) {
       <NavLink
         to={item.to}
         className={({ isActive }) =>
-          `relative flex flex-col items-center gap-1 pb-2.5 pt-3 text-[0.6875rem] font-medium transition-colors ${
+          `relative flex flex-col items-center gap-1 pt-3 pb-2.5 text-[0.6875rem] font-medium transition-colors ${
             isActive ? 'text-honey' : 'text-birch-300 hover:text-birch-50'
           }`
         }
@@ -451,14 +453,14 @@ function TabItem({ item }: { item: NavItem }) {
           <>
             <span
               aria-hidden
-              className={`ease-arrive absolute top-0 h-0.5 w-6 rounded-b-full bg-honey transition-transform duration-300 ${
+              className={`absolute top-0 h-0.5 w-6 rounded-b-full bg-honey transition-transform duration-300 ease-arrive ${
                 isActive ? 'scale-x-100' : 'scale-x-0'
               }`}
             />
             <span className="relative">
               <Icon name={item.icon} size={21} />
               {item.count ? (
-                <CountBadge count={item.count} className="absolute -right-2.5 -top-1.5" />
+                <CountBadge count={item.count} className="absolute -top-1.5 -right-2.5" />
               ) : null}
             </span>
             {item.label}

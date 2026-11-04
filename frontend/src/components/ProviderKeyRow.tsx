@@ -16,7 +16,7 @@ export default function ProviderKeyRow({ provider }: ProviderKeyRowProps) {
   return (
     <details className="group py-4 first:pt-0 last:pb-0">
       <summary className="flex cursor-pointer list-none items-center gap-3 rounded-control [&::-webkit-details-marker]:hidden">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-white text-bark ring-1 ring-inset ring-birch-300">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-white text-bark ring-1 ring-birch-300 ring-inset">
           <ProviderLogo id={provider.id} size={22} />
         </span>
         <span className="min-w-0 flex-1">

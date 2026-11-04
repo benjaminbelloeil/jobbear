@@ -101,7 +101,7 @@ export default function AiSettings() {
           <div className="mt-6">
             <div className="flex items-baseline justify-between gap-3 text-sm">
               <span className="font-semibold text-bark-700">Spent so far</span>
-              <span className="tabular-nums text-bark-500">
+              <span className="text-bark-500 tabular-nums">
                 <span className="font-semibold text-bark">{dollars(usage.cost_usd)}</span> of{' '}
                 {dollars(usage.cap_usd)}
               </span>
@@ -115,7 +115,7 @@ export default function AiSettings() {
               className="mt-2 h-2.5 overflow-hidden rounded-full bg-birch-200"
             >
               <div
-                className="fill-in h-full rounded-full bg-honey"
+                className="h-full fill-in rounded-full bg-honey"
                 style={{ width: `${Math.max(spent * 100, 2)}%` }}
               />
             </div>

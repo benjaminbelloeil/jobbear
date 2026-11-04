@@ -22,7 +22,7 @@ export default function StatusBreakdown({ items }: StatusBreakdownProps) {
   )
   return (
     <div>
-      <div aria-hidden className="fill-in mb-5 flex h-3.5 gap-0.5 overflow-hidden rounded-full">
+      <div aria-hidden className="mb-5 flex h-3.5 fill-in gap-0.5 overflow-hidden rounded-full">
         {items.map(({ status, count }) => (
           <span
             key={status}
@@ -50,7 +50,7 @@ export default function StatusBreakdown({ items }: StatusBreakdownProps) {
               </span>
               <span className="h-2 overflow-hidden rounded-full bg-birch-200">
                 <span
-                  className="fill-in block h-full rounded-full"
+                  className="block h-full fill-in rounded-full"
                   style={
                     {
                       width: `${(count / max) * 100}%`,

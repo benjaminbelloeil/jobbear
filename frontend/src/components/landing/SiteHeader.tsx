@@ -71,7 +71,7 @@ export default function SiteHeader({ links, repoUrl }: { links: NavLink[]; repoU
     >
       <nav
         aria-label="Site"
-        className="mx-auto grid h-[4.5rem] max-w-[90rem] grid-cols-[1fr_auto] items-center gap-4 px-5 sm:px-8 md:grid-cols-[1fr_auto_1fr] lg:px-12"
+        className="mx-auto grid h-18 max-w-360 grid-cols-[1fr_auto] items-center gap-4 px-5 sm:px-8 md:grid-cols-[1fr_auto_1fr] lg:px-12"
       >
         <Link
           to="/"
@@ -83,7 +83,7 @@ export default function SiteHeader({ links, repoUrl }: { links: NavLink[]; repoU
           JobBear
         </Link>
 
-        <ul className="hidden items-center gap-1 rounded-full bg-birch/[0.06] p-1.5 ring-1 ring-birch/10 md:flex">
+        <ul className="hidden items-center gap-1 rounded-full bg-birch/6 p-1.5 ring-1 ring-birch/10 md:flex">
           {links.map(({ id, label }) => {
             const on = active === id
             return (
@@ -129,7 +129,7 @@ export default function SiteHeader({ links, repoUrl }: { links: NavLink[]; repoU
       </nav>
 
       {menuOpen && (
-        <div id="site-menu" className="border-t border-birch/10 px-5 pb-6 pt-2 sm:px-8 md:hidden">
+        <div id="site-menu" className="border-t border-birch/10 px-5 pt-2 pb-6 sm:px-8 md:hidden">
           <ul className="divide-y divide-birch/10">
             {links.map(({ id, label }) => (
               <li key={id}>

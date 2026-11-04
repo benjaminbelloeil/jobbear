@@ -16,7 +16,7 @@ function Badge({ tone, children }: { tone: 'lake' | 'honey' | 'berry'; children:
   }
   return (
     <span
-      className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${tones[tone]}`}
+      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ring-inset ${tones[tone]}`}
     >
       {children}
     </span>
@@ -107,7 +107,7 @@ export function SortScene() {
       <div className={`${card} p-4`}>
         <div className="flex items-center justify-between gap-3 text-sm">
           <span className="font-medium">“Scheduling your interview”</span>
-          <span className="tabular-nums text-bark-500">96% sure</span>
+          <span className="text-bark-500 tabular-nums">96% sure</span>
         </div>
         <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-birch-200">
           <span
@@ -138,7 +138,7 @@ export function SortScene() {
       <div className={`${card} p-4`}>
         <div className="flex items-center justify-between gap-3 text-sm">
           <span className="font-medium">“Quick question about your availability”</span>
-          <span className="tabular-nums text-bark-500">61% sure</span>
+          <span className="text-bark-500 tabular-nums">61% sure</span>
         </div>
         <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-birch-200">
           <span
@@ -192,7 +192,7 @@ export function InsightScene() {
         </ul>
       </div>
       <div data-a="pop" style={d(1000)} className="rounded-control bg-bark p-4 text-birch-50">
-        <p className="font-display text-lg font-semibold leading-snug">
+        <p className="font-display text-lg leading-snug font-semibold">
           Referrals get a reply 3× as often as LinkedIn.
         </p>
         <p className="mt-1 text-sm text-birch-300">So this week: ask for two more referrals.</p>

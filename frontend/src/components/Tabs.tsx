@@ -50,7 +50,7 @@ export default function Tabs<T extends string>({
     <div
       role="tablist"
       aria-label={label}
-      className={`no-scrollbar -mx-4 flex gap-1 overflow-x-auto border-b border-birch-300 px-4 sm:mx-0 sm:px-0 ${className}`}
+      className={`-mx-4 no-scrollbar flex gap-1 overflow-x-auto border-b border-birch-300 px-4 sm:mx-0 sm:px-0 ${className}`}
       style={style}
     >
       {tabs.map((tab, index) => {
@@ -69,7 +69,7 @@ export default function Tabs<T extends string>({
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(tab.id)}
             onKeyDown={(event) => onKey(event, index)}
-            className={`relative -mb-px inline-flex shrink-0 items-center gap-2 whitespace-nowrap px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
+            className={`relative -mb-px inline-flex shrink-0 items-center gap-2 px-4 py-3 text-sm font-semibold whitespace-nowrap transition-colors duration-150 ${
               selected ? 'text-bark' : 'text-bark-500 hover:text-bark'
             }`}
           >
@@ -83,7 +83,7 @@ export default function Tabs<T extends string>({
             {tab.label}
             <span
               aria-hidden
-              className={`ease-arrive absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-honey transition-transform duration-300 ${
+              className={`absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-honey transition-transform duration-300 ease-arrive ${
                 selected ? 'scale-x-100' : 'scale-x-0'
               }`}
             />

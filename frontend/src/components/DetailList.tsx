@@ -16,7 +16,7 @@ export default function DetailList({ items }: DetailListProps) {
       {items.map((item) => (
         <div key={item.label}>
           <dt className="text-sm text-bark-500">{item.label}</dt>
-          <dd className="mt-1 break-words">{item.value ?? '—'}</dd>
+          <dd className="mt-1 wrap-break-word">{item.value ?? '—'}</dd>
         </div>
       ))}
     </dl>

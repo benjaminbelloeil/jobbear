@@ -64,13 +64,13 @@ function EventChip({ item }: { item: SampleAgendaItem }) {
   return (
     <Link
       to={`/applications/${item.application_id}`}
-      className={`ease-arrive block rounded-control px-2.5 py-2 text-left transition duration-200 hover:-translate-y-0.5 motion-reduce:transform-none ${kind.chip}`}
+      className={`block rounded-control px-2.5 py-2 text-left transition duration-200 ease-arrive hover:-translate-y-0.5 motion-reduce:transform-none ${kind.chip}`}
     >
       <span className="flex items-center gap-1.5 text-xs font-semibold tabular-nums opacity-80">
         <Icon name={kind.icon} size={12} />
         {whenLabel(item)}
       </span>
-      <span className="mt-0.5 block text-sm font-semibold leading-snug">{item.title}</span>
+      <span className="mt-0.5 block text-sm leading-snug font-semibold">{item.title}</span>
       <span className="block truncate text-xs opacity-80">{company(item)}</span>
     </Link>
   )
@@ -214,7 +214,7 @@ export default function Calendar() {
                   <header className="flex flex-wrap items-center justify-between gap-2 border-b border-birch-200 px-4 py-3 sm:px-5">
                     <p className="flex items-baseline gap-2">
                       <span className="font-semibold">{weekName(week.start)}</span>
-                      <span className="text-sm tabular-nums text-bark-500">
+                      <span className="text-sm text-bark-500 tabular-nums">
                         {monthDay.format(week.start)} – {monthDay.format(last)}
                       </span>
                     </p>
@@ -232,7 +232,7 @@ export default function Calendar() {
                       <Icon
                         name="arrowRight"
                         size={14}
-                        className="ease-arrive transition-transform duration-200 group-hover:translate-x-0.5"
+                        className="transition-transform duration-200 ease-arrive group-hover:translate-x-0.5"
                       />
                     </button>
                   </header>
@@ -250,12 +250,12 @@ export default function Calendar() {
                               <span className="block text-xs font-semibold text-bark-500">
                                 {weekdayShort.format(date)}
                               </span>
-                              <span className="block font-display text-2xl font-bold tabular-nums leading-tight">
+                              <span className="block font-display text-2xl leading-tight font-bold tabular-nums">
                                 {date.getDate()}
                               </span>
                             </span>
                             <span className="min-w-0">
-                              <span className="block font-semibold leading-snug sm:truncate">
+                              <span className="block leading-snug font-semibold sm:truncate">
                                 {item.title}
                               </span>
                               <span className="block truncate text-sm text-bark-500">
@@ -271,14 +271,14 @@ export default function Calendar() {
                                 <Icon name={kind.icon} size={12} />
                                 {kind.label}
                               </span>
-                              <span className="text-sm tabular-nums text-bark-500 sm:text-right">
+                              <span className="text-sm text-bark-500 tabular-nums sm:text-right">
                                 {whenLabel(item)}
                               </span>
                             </span>
                             <Icon
                               name="chevronRight"
                               size={16}
-                              className="ease-arrive hidden text-bark-400 transition-transform duration-200 group-hover:translate-x-0.5 sm:block"
+                              className="hidden text-bark-400 transition-transform duration-200 ease-arrive group-hover:translate-x-0.5 sm:block"
                             />
                           </Link>
                         </li>

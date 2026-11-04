@@ -89,7 +89,7 @@ export default function PrivacySettings() {
                   <span className="block text-sm font-semibold">{item.label}</span>
                   <span className="block text-sm text-bark-500">{item.count}</span>
                 </span>
-                <span className="shrink-0 text-sm tabular-nums text-bark-500">{item.size}</span>
+                <span className="shrink-0 text-sm text-bark-500 tabular-nums">{item.size}</span>
               </li>
             ))}
           </ul>
@@ -109,7 +109,7 @@ export default function PrivacySettings() {
         description="The last emails the model looked at, and what it decided. The email itself isn't logged."
       >
         <div className="-mx-5 overflow-x-auto sm:-mx-6">
-          <table className="w-full min-w-[36rem] text-sm">
+          <table className="w-full min-w-xl text-sm">
             <thead>
               <tr className="border-b border-birch-200 text-left text-xs text-bark-500">
                 <th scope="col" className="px-5 pb-3 font-medium sm:px-6">
@@ -132,7 +132,7 @@ export default function PrivacySettings() {
             <tbody className="divide-y divide-birch-200">
               {sampleAiLog.map((row) => (
                 <tr key={row.id}>
-                  <td className="whitespace-nowrap px-5 py-3 tabular-nums text-bark-500 sm:px-6">
+                  <td className="px-5 py-3 whitespace-nowrap text-bark-500 tabular-nums sm:px-6">
                     {when.format(localTime(row.at))}
                   </td>
                   <td className="py-3">{row.sender}</td>
@@ -145,7 +145,7 @@ export default function PrivacySettings() {
                       className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                         row.acted
                           ? 'bg-pine-50 text-pine-700'
-                          : 'bg-honey-50 text-honey-800 ring-1 ring-inset ring-honey/40'
+                          : 'bg-honey-50 text-honey-800 ring-1 ring-honey/40 ring-inset'
                       }`}
                     >
                       {row.acted ? 'Handled' : 'Sent to Inbox'}

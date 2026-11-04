@@ -21,18 +21,18 @@ export default function NotFound() {
         <div className="grid aspect-square w-44 place-items-center rounded-full bg-birch sm:w-52">
           <BearCharacter mood="sleeping" size={130} title="The JobBear bear, asleep" />
         </div>
-        <h1 className="mt-8 text-4xl font-extrabold leading-[1.04] tracking-[-0.03em] [text-wrap:balance] sm:text-6xl">
+        <h1 className="mt-8 text-4xl leading-[1.04] font-extrabold tracking-[-0.03em] text-balance sm:text-6xl">
           This page wandered off.
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-birch-300">
           Error 404: nothing lives at{' '}
-          <code className="break-all rounded bg-black/25 px-1.5 py-0.5 font-mono text-base text-birch-50">
+          <code className="rounded-sm bg-black/25 px-1.5 py-0.5 font-mono text-base break-all text-birch-50">
             {pathname}
           </code>
           . The link may be old, or the address has a typo.
         </p>
         <div className="mt-9 flex flex-wrap justify-center gap-3">
-          <Link to="/" className="btn-honey btn-lg btn-lift">
+          <Link to="/" className="btn-honey btn-lift btn-lg">
             <Icon name="chevronLeft" size={18} />
             Back to the home page
           </Link>

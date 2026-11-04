@@ -17,22 +17,22 @@ interface MetricStripProps {
 /** One strip of headline numbers, divided by hairlines rather than split into cards. */
 export default function MetricStrip({ metrics }: MetricStripProps) {
   return (
-    <section className="panel grid grid-cols-2 overflow-hidden sm:grid-cols-3 lg:grid-cols-5">
+    <section className="grid grid-cols-2 overflow-hidden panel sm:grid-cols-3 lg:grid-cols-5">
       {metrics.map((metric, index) => {
         // A hint that reads as growth ("+4 this week") gets the good-news colour.
         const rising = typeof metric.hint === 'string' && metric.hint.startsWith('+')
         return (
           <div
             key={metric.label}
-            className="group relative -mb-px -mr-px border-b border-r border-birch-200 px-5 py-4 transition-colors duration-200 last:col-span-2 hover:bg-white sm:last:col-span-1"
+            className="group relative -mr-px -mb-px border-r border-b border-birch-200 px-5 py-4 transition-colors duration-200 last:col-span-2 hover:bg-white sm:last:col-span-1"
           >
             {/* Honey hairline that draws in along the top edge on hover. */}
             <span
               aria-hidden
-              className="ease-arrive absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-honey transition-transform duration-300 group-hover:scale-x-100"
+              className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-honey transition-transform duration-300 ease-arrive group-hover:scale-x-100"
             />
             <p className="text-sm text-bark-500">{metric.label}</p>
-            <p className="mt-1.5 font-display text-3xl font-bold tabular-nums tracking-tight">
+            <p className="mt-1.5 font-display text-3xl font-bold tracking-tight tabular-nums">
               {metric.value === undefined ? (
                 <span className="text-bark-500">—</span>
               ) : (

@@ -46,7 +46,7 @@ export default function Layout() {
     <div className="min-h-screen">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-honey focus:px-4 focus:py-2 focus:text-bark"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-control focus:bg-honey focus:px-4 focus:py-2 focus:text-bark"
       >
         Skip to content
       </a>
@@ -55,7 +55,7 @@ export default function Layout() {
         {/* Keyed by route so each view arrives with a short fade (continuity, not choreography). */}
         <div
           key={location.pathname}
-          className="view-in px-4 pb-32 pt-6 sm:px-8 lg:px-10 lg:pb-16 lg:pt-10"
+          className="view-in px-4 pt-6 pb-32 sm:px-8 lg:px-10 lg:pt-10 lg:pb-16"
         >
           {/* Page code loads here, so the sidebar stays put while it does. */}
           <Suspense fallback={<PageLoader inline />}>
