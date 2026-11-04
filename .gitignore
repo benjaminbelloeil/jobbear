@@ -71,3 +71,6 @@ Thumbs.db
 
 # Personal Claude Code notes (business decisions, private roadmap)
 CLAUDE.local.md
+
+# Playwright MCP scratch output
+.playwright-mcp/

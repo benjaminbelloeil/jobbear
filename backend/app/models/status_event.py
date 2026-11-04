@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import DateTime, Enum, ForeignKey, Text, func
+from sqlalchemy import DateTime, Enum, ForeignKey, Index, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
@@ -24,9 +24,16 @@ class StatusEvent(Base):
     to_status: Mapped[ApplicationStatus] = mapped_column(
         Enum(ApplicationStatus, name="application_status")
     )
-    source: Mapped[EventSource] = mapped_column(Enum(EventSource, name="event_source"))
+    source: Mapped[EventSource] = mapped_column(
+        Enum(EventSource, name="event_source"),
+    )
     occurred_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
     note: Mapped[str | None] = mapped_column(Text)
+    # serves: history endpoint (filter by application, rows come back already sorted by
+    # occurred_at then id) and counting an application's events (uses the first column only).
+    __table_args__ = (
+        Index("ix_status_events_application_occurred", application_id, occurred_at, id),
+    )
     application: Mapped["Application"] = relationship(back_populates="status_events")

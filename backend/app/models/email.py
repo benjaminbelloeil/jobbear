@@ -17,7 +17,9 @@ class Email(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     # Nullable: emails that could not be matched stay unlinked for manual review.
     application_id: Mapped[int | None] = mapped_column(
-        ForeignKey("applications.id", ondelete="SET NULL")
+        ForeignKey("applications.id", ondelete="SET NULL"),
+        # serves: the inbox looking up an application's emails
+        index=True,
     )
     message_id: Mapped[str] = mapped_column(String(255), unique=True)
     sender: Mapped[str] = mapped_column(String(500))
